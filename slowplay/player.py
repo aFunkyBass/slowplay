@@ -14,7 +14,17 @@ Gst.init(None)
 TIME_FORMAT = Gst.Format(Gst.Format.TIME)
 PERCENT_FORMAT = Gst.Format(Gst.Format.PERCENT)
 
-class Replayer():
+SAVE_PIPELINE_STRING = "filesrc name=""save_src"" ! decodebin ! \
+    audioconvert ! pitch name=""save_pitch"" ! \
+    audioconvert ! \
+    ""audio/x-raw, format=(string)S16LE, rate=(int)44100, channels=(int)2"" ! \
+    {0} ! filesink name=""save_sink"""
+
+WAV_ENCODER = "wavenc"
+MP3_ENCODER = "lamemp3enc"
+
+
+class slowPlayer():
     def __init__(self):
         self.pipeline = Gst.Pipeline.new()
 
@@ -201,11 +211,13 @@ class Replayer():
 
     def fileSave(self, src, dest, callback = None):
         print(f"Src: {src} - Dest: {dest}")
-        save_pipeline = Gst.parse_launch("filesrc name=""save_src"" ! decodebin ! \
-                                         audioconvert ! pitch name=""save_pitch"" ! \
-                                         audioconvert ! \
-                                         ""audio/x-raw, format=(string)S16LE, rate=(int)44100, channels=(int)2"" ! \
-                                         lamemp3enc ! filesink name=""save_sink""")
+
+        if(str(dest).endswith("wav")):
+            encoder = WAV_ENCODER
+        else:
+            encoder = MP3_ENCODER
+        
+        save_pipeline = Gst.parse_launch(SAVE_PIPELINE_STRING.format(encoder))
 
         save_audiosrc = Gst.Bin.get_by_name(save_pipeline, "save_src")
         save_tempopitch = Gst.Bin.get_by_name(save_pipeline, "save_pitch")
@@ -229,7 +241,7 @@ class Replayer():
   
             message = save_bus.timed_pop_filtered(self.updateInterval * Gst.MSECOND,
                         Gst.MessageType.STATE_CHANGED | Gst.MessageType.ERROR |
-                        Gst.MessageType.EOS)# | Gst.MessageType.DURATION_CHANGED)
+                        Gst.MessageType.EOS)
 
             if(message):
                 t = message.type

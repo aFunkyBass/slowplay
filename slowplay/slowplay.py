@@ -20,33 +20,38 @@ import filedialpy
 INITIAL_GEOMETRY = "800x350"
 APP_TITLE = "SlowPlay"
 
-THEME_NAME = "clam"
-LBL_FONT_SIZE = 14
+THEME_NAME = "clam"         # tkInter Theme
+LBL_FONT_SIZE = 14          # Label standard size
 
-DEFAULT_SPEED = 100
-MIN_SPEED_PERCENT = 50
-MAX_SPEED_PERCENT = 150
-STEPS_SPEED = 5
+DEFAULT_SPEED = 100         # Default speed (percent)
+MIN_SPEED_PERCENT = 50      # Minimum speed (percent)
+MAX_SPEED_PERCENT = 150     # Maximum speed (percent)
+STEPS_SPEED = 5             # Speed incr/decr steps (percent)
 
-DEFAULT_SEMITONES = 0
-MIN_PITCH_SEMITONES = -12
-MAX_PITCH_SEMITONES = 12
-STEPS_SEMITONES = 1
+DEFAULT_SEMITONES = 0       # Default semitone transpose (0 = no transpose)
+MIN_PITCH_SEMITONES = -12   # Maximum semitones transpose down
+MAX_PITCH_SEMITONES = 12    # Maximum semitones transpose up
+STEPS_SEMITONES = 1         # Transpose incr/decr steps (semitones)
 
-DEFAULT_CENTS = 0
-MIN_PITCH_CENTS = -50
-MAX_PITCH_CENTS = 50
+DEFAULT_CENTS = 0           # Default detune in cents (0 = no detune)
+MIN_PITCH_CENTS = -50       # Maximum detune down (cents)
+MAX_PITCH_CENTS = 50        # Maximum detune up (cents)
 
-DEFAULT_VOLUME = 100
-MIN_VOLUME = 0
+DEFAULT_VOLUME = 100 
+MIN_VOLUME = 0 
 MAX_VOLUME = 100
 
-STEPS_SEC_MOVE_1 = 5
-STEPS_SEC_MOVE_2 = 10
-STEPS_SEC_MOVE_3 = 15
+STEPS_SEC_MOVE_1 = 5        # Seconds to move using the num keypad +/- min
+STEPS_SEC_MOVE_2 = 10       # Seconds to move using the num keypad +/- med
+STEPS_SEC_MOVE_3 = 15       # Seconds to move using the num keypad +/- max
 
-UPDATE_INTERVAL = 50
+# Song position update interval in milliseconds
+UPDATE_INTERVAL = 50        
 
+# Status bar message disappear time
+STATUS_BAR_TIMEOUT = 3000
+
+# Allowed audio files extensions (open)
 OPEN_EXTENSIONS_FILTER = (
     'mp3',
     'wav',
@@ -59,30 +64,37 @@ OPEN_EXTENSIONS_FILTER = (
     'm4a'
 )
 
+# Allowed audio files extensions (save)
 SAVE_EXTENSIONS_FILTER = (
     'mp3',
     'wav',
 )
 
+# Default save file extension
 SAVE_DEFAULT_EXTENSION = "mp3"
+
 
 class App(ctk.CTk):
 #class App(ThemedTk):
     def __init__(self, *orig_args, **orig_kwargs):
         super().__init__(className=APP_TITLE, *orig_args, **orig_kwargs)
 
+        # Mark app directories
         working_dir = os.path.dirname(__file__)
         resources_dir = "".join([working_dir, "/resources"])
 
+        # Sets app title and window size
         self.geometry(INITIAL_GEOMETRY)
         self.title(APP_TITLE)
 
+        # Sets the app icon
         self.wm_iconphoto(False, PhotoImage(file=f"{resources_dir}/Icona-32.png"))
-                                    
-        self.player = pl.Replayer()
+
+        # Instanciate the GStreamer player
+        self.player = pl.slowPlayer()
         self.player.updateInterval = UPDATE_INTERVAL
 
-        # Imposta lo stile e il tema
+        # Imposta style and theme
         self.style = ttk.Style(self)
         #print(self.style.theme_names())
         if THEME_NAME in self.style.theme_names():
@@ -90,26 +102,31 @@ class App(ctk.CTk):
 
         ctk.set_appearance_mode("dark")
 
+        # Loads the reset buttons icon
         resetIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/Reset Icon.png"),
                                  dark_image=Image.open(f"{resources_dir}/Reset Icon.png"), size=(16, 16))
 
-        # variabili automatiche
-        self.songTime = ctk.StringVar(self)
-        self.songTime.set(dt.timedelta(seconds = 0))
-        self.songProgress = ctk.DoubleVar(self, value=0)
+        # tkInter auto-variables
+        self.songTime = ctk.StringVar(self)                 # Holds the song time clock
+        self.songTime.set(dt.timedelta(seconds = 0))        
+        self.songProgress = ctk.DoubleVar(self, value=0)    # Holds the value of progress bar
         self.songProgress.set(0)
 
         # Variabili globali
-        self.media = ""
-        self.mediaUri = ""
-        self.mediaFileName = ""
-        self.mediaPath = ""
-        self.bValuesChanging = False
-        self.lastOpenDir = ""
-        self.lastSaveDir = ""
+        self.media = ""                     # Media complete name
+        self.mediaUri = ""                  # Media URI
+        self.mediaFileName = ""             # Media simple filename
+        self.mediaPath = ""                 # Media absolute path
+        
+        self.bValuesChanging = False        # Flag turned when the user is changing some values
+                                            # used to stop automatic updates
+        
+        self.lastOpenDir = ""               # Last used dir in opening file
+        self.lastSaveDir = ""               # Last used dir in saving file
+        self.afterCancelID = ""             # ID of the last scheduled after action
 
-        # crea i tre fames principali Sinistro (espandibile), destro(pulsanti)
-        # e basso (status)
+        # Build the 3 main frames principali: Left (shrinkable), Right (buttons)
+        # and low (status bar)
         self.LFrame = ctk.CTkFrame(self, width=400, height=200)
         self.RFrame = ctk.CTkFrame(self)
         self.BFrame = ctk.CTkFrame(self, height=24)
@@ -121,7 +138,7 @@ class App(ctk.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # Crea i widget del pannello di sinistra
+        # Widgets on left panel
         self.dispPosition = ctk.CTkLabel(self.LFrame, textvariable=self.songTime, font=("", 28))
         self.dispPosition.grid(row=0, column=0, pady=[10, 0], sticky="n")
 
@@ -217,7 +234,7 @@ class App(ctk.CTk):
 
         self.CTLFrame.columnconfigure(1, weight=1)
 
-        # Crea i pulsanti del pannello di destra
+        # Widgets on right panel
         self.playButton = ctk.CTkButton(self.RFrame, text="Play", font=("", 18), command=self.togglePlay)
         self.playButton.grid(row=0, column=0, pady=(8, 0), sticky="w")
 
@@ -227,6 +244,7 @@ class App(ctk.CTk):
         self.saveasButton = ctk.CTkButton(self.RFrame, text="Save as...", font=("", 18), command=self.saveAs)
         self.saveasButton.grid(row=2, column=0, pady=(8, 0), sticky="w")
 
+        # Widget on status bar
         self.fileLabel = ctk.CTkLabel(self.BFrame, text="", font=("", LBL_FONT_SIZE))
         self.fileLabel.grid(row=0, column=0, padx=(8), sticky="w")
 
@@ -239,21 +257,32 @@ class App(ctk.CTk):
         if(args.media != None):
             self.setFile(args.media)
 
+    # Open file selection and sets it for playback
     def openFile(self):
         self.setFile(self.selectFileToOpen())
 
+    # Geneate a complex list to use as a filter for open and save dialogs
+    # based on the allowed file extensions tuple
     def makeFileTypes(self, filter):
+        # example: mp3 -> MP3 files: *.mp3
         filetypes = [f"{str(x).upper()} files: *.{x}" for x in filter]
+        
+        # Insert all the extension together as the first available filter
         filetypes.insert(0, "Supported files: " + ' '.join(["*." + x for x in filter]))
+
+        # Append the "All files: *" at the end of filetr
         filetypes.append("All files: *")
+
         return(filetypes)
 
+    # Open the file selection dialog
     def selectFileToOpen(self) -> str:
         filetypes = self.makeFileTypes(OPEN_EXTENSIONS_FILTER)
 
         if(self.lastOpenDir == ""):
             self.lastOpenDir = os.path.expanduser("~")
 
+        # Temporarily disables all the keypress and mouse binding
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
         try:
@@ -267,7 +296,7 @@ class App(ctk.CTk):
         
         return(filename)
 
-    # Reimposta tutti i valori
+    # Reset all values
     def resetValues(self):
         self.player.Pause()
         self.player.Rewind()
@@ -278,6 +307,8 @@ class App(ctk.CTk):
         self.songTime.set(dt.timedelta(seconds = 0))
         self.scale.set(0)
 
+    # Ask the player to load the selected file
+    # and prepares it to play
     def setFile(self, filename):
         #print(filename)
         if(not filename or filename == ''):
@@ -288,23 +319,32 @@ class App(ctk.CTk):
 
         #self.player.audiosrc.set_property("uri", "file://" + filename)
 
+        # Saves the path and name of the selected file
         self.media = os.path.realpath(filename)
         self.mediaFileName = os.path.basename(self.media)
         self.mediaPath = os.path.dirname(self.media)
         self.lastOpenDir = self.mediaPath
+
+        # Compose a valid uri
         if(str(self.media).startswith('/')):
             self.mediaUri = "file://" + self.media
         else:
             self.mediaUri = self.media
 
+        # Actually load the media
         self.player.MediaLoad(self.mediaUri)
         self.player.update_position()
         self.resetValues()
 
-        self.fileLabel.configure(text=self.mediaFileName)
+        self.statusBarMessage(self.mediaFileName, static = True)
+        
         self.title(f"{APP_TITLE} - {self.mediaFileName}")
 
     def saveAs(self):
+        if(self.player.canPlay == False):
+            self.statusBarMessage("Please open a file...")
+            return
+
         filename = self.selectFileToSave()
 
         if(str(filename) == '()' or str(filename) == ""):
@@ -326,11 +366,13 @@ class App(ctk.CTk):
 
         self.lastSaveDir = os.path.dirname(filename)
 
+        self.statusBarMessage(F"Saving file {filename}...", static = True)
         try:
             self.player.fileSave(self.media, filename, self.saveProgress)
         finally:
             self.save_prg.destroy()
             self.save_prg_var.__del__()
+            self.statusBarMessage(self.mediaFileName, static = True)
 
     def selectFileToSave(self) -> str:
         filetypes = self.makeFileTypes(SAVE_EXTENSIONS_FILTER)
@@ -343,6 +385,7 @@ class App(ctk.CTk):
         try:
             filename = filedialpy.saveFile(
                 title='Save as..',
+                confirm_overwrite=True,
                 initial_file=self.mediaFileName,
                 initial_dir=self.lastSaveDir,
                 filter=filetypes)
@@ -354,20 +397,31 @@ class App(ctk.CTk):
 
     def saveProgress(self, value):
         self.save_prg_var.set(value)
-        self.update_idletasks()
+        self.update()
 
     def togglePlay(self):
+        if(self.player.canPlay == False):
+            self.statusBarMessage("Please open a file...")
+            return
+        
         if self.player.isPlaying == False:
             self.player.Play()
         else:
             self.player.Pause()
 
+    def stopPlaying(self):
+        if(self.player.canPlay == False):
+            self.statusBarMessage("Please open a file...")
+            return
+
+        self.player.Pause()
+        self.player.Rewind()
+        self.dispSongTime(Force=True)
+
     def songControl(self):
         dd, pp = self.player.update_position()
         if(dd and pp and dd > 0 and pp >= dd):
-            self.player.Pause()
-            self.player.Rewind()
-            self.dispSongTime(Force=True)
+            self.stopPlaying()
 
     def dispSongTime(self, Force = False):
         if(self.bValuesChanging):
@@ -543,6 +597,33 @@ class App(ctk.CTk):
             except:
                 return
 
+    # Scrive un messaggio di info sulla barra di stato e lo
+    # cancella dopo il timeout. Se il messaggio è statico 
+    # non imposta il timeout
+    def statusBarMessage(self, message, static = False):
+        if(message is None):
+            return
+
+        self.statusBarUpdate(message)
+       
+        if(static == False):
+            # Imposta il timeout e resetta la barra di stato.
+            self.afterCancelID = self.after(STATUS_BAR_TIMEOUT, self.statusBarUpdate)
+
+    # Aggiorna il testo della barra di stato
+    # se non viene specificato nessun testo, scrive il nome del brano
+    def statusBarUpdate(self, newText = ""):
+        #print(f"Messaggio {newText} - ID Cancel: {self.afterCancelID}")
+
+        if(self.afterCancelID):
+            self.after_cancel(self.afterCancelID)
+            self.afterCancelID = ""
+
+        if(newText):
+            self.fileLabel.configure(text = newText)
+        else:
+            self.fileLabel.configure(text = self.mediaFileName)
+
     def parseHotkey(self, event):
         key = event.keysym
         state = event.state
@@ -571,9 +652,7 @@ class App(ctk.CTk):
         elif(key == 'space' or key == 'KP_0'):
             self.togglePlay()
         elif(key == 'KP_Decimal'):
-            self.player.Pause()
-            self.player.Rewind()
-            self.dispSongTime(Force=True)
+            self.stopPlaying()
         elif(key == 'Home'):
             self.player.Rewind()
             self.dispSongTime(Force=True)
@@ -583,6 +662,9 @@ class App(ctk.CTk):
         elif(key == 'KP_Subtract'):
             if(self.varPitchST.get() > MIN_PITCH_SEMITONES):
                 self.varPitchST.set(self.varPitchST.get() - STEPS_SEMITONES)
+        elif(key == 'q' and state == 20):
+            self.destroy()
+            exit()
 
         if(move != 0):
             self.bValuesChanging = True
