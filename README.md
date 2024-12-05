@@ -1,43 +1,53 @@
-#SlowPlay
+# SlowPlay
 
 ---
 
-==SlowPlay== is a simple audio player with speed/pitch change capabilities, based on GStreamer. It is meant to help music students/teachers transcribe music and play along with it.
+**SlowPlay** is a simple audio player with speed/pitch change capabilities, based on GStreamer. It is meant to help music students/teachers transcribe music and play along with it.
 
-###Inspiration
+## Inspiration
+
 This software is heavily inspired, although not forked, by [Play It Slowly](https://github.com/jwagner/playitslowly) by Jonas Wagner.
 
 I've been using Play It Slowly as my music classes companion for ages, but unfortunately it is no longer mantained and I started experiencing problems since I've updated my laptop OS, so I decided to rewrite it.
 
 Thank you Jonas for your work.
 
-##Features
-==SlowPlay== can speed down/up songs or change their pitch independently "on the fly". It is possible export modified songs by using the "Save as..." button. 
+## Features
+
+**SlowPlay** can speed down/up songs or change their pitch independently "on the fly". It is possible export modified songs by using the "Save as..." button.
 
 You can import the most common audio files format (mp3, wav, flac, aif...). You can save your files either in mp3 or wav format, based on the extension of file to me be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as variable bitrate quality=4. Volume setting and metadata are ignored in the export operation.
 
-###Requirements
+### Requirements
 
 For SlowPlay to work you need to have GStreamer along with Soundtouch plugins. While GStreamer is probably installed by default on your Linux box, you probably have to manually install the gstreamer-plugins-bad package. Please refer to your Linux distribution for the installation.
 
-##Shortcuts
+## Shortcuts
 
 SlowPlay offers the following shortcuts:
 
-- **NUM_KEYPAD_0**: Toggle Play/Pause
-- **NUM_KEYPAD_.**: Stop and Rewind
+**CTRL+q**: Quit application
 
-- **NUM_KEYPAD_1**: Rewind 5 seconds
-- **NUM_KEYPAD_4**: Rewind 10 seconds
-- **NUM_KEYPAD_7**: Rewind 15 seconds
+The following commands are used to control playback and they're all assigned to the numeric keypad. Refer to the drawing below for visual help.
 
-- **NUM_KEYPAD_3**: Forward 5 seconds
-- **NUM_KEYPAD_6**: Forward 10 seconds
-- **NUM_KEYPAD_9**: Forward 15 seconds
+- **0**: Toggle Play/Pause
+- **.**: Stop and Rewind
 
-- **NUM_KEYPAD_8**: Increase speed by 5%
-- **NUM_KEYPAD_2**: Decrease speed by 5%
-- **NUM_KEYPAD_5**: Reset speed
+- **1**: Rewind 5 seconds
+- **4**: Rewind 10 seconds
+- **7**: Rewind 15 seconds
 
-- **NUM_KEYPAD_+**: Transpose +1 semitone
-- **NUM_KEYPAD_-**: Transpose -1 semitone
+- **3**: Forward 5 seconds
+- **6**: Forward 10 seconds
+- **9**: Forward 15 seconds
+
+- **8**: Increase speed by 5%
+- **2**: Decrease speed by 5%
+- **5**: Reset speed to 100%
+
+- **+**: Transpose +1 semitone
+- **-**: Transpose -1 semitone
+
+![Keypad shortcuts](slowplay/resources/Keypad.png)
+
+*(please make sure none of the input boxes have the focus. Click on an empty area of the app to take the focus back from an input box)*:

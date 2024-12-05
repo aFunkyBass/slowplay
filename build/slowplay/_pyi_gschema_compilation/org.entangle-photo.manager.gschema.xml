@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+
+  <enum id="org.entangle-photo.manager.cms.rendering-intent">
+    <value value="0" nick="perceptual"/>
+    <value value="1" nick="relative-colourimetric"/>
+    <value value="2" nick="saturation"/>
+    <value value="3" nick="absolute-colourimetric"/>
+  </enum>
+
+  <enum id="org.entangle-photo.manager.img.grid-lines">
+    <value value="0" nick="none"/>
+    <value value="1" nick="center-lines"/>
+    <value value="2" nick="rule-of-3rds"/>
+    <value value="3" nick="quarters"/>
+    <value value="4" nick="rule-of-5ths"/>
+    <value value="5" nick="golden-sections"/>
+  </enum>
+
+  <schema path="/org/entangle-photo/manager/" id="org.entangle-photo.manager" gettext-domain="entangle-photo">
+    <child schema="org.entangle-photo.manager.interface" name="interface"/>
+    <child schema="org.entangle-photo.manager.capture" name="capture"/>
+    <child schema="org.entangle-photo.manager.cms" name="cms"/>
+    <child schema="org.entangle-photo.manager.img" name="img"/>
+  </schema>
+
+  <schema path="/org/entangle-photo/manager/interface/" id="org.entangle-photo.manager.interface" gettext-domain="entangle-photo">
+    <key type="b" name="auto-connect">
+      <default>true</default>
+      <summary>Auto connect</summary>
+      <description>Automatically connect to cameras at startup</description>
+    </key>
+
+    <key type="b" name="screen-blank">
+      <default>false</default>
+      <summary>Screen blank</summary>
+      <description>Blank screen while capturing images</description>
+    </key>
+
+    <key type="b" name="histogram-linear">
+      <default>false</default>
+      <summary>Show linear histogram</summary>
+      <description>Show linear histogram instead of logarithmic</description>
+    </key>
+
+    <key type="as" name="plugins">
+      <default>[]</default>
+      <summary>Plugins</summary>
+      <description>Plugins which are loaded</description>
+    </key>
+  </schema>
+
+  <schema path="/org/entangle-photo/manager/capture/" id="org.entangle-photo.manager.capture" gettext-domain="entangle-photo">
+    <key type="s" name="filename-pattern">
+      <default>'captureXXXXXX'</default>
+      <summary>Filename pattern</summary>
+      <description>Image filename pattern</description>
+    </key>
+
+    <key type="s" name="last-session">
+      <default>''</default>
+      <summary>Picture dir</summary>
+      <description>Directory in which image sessions are created</description>
+    </key>
+
+    <key type="b" name="continuous-preview">
+      <default>false</default>
+      <summary>Continuous preview</summary>
+      <description>Continue with preview after capture</description>
+    </key>
+
+    <key type="b" name="delete-file">
+      <default>true</default>
+      <summary>Delete files</summary>
+      <description>Delete files from camera after capture</description>
+    </key>
+
+    <key type="b" name="sync-clock">
+      <default>false</default>
+      <summary>Sync clock</summary>
+      <description>Automatically sync camera clock with computer</description>
+    </key>
+
+    <key type="b" name="electronic-shutter">
+      <default>false</default>
+      <summary>Electronic shutter</summary>
+      <description>Use preview output as capture image</description>
+    </key>
+  </schema>
+
+  <schema path="/org/entangle-photo/manager/cms/" id="org.entangle-photo.manager.cms" gettext-domain="entangle-photo">
+    <key type="b" name="enabled">
+      <default>true</default>
+      <summary>Enable colour management</summary>
+      <description>Enable colour managed display of images</description>
+    </key>
+
+    <key type="b" name="detect-system-profile">
+      <default>true</default>
+      <summary>Detect system monitor profile</summary>
+      <description>Automatically detexct colour profile for monitors</description>
+    </key>
+
+    <key name="rendering-intent" enum="org.entangle-photo.manager.cms.rendering-intent">
+      <default>'perceptual'</default>
+      <summary>Rendering intent</summary>
+      <description>Rendering intent</description>
+    </key>
+
+    <key type="s" name="monitor-profile">
+      <default>''</default>
+      <summary>Monitor profile</summary>
+      <description>Path to monitor colour profile</description>
+    </key>
+
+    <key type="s" name="rgb-profile">
+      <default>''</default>
+      <summary>RGB profile</summary>
+      <description>Path to RGB colour profile</description>
+    </key>
+  </schema>
+
+  <schema path="/org/entangle-photo/manager/img/" id="org.entangle-photo.manager.img" gettext-domain="entangle-photo">
+    <key type="s" name="aspect-ratio">
+      <default>'1.33'</default>
+      <summary>Aspect ratio</summary>
+      <description>Apply image mask with a fixed aspect ratio (eg 1.33)</description>
+    </key>
+
+    <key type="i" name="mask-opacity">
+      <default>90</default>
+      <summary>Mask opacity</summary>
+      <description>Opacity of borders used for image mask</description>
+    </key>
+
+    <key type="b" name="mask-enabled">
+      <default>false</default>
+      <summary>Mask enabled</summary>
+      <description>Enable aspect ratio image mask</description>
+    </key>
+
+    <key type="b" name="overexposure-highlighting">
+      <default>true</default>
+      <summary>Overexposure highlighting</summary>
+      <description>Highlight areas of overexposure</description>
+    </key>
+
+    <key type="b" name="focus-point">
+      <default>true</default>
+      <summary>Focus point</summary>
+      <description>Focus point in preview mode</description>
+    </key>
+
+    <key name="grid-lines" enum="org.entangle-photo.manager.img.grid-lines">
+      <default>'golden-sections'</default>
+      <summary>Grid lines</summary>
+      <description>Grid lines in preview</description>
+    </key>
+
+    <key type="b" name="embedded-preview">
+      <default>true</default>
+      <summary>Use embedded preview</summary>
+      <description>Use embedded preview image instead of loading raw file</description>
+    </key>
+
+    <key type="i" name="onion-layers">
+      <default>3</default>
+      <summary>Onion layers</summary>
+      <description>Number of overlay layers in image display</description>
+    </key>
+
+    <key type="b" name="onion-skin">
+      <default>false</default>
+      <summary>Onion skin</summary>
+      <description>Enable image overlay display</description>
+    </key>
+
+    <key type="s" name="background">
+      <default>'#000000'</default>
+      <summary>Image background color</summary>
+      <description>Image background color</description>
+    </key>
+
+    <key type="s" name="highlight">
+      <default>'#FFFFFF'</default>
+      <summary>Image highlight color</summary>
+      <description>Image highlight color</description>
+    </key>
+
+  </schema>
+
+  <schema id="org.entangle-photo.manager.camera" gettext-domain="entangle-photo">
+    <key type="as" name="controls">
+      <default>[]</default>
+      <summary>Control list</summary>
+      <description>List of camera control setting name</description>
+    </key>
+  </schema>
+</schemalist>

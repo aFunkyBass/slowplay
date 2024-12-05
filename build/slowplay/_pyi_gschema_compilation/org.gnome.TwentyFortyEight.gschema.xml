@@ -1,0 +1,80 @@
+<schemalist gettext-domain="gnome-2048">
+  <schema id="org.gnome.TwentyFortyEight" path="/org/gnome/2048/">
+    <key name="window-width" type="i">
+      <default>600</default>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/window-width' -->
+      <summary>Window width</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/window-width' -->
+      <description>Window width.</description>
+    </key>
+    <key name="window-height" type="i">
+      <default>600</default>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/window-height' -->
+      <summary>Window height</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/window-height' -->
+      <description>Window height.</description>
+    </key>
+    <key name="window-maximized" type="b">
+      <default>false</default>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/window-maximized' -->
+      <summary>Window maximized</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/window-maximized' -->
+      <description>Window maximization state.</description>
+    </key>
+    <key name="rows" type="i">
+      <default>4</default>
+      <range min="1" max="9"/>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/rows' -->
+      <summary>Number of rows</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/rows' -->
+      <description>Game grid number of rows.</description>
+    </key>
+    <key name="cols" type="i">
+      <default>4</default>
+      <range min="1" max="9"/>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/cols' -->
+      <summary>Number of columns</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/cols' -->
+      <description>Game grid number of columns.</description>
+    </key>
+    <key name="target-value" type="i"> <!-- TODO type="y", only storing the power of 2 -->
+      <default>2048</default>
+      <range min="4"/>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/target-value' -->
+      <summary>Target value</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/target-value' -->
+      <description>Tile value at which user is congratulated.</description>
+    </key>
+    <key name="do-congrat" type="b">
+      <default>true</default>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/do-congrat' -->
+      <summary>Congrat on target tile</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/do-congrat' -->
+      <description>Whether the user shall be congratulated on obtaining target tile.</description>
+    </key>
+    <key name="animations-speed" type="d">
+      <default>130.0</default>
+      <!-- as in the preferences.ui file -->
+      <range min="20.0" max="2000.0"/>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/animations-speed' -->
+      <summary>Animations speed</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/animations-speed' -->
+      <description>Duration of animations: show tile, move tile, and dim tile.</description>
+    </key>
+    <key name="allow-undo" type="b">
+      <default>false</default>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/allow-undo' -->
+      <summary>Allow undo</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/allow-undo' -->
+      <description>Whether tile movements can be undone.</description>
+    </key>
+    <key name="allow-undo-max" type="u">
+      <default>10</default>
+      <range min="1"/>
+      <!-- Translators: summary of a settings key, see 'dconf-editor /org/gnome/2048/allow-undo-max' -->
+      <summary>Number of undo movements</summary>
+      <!-- Translators: description of a settings key, see 'dconf-editor /org/gnome/2048/allow-undo-max' -->
+      <description>Maximum number of tile movements that can be undone.</description>
+    </key>
+  </schema>
+</schemalist>

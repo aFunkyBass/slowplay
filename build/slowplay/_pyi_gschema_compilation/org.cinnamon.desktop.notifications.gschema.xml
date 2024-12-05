@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/org/cinnamon/desktop/notifications/" id="org.cinnamon.desktop.notifications">
+    <key type="b" name="fade-on-mouseover">
+      <default>true</default>
+      <summary>Notifications fade out</summary>
+      <description>Set this to TRUE to allow notifications to fade under the mouse.</description>
+    </key>
+
+    <key type="b" name="remove-old">
+      <default>false</default>
+      <summary>Remove old notifications</summary>
+      <description>Check this to automatically remove old notifications.</description>
+    </key>
+
+    <key type="i" name="timeout">
+      <default>1800</default>
+      <summary>Notification timeout</summary>
+      <description>Duration to keep store a notification in persitence.</description>
+    </key>
+    <key type="i" name="fade-opacity">
+      <default>40</default>
+      <range min="0" max="100"/>
+      <summary>Opacity (percent) to use when mousing over a notification</summary>
+      <description>Opacity (percent) to use for notification fades</description>
+    </key>
+    <key type="b" name="display-notifications">
+      <default>true</default>
+      <summary>Whether notifications are to be displayed</summary>
+    </key>
+    <key type="b" name="bottom-notifications">
+      <default>false</default>
+      <summary>Whether notifications are displayed on the bottom side of the screen</summary>
+    </key>
+  </schema>
+</schemalist>

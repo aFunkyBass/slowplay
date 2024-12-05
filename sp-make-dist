@@ -1,0 +1,1 @@
+pyinstaller sp-launch.py --name slowplay --add-data "slowplay/resources/*:slowplay/resources" --hidden-import='PIL._tkinter_finder'

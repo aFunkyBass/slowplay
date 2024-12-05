@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2011, Nokia <ivan.frade@nokia.com>
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the
+Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA  02110-1301, USA.
+-->
+<schemalist>
+  <schema id="org.freedesktop.Tracker.Extract" path="/org/freedesktop/tracker/extract/" gettext-domain="tracker-miners">
+    <key name="verbosity" enum="org.freedesktop.TrackerMiners.TrackerVerbosity">
+      <default>'errors'</default>
+      <summary>Log verbosity</summary>
+      <description>Log verbosity.</description>
+    </key>
+
+    <key name="sched-idle" enum="org.freedesktop.TrackerMiners.TrackerSchedIdle">
+      <default>'first-index'</default>
+      <summary>Scheduler priority when idle</summary>
+      <description>
+	The scheduler is the kernel component that decides which
+	runnable application will be executed by the CPU next. Each
+	application has an associated scheduling policy and priority.
+      </description>
+    </key>
+
+    <key name="max-bytes" type="i">
+      <summary>Max bytes to extract</summary>
+      <description>Maximum number of UTF-8 bytes to extract.</description>
+      <range min="0" max="10485760"/>
+      <default>1048576</default>
+    </key>
+
+    <key name="wait-for-miner-fs" type="b">
+      <summary>Wait for FS miner to be done before extracting</summary>
+      <description>When true, tracker-extract will wait for tracker-miner-fs to be done crawling before extracting meta-data. This option is useful on constrained environment where it is important to list files as fast as possible and can wait to get meta-data later.</description>
+      <default>false</default>
+    </key>
+  </schema>
+</schemalist>

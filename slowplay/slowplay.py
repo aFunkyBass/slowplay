@@ -4,11 +4,10 @@
 # https://tkinterexamples.com/
 #
 #import tkinter as tk
-import player as pl
+import customtkinter as ctk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import PhotoImage
-import customtkinter as ctk
 import datetime as dt
 from ttkthemes import ThemedTk
 import os
@@ -16,9 +15,16 @@ import argparse
 from PIL import Image
 import re
 import filedialpy
+import sys, pathlib
+
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+
+from player import slowPlayer
 
 INITIAL_GEOMETRY = "800x350"
 APP_TITLE = "SlowPlay"
+APP_DESCRIPTION = "SlowPlay is a simple audio player with speed/pitch \
+change capabilities, based on GStreamer."
 
 THEME_NAME = "clam"         # tkInter Theme
 LBL_FONT_SIZE = 14          # Label standard size
@@ -46,7 +52,7 @@ STEPS_SEC_MOVE_2 = 10       # Seconds to move using the num keypad +/- med
 STEPS_SEC_MOVE_3 = 15       # Seconds to move using the num keypad +/- max
 
 # Song position update interval in milliseconds
-UPDATE_INTERVAL = 50        
+UPDATE_INTERVAL = 20        
 
 # Status bar message disappear time
 STATUS_BAR_TIMEOUT = 3000
@@ -73,7 +79,6 @@ SAVE_EXTENSIONS_FILTER = (
 # Default save file extension
 SAVE_DEFAULT_EXTENSION = "mp3"
 
-
 class App(ctk.CTk):
 #class App(ThemedTk):
     def __init__(self, *orig_args, **orig_kwargs):
@@ -91,7 +96,7 @@ class App(ctk.CTk):
         self.wm_iconphoto(False, PhotoImage(file=f"{resources_dir}/Icona-32.png"))
 
         # Instanciate the GStreamer player
-        self.player = pl.slowPlayer()
+        self.player = slowPlayer(args.sink)
         self.player.updateInterval = UPDATE_INTERVAL
 
         # Imposta style and theme
@@ -317,8 +322,6 @@ class App(ctk.CTk):
             messagebox.showerror("File not found...", f"Unable to open file: {filename}")
             return
 
-        #self.player.audiosrc.set_property("uri", "file://" + filename)
-
         # Saves the path and name of the selected file
         self.media = os.path.realpath(filename)
         self.mediaFileName = os.path.basename(self.media)
@@ -336,37 +339,46 @@ class App(ctk.CTk):
         self.player.update_position()
         self.resetValues()
 
+        # Updates window title and status bar
         self.statusBarMessage(self.mediaFileName, static = True)
-        
         self.title(f"{APP_TITLE} - {self.mediaFileName}")
 
+    # Saves an audio file with the pitch and tempo settings
     def saveAs(self):
         if(self.player.canPlay == False):
             self.statusBarMessage("Please open a file...")
             return
 
+        # Open the file dialog
         filename = self.selectFileToSave()
 
         if(str(filename) == '()' or str(filename) == ""):
             return
 
-        self.player.Pause()
-
+        # Check for a valid path
         if(os.path.exists(os.path.dirname(filename)) == False):
             messagebox.showerror("Filename error...", f"Unable to save file: {filename}")
             return
 
+        # Check for a valid extension and in case is not present
+        # add the default one
         if(filename.endswith(SAVE_EXTENSIONS_FILTER) == False):
             filename += "." + SAVE_DEFAULT_EXTENSION
 
+        self.player.Pause()
+
+        # Create a progress bar on the right panel
         self.save_prg_var = ctk.DoubleVar(self, value=0)
         self.save_prg = ctk.CTkProgressBar(self.RFrame, variable=self.save_prg_var, height=10, width=10)
         self.save_prg.grid(row=4, column=0, padx=8, pady=10, sticky="ew")
         self.update_idletasks()
 
+        # Saves the path for future saves
         self.lastSaveDir = os.path.dirname(filename)
 
-        self.statusBarMessage(F"Saving file {filename}...", static = True)
+        # Actually asks the player to save the file and destroy 
+        # the progress bar afterwards
+        self.statusBarMessage(F"Saving file: {filename}...", static = True)
         try:
             self.player.fileSave(self.media, filename, self.saveProgress)
         finally:
@@ -374,6 +386,7 @@ class App(ctk.CTk):
             self.save_prg_var.__del__()
             self.statusBarMessage(self.mediaFileName, static = True)
 
+    # Open the save file dialog
     def selectFileToSave(self) -> str:
         filetypes = self.makeFileTypes(SAVE_EXTENSIONS_FILTER)
         
@@ -395,6 +408,7 @@ class App(ctk.CTk):
 
         return(filename)
 
+    # Updates the save progress bars
     def saveProgress(self, value):
         self.save_prg_var.set(value)
         self.update()
@@ -699,7 +713,8 @@ class App(ctk.CTk):
 
         self.after(UPDATE_INTERVAL, self._tasks_)
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description =  APP_DESCRIPTION)
+parser.add_argument("--sink", help="Specify a GStreamer custom sink")
 parser.add_argument("media", nargs="?", help="URI of the media to open")
 
 args = parser.parse_args()

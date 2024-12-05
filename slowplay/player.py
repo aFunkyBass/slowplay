@@ -1,12 +1,6 @@
 from tkinter import messagebox
-
-#argv = sys.argv
-# work around Gstreamer parsing sys.argv!
-#sys.argv = []
-
 import gi
 gi.require_version('Gst', '1.0')
-
 from gi.repository import Gst
 
 Gst.init(None)
@@ -14,21 +8,27 @@ Gst.init(None)
 TIME_FORMAT = Gst.Format(Gst.Format.TIME)
 PERCENT_FORMAT = Gst.Format(Gst.Format.PERCENT)
 
-SAVE_PIPELINE_STRING = "filesrc name=""save_src"" ! decodebin ! \
-    audioconvert ! pitch name=""save_pitch"" ! \
-    audioconvert ! \
-    ""audio/x-raw, format=(string)S16LE, rate=(int)44100, channels=(int)2"" ! \
-    {0} ! filesink name=""save_sink"""
+NANOSEC = 1000000000
+
+GST_DEFAULT_SINK = "autoaudiosink"
+
+SAVE_PIPELINE_STRING = "filesrc name=""save_src"" ! decodebin3 ! \
+audioconvert ! pitch name=""save_pitch"" ! \
+audioconvert ! \
+""audio/x-raw, format=(string)S16LE, rate=(int)44100, channels=(int)2"" ! \
+{0} ! filesink name=""save_sink"""
 
 WAV_ENCODER = "wavenc"
 MP3_ENCODER = "lamemp3enc"
 
-
 class slowPlayer():
-    def __init__(self):
+    def __init__(self, customsink = None):
+
+        # Creates a pipeline
         self.pipeline = Gst.Pipeline.new()
 
-        self.audiosrc = Gst.ElementFactory.make("playbin", "player")
+        # Use the Playbin3 element
+        self.audiosrc = Gst.ElementFactory.make("playbin3", "player")
         self.pipeline.add(self.audiosrc)
         self.bin = Gst.Bin()
 
@@ -37,8 +37,9 @@ class slowPlayer():
         #self.converter = Gst.ElementFactory.make("audioconvert")
 
         self.tempopitch = Gst.ElementFactory.make("pitch")
+        self.converter = Gst.ElementFactory.make("audioconvert")
         self.pipevolume = Gst.ElementFactory.make("volume")
-
+        
         if self.tempopitch is None:
             messagebox.showerror("Error", "You need to install the Gstreamer soundtouch elements for "
                     "this program to work. They are part of Gstreamer-plugins-bad. Consult the "
@@ -47,30 +48,25 @@ class slowPlayer():
 
         #self.resampler = Gst.ElementFactory.make("audioresample")
 
-        self.sink = Gst.ElementFactory.make("autoaudiosink")
+        # Use a custom sink if specified on the command line
+        if(customsink is not None):
+            self.sink = Gst.ElementFactory.make(customsink)
+        else:
+            self.sink = Gst.ElementFactory.make(GST_DEFAULT_SINK)
         
         self.bin.add(self.tempopitch)
+        self.bin.add(self.converter)
         self.bin.add(self.pipevolume)
         self.bin.add(self.sink)
 
-        self.tempopitch.link(self.pipevolume)
+        self.tempopitch.link(self.converter)
+        self.converter.link(self.pipevolume)
         self.pipevolume.link(self.sink)
 
         sink_pad = Gst.GhostPad.new("sink", self.tempopitch.get_static_pad("sink"))
         self.bin.add_pad(sink_pad)
 
         self.audiosrc.set_property("audio-sink", self.bin)
-        """
-
-        self.pipeline = Gst.parse_launch("filesrc ! decodebin ! \
-                                         audioconvert ! pitch ! \
-                                         audioconvert ! audioresample ! \
-                                         volume ! autoaudiosink")
-        
-        self.audiosrc = Gst.Bin.get_by_name(self.pipeline, "filesrc0")
-        self.tempopitch = Gst.Bin.get_by_name(self.pipeline, "pitch0")
-        self.pipevolume = Gst.Bin.get_by_name(self.pipeline, "volume0")
-        """
 
         self.bus = self.pipeline.get_bus()
 
@@ -117,23 +113,6 @@ class slowPlayer():
     def update_position(self):
         return(self.query_duration(), self.query_position())
 
-        """
-        retval, duration = self.pipeline.query_duration(TIME_FORMAT)
-        #print(f"Retval: {retval} - Duration: {duration}")
-        if(retval):
-            self.duration = self.song_time(duration)
-            #self.duration = duration / 1000000000
-
-        retval, position = self.pipeline.query_position(TIME_FORMAT)
-        #print(f"Position: {position} - Duration: {duration} - Duration (song_time): {self.duration} ")
-        if(retval):
-            #self.position = position / 1000000000
-            self.position = self.song_time(position)
-            #print(f"Position: {self.position} - Duration: {self.duration} ")
-            return(position)
-        return(None)
-        """
-
     def seek_relative(self, newPos):
         duration, position = self.update_position()
         newPos = position + self.pipeline_time(newPos)
@@ -178,27 +157,28 @@ class slowPlayer():
         self.tempopitch.set_property("tempo", speed)
 
     def set_pitch(self, pitch):
-        self.tempopitch.set_property("pitch", (2**(pitch/12.0)))
+        self.tempopitch.set_property("pitch", (2 ** (pitch / 12.0)))
 
     def set_volume(self, volume):
         self.pipevolume.set_property("volume", volume)
 
+    # Convert from song position to pipeline time
     def pipeline_time(self, t):
-        """convert from song position to pipeline time"""
         if(t):
-            return t/self.get_speed()*1000000000
+            return(t / self.get_speed() * NANOSEC)
         else:
             return(None)
 
+    # Convert from pipetime time to song position
     def song_time(self, t):
-        """convert from pipetime time to song position"""
         if(t):
-            return t*self.get_speed()/1000000000
+            return(t * self.get_speed() / NANOSEC)
         else:
             return(None)
 
     def MediaLoad(self, mediafile):
         self.pipeline.set_state(Gst.State.NULL)
+
         if(str(mediafile).startswith('/')):
             mediafile = "file://" + mediafile
         self.audiosrc.set_property("uri", mediafile)
@@ -210,7 +190,7 @@ class slowPlayer():
         return
 
     def fileSave(self, src, dest, callback = None):
-        print(f"Src: {src} - Dest: {dest}")
+        #print(f"Src: {src} - Dest: {dest}")
 
         if(str(dest).endswith("wav")):
             encoder = WAV_ENCODER
