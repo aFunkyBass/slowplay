@@ -18,13 +18,13 @@ You can import the most common audio files format (mp3, wav, flac, aif...). You 
 
 ### Developement
 
-This software is my very first attempt to write "serious" Python code, so it may not look strictly pythonic to the purist, I apologize for that. I was born with C and quit my job as software developer many years ago, so not only I'm not a Python dev but I am also an obsolete dev! :)
+This software is my very first attempt to write "serious" Python code, so it may not look strictly pythonic to the purists, I apologize for that. I was born with C and quit my job as software developer many years ago, so not only I'm not a Python dev but I am also an obsolete dev! :)
 
-Having said that, Slowplay is still at its early test stage, I had not the possibility to test it on many computers, so don't expect to work on your system right out of the box. Please report problems, I can try to address the with your help.
+Having said that, Slowplay is still at its early test stage, I had not the possibility to test it on many computers, so don't expect it to work on your system right out of the box. Please report problems, I can try to address the with your help.
 
 ## Installation
 
-Please download the `slowplay[version-num].zip` from the [latest release](/releases/latest). Extract it on a folder that can be reached by your path (tipically `/opt` or `~/.local/bin`) and run the executable file `slowplay`
+Please download the `slowplay[version-num].zip` from the [latest release](https://github.com/aFunkyBass/slowplay/releases/latest). Extract it on a folder that can be reached by your path (tipically `/opt` or `~/.local/bin`) and run the executable file `slowplay`
 
 ### Requirements
 
