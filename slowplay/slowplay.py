@@ -275,7 +275,7 @@ class App(ctk.CTk):
         # Insert all the extension together as the first available filter
         filetypes.insert(0, "Supported files: " + ' '.join(["*." + x for x in filter]))
 
-        # Append the "All files: *" at the end of filetr
+        # Append the "All files: *" at the end of filter
         filetypes.append("All files: *")
 
         return(filetypes)
