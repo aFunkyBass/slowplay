@@ -1,16 +1,60 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+gst_include_plugins = [
+    # gstreamer
+    "coreelements",
+    # gstreamer-plugins-base
+    "alsa",  # Linux audio output
+    "jack",
+    "oss",
+    "oss4",
+    "audioconvert",
+    "audiomixer",
+    "audiorate",
+    "audioresample",
+    "ogg",
+    "playback",
+    "rawparse",
+    "typefindfunctions",
+    "volume",
+    "vorbis",
+    "wavenc",
+    # gstreamer-plugins-good
+    "audioparsers",
+    "auparse",
+    "autodetect",
+    "directsound", # Windows audio output
+    "flac",
+    "id3demux",
+    "lame",
+    "mpg123",
+    "osxaudio",  # macOS audio output
+    "pulseaudio",  # Linux audio output
+    "replaygain",
+    "speex",
+    "taglib",
+    "twolame",
+    "wavparse",
+    # gstreamer-plugins-bad
+    "wasapi",  # Windows audio output
+    "soundtouch",  # soundtouch plugins
+]
+
 
 a = Analysis(
     ['sp-launch.py'],
     pathex=[],
     binaries=[],
     datas=[('slowplay/resources/*', 'slowplay/resources')],
-    hiddenimports=['PIL._tkinter_finder'],
+    hiddenimports=['PIL._tkinter_finder', 'filedialpy'],
     hookspath=[],
-    hooksconfig={},
+    hooksconfig={
+        "gstreamer": {
+            "include_plugins": gst_include_plugins,
+        },
+    },
     runtime_hooks=[],
-    excludes=[],
+    excludes=['PyQt5'],
     noarchive=False,
     optimize=0,
 )

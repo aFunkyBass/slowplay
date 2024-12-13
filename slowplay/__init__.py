@@ -1,1 +1,1 @@
-from . import slowplay, player
+from . import slowplay, player, filedialogs

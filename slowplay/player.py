@@ -1,4 +1,4 @@
-from tkinter import messagebox
+from CTkMessagebox import CTkMessagebox
 import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
@@ -41,9 +41,8 @@ class slowPlayer():
         self.pipevolume = Gst.ElementFactory.make("volume")
         
         if self.tempopitch is None:
-            messagebox.showerror("Error", "You need to install the Gstreamer soundtouch elements for "
-                    "this program to work. They are part of Gstreamer-plugins-bad. Consult the "
-                    "README if you need more information.")
+            CTkMessagebox(title="Error", icon="cancel", 
+                          message="You need to install the Gstreamer soundtouch elements for this program to work.")
             raise SystemExit()
 
         #self.resampler = Gst.ElementFactory.make("audioresample")

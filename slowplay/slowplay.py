@@ -5,21 +5,20 @@
 #
 #import tkinter as tk
 import customtkinter as ctk
-from tkinter import ttk
-from tkinter import messagebox
+from CTkMessagebox import CTkMessagebox
+#from tkinter import ttk
 from tkinter import PhotoImage
 import datetime as dt
-from ttkthemes import ThemedTk
 import os
 import argparse
 from PIL import Image
 import re
-import filedialpy
 import sys, pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from player import slowPlayer
+import filedialogs
 
 INITIAL_GEOMETRY = "800x350"
 APP_TITLE = "SlowPlay"
@@ -80,7 +79,6 @@ SAVE_EXTENSIONS_FILTER = (
 SAVE_DEFAULT_EXTENSION = "mp3"
 
 class App(ctk.CTk):
-#class App(ThemedTk):
     def __init__(self, *orig_args, **orig_kwargs):
         super().__init__(className=APP_TITLE, *orig_args, **orig_kwargs)
 
@@ -94,17 +92,12 @@ class App(ctk.CTk):
 
         # Sets the app icon
         self.wm_iconphoto(False, PhotoImage(file=f"{resources_dir}/Icona-32.png"))
-
+        
         # Instanciate the GStreamer player
         self.player = slowPlayer(args.sink)
         self.player.updateInterval = UPDATE_INTERVAL
 
-        # Imposta style and theme
-        self.style = ttk.Style(self)
-        #print(self.style.theme_names())
-        if THEME_NAME in self.style.theme_names():
-            self.style.theme_use(THEME_NAME)
-
+        # set style and theme
         ctk.set_appearance_mode("dark")
 
         # Loads the reset buttons icon
@@ -266,24 +259,8 @@ class App(ctk.CTk):
     def openFile(self):
         self.setFile(self.selectFileToOpen())
 
-    # Geneate a complex list to use as a filter for open and save dialogs
-    # based on the allowed file extensions tuple
-    def makeFileTypes(self, filter):
-        # example: mp3 -> MP3 files: *.mp3
-        filetypes = [f"{str(x).upper()} files: *.{x}" for x in filter]
-        
-        # Insert all the extension together as the first available filter
-        filetypes.insert(0, "Supported files: " + ' '.join(["*." + x for x in filter]))
-
-        # Append the "All files: *" at the end of filter
-        filetypes.append("All files: *")
-
-        return(filetypes)
-
     # Open the file selection dialog
     def selectFileToOpen(self) -> str:
-        filetypes = self.makeFileTypes(OPEN_EXTENSIONS_FILTER)
-
         if(self.lastOpenDir == ""):
             self.lastOpenDir = os.path.expanduser("~")
 
@@ -291,10 +268,10 @@ class App(ctk.CTk):
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
         try:
-            filename = filedialpy.openFile(
+            filename = filedialogs.openFileDialog(
                 title='Open a file',
-                initial_dir=self.lastOpenDir,
-                filter=filetypes)
+                initialdir=self.lastOpenDir,
+                filter = OPEN_EXTENSIONS_FILTER)
         finally:
             self.bind_all('<1>', self._click_manager_)
             self.bind_all('<KeyPress>', self._hotkey_manager_)
@@ -319,7 +296,8 @@ class App(ctk.CTk):
         if(not filename or filename == ''):
             return
         elif not os.path.isfile(filename):
-            messagebox.showerror("File not found...", f"Unable to open file: {filename}")
+            CTkMessagebox(master = self, title = "Error: file not found", message=f"Unable to open file: {filename}", 
+                          icon = "cancel", font = ("", LBL_FONT_SIZE))
             return
 
         # Saves the path and name of the selected file
@@ -352,18 +330,29 @@ class App(ctk.CTk):
         # Open the file dialog
         filename = self.selectFileToSave()
 
-        if(str(filename) == '()' or str(filename) == ""):
+        if(filename is None or str(filename) == ""):
             return
 
         # Check for a valid path
         if(os.path.exists(os.path.dirname(filename)) == False):
-            messagebox.showerror("Filename error...", f"Unable to save file: {filename}")
+            CTkMessagebox(master = self, title = "Filename error...", message = f"Unable to save file: {filename}", 
+                          icon = "cancel", font=("", LBL_FONT_SIZE))
             return
 
         # Check for a valid extension and in case is not present
         # add the default one
         if(filename.endswith(SAVE_EXTENSIONS_FILTER) == False):
             filename += "." + SAVE_DEFAULT_EXTENSION
+
+        # Check once again if the file exists and ask confirmation
+        # to overwrite it
+        if(os.path.isfile(filename)):
+            res = CTkMessagebox(master = self, title = "Overwrite confirmation", 
+                                message = f"{filename}\nalready exists.\n\nDo you want to overwrite it?",
+                                icon = "warning", option_1 = "Yes", option_2="No", font = ("", LBL_FONT_SIZE),
+                                option_focus = "2")
+            if(res.get() != "Yes"):
+                return
 
         self.player.Pause()
 
@@ -388,20 +377,17 @@ class App(ctk.CTk):
 
     # Open the save file dialog
     def selectFileToSave(self) -> str:
-        filetypes = self.makeFileTypes(SAVE_EXTENSIONS_FILTER)
-        
         if(self.lastSaveDir == ""):
             self.lastSaveDir = os.path.expanduser("~")
 
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
         try:
-            filename = filedialpy.saveFile(
+            filename = filedialogs.saveFileDialog(
                 title='Save as..',
-                confirm_overwrite=True,
-                initial_file=self.mediaFileName,
-                initial_dir=self.lastSaveDir,
-                filter=filetypes)
+                initialfile = self.mediaFileName,
+                initialdir = self.lastSaveDir,
+                filter = SAVE_EXTENSIONS_FILTER)
         finally:
             self.bind_all('<1>', self._click_manager_)
             self.bind_all('<KeyPress>', self._hotkey_manager_)
@@ -693,15 +679,19 @@ class App(ctk.CTk):
                 self.varSpeed.set(val)
 
     def _hotkey_manager_(self, event):
-        if(event.widget.winfo_class() != 'Entry'):
-            app.parseHotkey(event)
+        try:
+            if(event.widget.winfo_class() != 'Entry'):
+                app.parseHotkey(event)
+        except:
+            pass
 
         #print("Key: ", key, " - State: ", state)
         #pass
 
     def _click_manager_(self, event):
         widget = event.widget
-        widget.focus_set()
+        if(hasattr(widget, "focus")):
+            widget.focus_set()
 
         #print("Widget: ", widget.winfo_class())
         #pass
