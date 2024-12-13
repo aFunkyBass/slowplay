@@ -24,7 +24,7 @@ Having said that, Slowplay is still at its early test stage, I had not the possi
 
 ## Installation
 
-Please download the `slowplay[version-num].zip` from the [latest release](https://github.com/aFunkyBass/slowplay/releases/latest). Extract it on a folder that can be reached by your path (tipically `/opt` or `~/.local/bin`) and run the executable file `slowplay`
+Please download the `slowplay[version-num].tar.gz` from the [latest release](https://github.com/aFunkyBass/slowplay/releases/latest). Extract it on a folder that can be reached by your path (tipically `/opt` or `~/.local/bin`) and run the executable file `slowplay`
 
 ### Requirements
 
