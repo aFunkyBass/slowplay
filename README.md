@@ -16,13 +16,13 @@ Thank you Jonas for your work.
 
 **SlowPlay** can speed down/up songs or change their pitch independently "on the fly". It is possible export modified songs by using the "Save as..." button.
 
-You can import the most common audio files format (mp3, wav, flac, aif...). You can save your files either in mp3 or wav format, based on the extension of file to me be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as variable bitrate quality=4. Volume setting and metadata are ignored in the export operation.
+You can import the most common audio files format (mp3, wav, flac, aif...). You can save your files either in mp3 or wav format, based on the extension of file to me saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as variable bitrate quality=4. Volume setting and metadata are ignored in the export operation.
 
 ### Developement
 
 This software is my very first attempt to write "serious" Python code, so it may not look strictly pythonic to the purists, I apologize for that. I was born with C and quit my job as software developer many years ago, so not only I'm not a Python dev but I am also an obsolete dev! :)
 
-Having said that, Slowplay is still at its early test stage, I had not the possibility to test it on many computers, so don't expect it to work on your system right out of the box. Please report problems, I can try to address the with your help.
+Having said that, Slowplay is still at its early test stage, I had not the possibility to test it on many computers, so don't expect it to work on your system right out of the box. Please report problems, I can try to address them with your help.
 
 ## Installation
 
