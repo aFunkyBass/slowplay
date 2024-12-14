@@ -2,6 +2,8 @@
 
 **SlowPlay** is a simple audio player with speed/pitch change capabilities, based on GStreamer. It is meant to help music students/teachers transcribe music and play along with it.
 
+![Screenshot](slowplay/resources/Screenshot.png)
+
 ## Inspiration
 
 This software is heavily inspired, although not forked, by [Play It Slowly](https://github.com/jwagner/playitslowly) by Jonas Wagner.
