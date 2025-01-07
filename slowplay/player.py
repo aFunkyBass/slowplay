@@ -42,7 +42,8 @@ class slowPlayer():
         
         if self.tempopitch is None:
             CTkMessagebox(title="Error", icon="cancel", 
-                          message="You need to install the Gstreamer soundtouch elements for this program to work.")
+                          message="You need to install the Gstreamer soundtouch \
+                                    elements for this program to work.")
             raise SystemExit()
 
         #self.resampler = Gst.ElementFactory.make("audioresample")
@@ -78,6 +79,9 @@ class slowPlayer():
         self.cents = 0
         self.volume = 0
         self.updateInterval = 0
+        self.startPoint = 0
+        self.endPoint = 0
+        self.loopEnabled = False
 
     def handle_message(self):
         message = self.bus.timed_pop_filtered(self.updateInterval * Gst.MSECOND,
@@ -240,7 +244,7 @@ class slowPlayer():
         save_pipeline = None
     
     def Rewind(self):
-        self.seek_absolute(0)
+        self.seek_absolute(self.startPoint)
 
     def Play(self):
         self.pipeline.set_state(Gst.State.PLAYING)

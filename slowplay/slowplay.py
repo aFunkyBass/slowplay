@@ -19,6 +19,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from player import slowPlayer
 import filedialogs
+from CTkRangeSlider import *
 
 INITIAL_GEOMETRY = "800x350"
 APP_TITLE = "SlowPlay"
