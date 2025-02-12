@@ -6,6 +6,7 @@
 #import tkinter as tk
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
+from tkinterdnd2 import TkinterDnD, DND_ALL
 #from tkinter import ttk
 from tkinter import PhotoImage
 import datetime as dt
@@ -79,9 +80,10 @@ SAVE_EXTENSIONS_FILTER = (
 # Default save file extension
 SAVE_DEFAULT_EXTENSION = "mp3"
 
-class App(ctk.CTk):
+class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def __init__(self, *orig_args, **orig_kwargs):
         super().__init__(className=APP_TITLE, *orig_args, **orig_kwargs)
+        self.TkdndVersion = TkinterDnD._require(self)
 
         # Mark app directories
         working_dir = os.path.dirname(__file__)
@@ -230,6 +232,17 @@ class App(ctk.CTk):
         self.entVolume.bind('<KP_Enter>', self.checkVolume)
         self.entVolume.bind('<FocusOut>', self.checkVolume)
         self.volumeChanged(None, None, None)
+
+        """
+        self.varLoopStart = ctk.DoubleVar(self, value=0)
+        self.varLoopEnd = ctk.DoubleVar(self, value=0)
+        self.entLoopStart = ctk.CTkEntry(self.CTLFrame, width=50, justify="center")
+        self.entLoopStart.grid(row=4, column=0, padx=8, pady=8, sticky="e")
+        self.entLoopEnd = ctk.CTkEntry(self.CTLFrame, width=50, justify="center")
+        self.entLoopEnd.grid(row=4, column=2, padx=8, pady=8, sticky="w")
+        self.sldLoop = CTkRangeSlider(self.CTLFrame)
+        self.sldLoop.grid(row=4, column=1, padx=8, pady=8, sticky="ew")
+        """
 
         self.CTLFrame.columnconfigure(1, weight=1)
 
@@ -697,6 +710,10 @@ class App(ctk.CTk):
         #print("Widget: ", widget.winfo_class())
         #pass
 
+    def _drop_manager_(self, event):
+        dropped_file = event.data.replace("{","").replace("}", "")
+        print(dropped_file)
+
     def _tasks_(self):
         self.player.handle_message()
         self.songControl()
@@ -714,6 +731,8 @@ app = App()
 
 app.bind_all('<KeyPress>', app._hotkey_manager_)
 app.bind_all('<1>', app._click_manager_)
+app.drop_target_register(DND_ALL)
+app.dnd_bind("<<Drop>>", app._drop_manager_)
 
 app.after(10, app._tasks_)
 
