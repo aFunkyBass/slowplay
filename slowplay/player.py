@@ -200,18 +200,37 @@ class slowPlayer():
         else:
             encoder = MP3_ENCODER
         
-        save_pipeline = Gst.parse_launch(SAVE_PIPELINE_STRING.format(encoder))
+        save_pipeline = Gst.Pipeline.new()
+        
+        save_audiosrc = Gst.ElementFactory.make("playbin3")
+        save_pipeline.add(save_audiosrc)
+        
+        save_bin = Gst.Bin()
 
-        save_audiosrc = Gst.Bin.get_by_name(save_pipeline, "save_src")
-        save_tempopitch = Gst.Bin.get_by_name(save_pipeline, "save_pitch")
-        save_sink = Gst.Bin.get_by_name(save_pipeline, "save_sink")
+        save_tempopitch = Gst.ElementFactory.make("pitch")
+        save_audioconvert = Gst.ElementFactory.make("audioconvert")
+        save_encoder = Gst.ElementFactory.make(encoder)
+        save_sink = Gst.ElementFactory.make("filesink")
 
-        save_audiosrc.set_property("location", src)
+        save_bin.add(save_tempopitch)
+        save_bin.add(save_audioconvert)
+        save_bin.add(save_encoder)
+        save_bin.add(save_sink)
+
+        save_tempopitch.link(save_audioconvert)
+        save_audioconvert.link(save_encoder)
+        save_encoder.link(save_sink)
+
+        save_sink_pad = Gst.GhostPad.new("sink", save_tempopitch.get_static_pad("sink"))
+        save_bin.add_pad(save_sink_pad)
+        save_audiosrc.set_property("audio-sink", save_bin)
+
+        save_bus = save_pipeline.get_bus()
+
+        save_audiosrc.set_property("uri", src)
         save_tempopitch.set_property("tempo", self.tempopitch.get_property("tempo"))
         save_tempopitch.set_property("pitch", self.tempopitch.get_property("pitch"))
         save_sink.set_property("location", dest)
-
-        save_bus = save_pipeline.get_bus()
 
         save_pipeline.set_state(Gst.State.PLAYING)
 

@@ -2,6 +2,8 @@
 #
 # https://lazka.github.io/pgi-docs/#Gst-1.0/classes/Element.html
 # https://tkinterexamples.com/
+# https://developer.ridgerun.com/wiki/index.php/How_to_generate_a_GStreamer_pipeline_diagram
+# https://github.com/gkralik/python-gst-tutorial/tree/master
 #
 #import tkinter as tk
 import customtkinter as ctk
@@ -303,6 +305,16 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.songTime.set(dt.timedelta(seconds = 0))
         self.scale.set(0)
 
+    def filename2Uri(self, fname):
+        # Compose a valid uri
+        if(str(fname).startswith('/')):
+            Uri = "file://" + fname
+        else:
+            Uri = fname
+        
+        return(Uri)
+
+
     # Ask the player to load the selected file
     # and prepares it to play
     def setFile(self, filename):
@@ -321,10 +333,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.lastOpenDir = self.mediaPath
 
         # Compose a valid uri
-        if(str(self.media).startswith('/')):
-            self.mediaUri = "file://" + self.media
-        else:
-            self.mediaUri = self.media
+        self.mediaUri = self.filename2Uri(self.media)
 
         # Actually load the media
         self.player.MediaLoad(self.mediaUri)
@@ -383,7 +392,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # the progress bar afterwards
         self.statusBarMessage(F"Saving file: {filename}...", static = True)
         try:
-            self.player.fileSave(self.media, filename, self.saveProgress)
+            self.player.fileSave(self.mediaUri, filename, self.saveProgress)
         finally:
             self.save_prg.destroy()
             self.save_prg_var.__del__()
