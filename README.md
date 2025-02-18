@@ -30,7 +30,7 @@ Please download the `slowplay[version-num].tar.gz` from the [latest release](htt
 
 ### Requirements
 
-For SlowPlay to work you need to have GStreamer along with Soundtouch plugins. While GStreamer is probably installed by default on your Linux box, you probably have to manually install the gstreamer-plugins-bad package. Please refer to your Linux distribution for the installation.
+Slowplay distributable is compiled using pyinstaller, so it should be running out of the box on most modern systems as all the libraries are built-in. Please report your issues on this repository.
 
 ## Shortcuts
 

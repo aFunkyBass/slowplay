@@ -71,8 +71,8 @@
  [],
  False,
  False,
- 1739497227,
+ 1739885430,
  [('run',
    '/home/guido/.local/lib/python3.8/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run',
    'EXECUTABLE')],
- '/lib/x86_64-linux-gnu/libpython3.8.so')
+ '/lib/x86_64-linux-gnu/libpython3.8.so.1.0')
