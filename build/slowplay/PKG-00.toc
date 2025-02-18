@@ -63,7 +63,7 @@
   ('sp-launch',
    '/media/Dati/GUIDO/Documenti/Progetti/slowplay/sp-launch.py',
    'PYSOURCE')],
- 'libpython3.8.so.1.0',
+ 'libpython3.8.so',
  True,
  False,
  False,

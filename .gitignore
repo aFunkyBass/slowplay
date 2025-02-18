@@ -1,3 +1,4 @@
 slowplay/resources/Working/
+slowplay/__pycache__/
 build/
 dist/
