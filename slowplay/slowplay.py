@@ -8,7 +8,7 @@
 #import tkinter as tk
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
-from tkinterdnd2 import TkinterDnD, DND_ALL
+#from tkinterdnd2 import TkinterDnD, DND_ALL
 #from tkinter import ttk
 from tkinter import PhotoImage
 import datetime as dt
@@ -22,7 +22,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from player import slowPlayer
 import filedialogs
-from CTkRangeSlider import *
+#from CTkRangeSlider import *
 
 INITIAL_GEOMETRY = "800x350"
 APP_TITLE = "SlowPlay"
@@ -82,10 +82,11 @@ SAVE_EXTENSIONS_FILTER = (
 # Default save file extension
 SAVE_DEFAULT_EXTENSION = "mp3"
 
-class App(ctk.CTk, TkinterDnD.DnDWrapper):
+class App(ctk.CTk):
+#class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def __init__(self, *orig_args, **orig_kwargs):
         super().__init__(className=APP_TITLE, *orig_args, **orig_kwargs)
-        self.TkdndVersion = TkinterDnD._require(self)
+        #self.TkdndVersion = TkinterDnD._require(self)
 
         # Mark app directories
         working_dir = os.path.dirname(__file__)
@@ -410,7 +411,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 title='Save as..',
                 initialfile = self.mediaFileName,
                 initialdir = self.lastSaveDir,
-                filter = SAVE_EXTENSIONS_FILTER)
+                filter = SAVE_EXTENSIONS_FILTER,
+                overwrite = False)
         finally:
             self.bind_all('<1>', self._click_manager_)
             self.bind_all('<KeyPress>', self._hotkey_manager_)
@@ -719,9 +721,9 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         #print("Widget: ", widget.winfo_class())
         #pass
 
-    def _drop_manager_(self, event):
-        dropped_file = event.data.replace("{","").replace("}", "")
-        print(dropped_file)
+    #def _drop_manager_(self, event):
+    #    dropped_file = event.data.replace("{","").replace("}", "")
+    #    print(dropped_file)
 
     def _tasks_(self):
         self.player.handle_message()
@@ -740,8 +742,8 @@ app = App()
 
 app.bind_all('<KeyPress>', app._hotkey_manager_)
 app.bind_all('<1>', app._click_manager_)
-app.drop_target_register(DND_ALL)
-app.dnd_bind("<<Drop>>", app._drop_manager_)
+#app.drop_target_register(DND_ALL)
+#app.dnd_bind("<<Drop>>", app._drop_manager_)
 
 app.after(10, app._tasks_)
 

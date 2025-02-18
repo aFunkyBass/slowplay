@@ -41,7 +41,7 @@ def openFileDialog(title = None, filter = None, initialdir = None, initialfile =
 # Start a file save as dialog box
 # if zenity is installed calls it it falls back on 
 # Tkinter otherwise
-def saveFileDialog(title = None, filter = None, initialdir = None, initialfile = None):
+def saveFileDialog(title = None, filter = None, initialdir = None, initialfile = None, overwrite = False):
   save = True
   if(__check_zenity__()):
     return(__z_dialog__(**locals()))
@@ -49,7 +49,7 @@ def saveFileDialog(title = None, filter = None, initialdir = None, initialfile =
     return(__tk_dialog__(**locals()))
 
 # Pops up the zenity file selection
-def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = None, save = False):
+def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = None, save = False, overwrite = False):
   # prepares the command array
   cmd = [ZEN_CMD, "--file-selection"]
 
@@ -71,7 +71,9 @@ def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = N
   # if save is true it open a save as dialgo box instead
   if(save):
     cmd.append("--save")
-    cmd.append("--confirm-overwrite")
+    # enables the overwrite warning
+    if(overwrite):
+      cmd.append("--confirm-overwrite")
 
   # creates a complex admitted extensions array starting from a simple tuple
   if(filter is not None):
@@ -101,7 +103,7 @@ def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = N
     return(None)
 
 # Pops up the TKInter file selection
-def __tk_dialog__(title = None, filter = None, initialdir = None, initialfile = None, save = False):
+def __tk_dialog__(title = None, filter = None, initialdir = None, initialfile = None, save = False, overwrite = False):
   from tkinter import Tk
   import tkinter.filedialog
 
@@ -126,7 +128,7 @@ def __tk_dialog__(title = None, filter = None, initialdir = None, initialfile = 
   if(save):
     f = tkinter.filedialog.asksaveasfilename(parent = root, initialdir = initialdir,
                                              initialfile = initialfile, title = title,
-                                             filetypes =  filetypes, confirmoverwrite = True)
+                                             filetypes =  filetypes, confirmoverwrite = overwrite)
   else:
     f = tkinter.filedialog.askopenfilename(parent = root, initialdir = initialdir,
                                            initialfile = initialfile, title = title, 
