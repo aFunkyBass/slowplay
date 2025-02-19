@@ -8,7 +8,7 @@
 #import tkinter as tk
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
-#from tkinterdnd2 import TkinterDnD, DND_ALL
+from tkinterdnd2 import *
 #from tkinter import ttk
 from tkinter import PhotoImage
 import datetime as dt
@@ -82,11 +82,10 @@ SAVE_EXTENSIONS_FILTER = (
 # Default save file extension
 SAVE_DEFAULT_EXTENSION = "mp3"
 
-class App(ctk.CTk):
-#class App(ctk.CTk, TkinterDnD.DnDWrapper):
+class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def __init__(self, *orig_args, **orig_kwargs):
         super().__init__(className=APP_TITLE, *orig_args, **orig_kwargs)
-        #self.TkdndVersion = TkinterDnD._require(self)
+        self.TkdndVersion = TkinterDnD._require(self)
 
         # Mark app directories
         working_dir = os.path.dirname(__file__)
@@ -721,9 +720,24 @@ class App(ctk.CTk):
         #print("Widget: ", widget.winfo_class())
         #pass
 
-    #def _drop_manager_(self, event):
-    #    dropped_file = event.data.replace("{","").replace("}", "")
-    #    print(dropped_file)
+    def _drop_manager_(self, event):
+        dropped_file = str(self.tk.splitlist(event.data)[0])
+        self.setFile(dropped_file)
+
+    # Test the dropped file
+    def _drop_check_(self, event):
+        # splits the files
+        fList = self.tk.splitlist(event.data)
+
+        # Rejects multiple files
+        if(len(fList) > 1 ):
+            return(REFUSE_DROP)
+
+        # Test for a valid file extension
+        _, fExt = os.path.splitext(str(fList[0]))
+        if (fExt.replace(".", "") not in OPEN_EXTENSIONS_FILTER):
+            return(REFUSE_DROP)
+
 
     def _tasks_(self):
         self.player.handle_message()
@@ -742,8 +756,9 @@ app = App()
 
 app.bind_all('<KeyPress>', app._hotkey_manager_)
 app.bind_all('<1>', app._click_manager_)
-#app.drop_target_register(DND_ALL)
-#app.dnd_bind("<<Drop>>", app._drop_manager_)
+app.drop_target_register(DND_FILES)
+app.dnd_bind("<<Drop>>", app._drop_manager_)
+app.dnd_bind("<<DropEnter>>", app._drop_check_)
 
 app.after(10, app._tasks_)
 
