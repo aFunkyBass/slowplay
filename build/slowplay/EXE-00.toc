@@ -50,6 +50,9 @@
   ('pyi_rth_cryptography_openssl',
    '/home/guido/.local/lib/python3.8/site-packages/_pyinstaller_hooks_contrib/rthooks/pyi_rth_cryptography_openssl.py',
    'PYSOURCE'),
+  ('pyi_rth_pyqt5',
+   '/home/guido/.local/lib/python3.8/site-packages/PyInstaller/hooks/rthooks/pyi_rth_pyqt5.py',
+   'PYSOURCE'),
   ('pyi_rth_glib',
    '/home/guido/.local/lib/python3.8/site-packages/PyInstaller/hooks/rthooks/pyi_rth_glib.py',
    'PYSOURCE'),
@@ -71,8 +74,8 @@
  [],
  False,
  False,
- 1739885430,
+ 1740071851,
  [('run',
    '/home/guido/.local/lib/python3.8/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run',
    'EXECUTABLE')],
- '/lib/x86_64-linux-gnu/libpython3.8.so.1.0')
+ '/lib/x86_64-linux-gnu/libpython3.8.so')

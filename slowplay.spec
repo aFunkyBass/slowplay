@@ -1,4 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
+from PyInstaller.utils.hooks import collect_all
+
+datas = [('slowplay/resources/*', 'slowplay/resources')]
+binaries = []
+hiddenimports = ['PIL._tkinter_finder']
+tmp_ret = collect_all('tkinterdnd2')
+datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 
 gst_include_plugins = [
     # gstreamer
@@ -20,6 +27,7 @@ gst_include_plugins = [
     "vorbis",
     "wavenc",
     # gstreamer-plugins-good
+    "apedemux",
     "audioparsers",
     "auparse",
     "autodetect",
@@ -40,21 +48,20 @@ gst_include_plugins = [
     "soundtouch",  # soundtouch plugins
 ]
 
-
 a = Analysis(
     ['sp-launch.py'],
     pathex=[],
-    binaries=[],
-    datas=[('slowplay/resources/*', 'slowplay/resources')],
-    hiddenimports=['PIL._tkinter_finder', 'filedialpy'],
-    hookspath=[],
+    binaries=binaries,
+    datas=datas,
+    hiddenimports=hiddenimports,
+    hookspath=['.'],
     hooksconfig={
         "gstreamer": {
             "include_plugins": gst_include_plugins,
         },
     },
     runtime_hooks=[],
-    excludes=['PyQt5'],
+    excludes=[],
     noarchive=False,
     optimize=0,
 )
@@ -83,6 +90,6 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=True,
-    upx_exclude=[],
-    name='slowplay',
+        upx_exclude=[],
+        name='slowplay',
 )

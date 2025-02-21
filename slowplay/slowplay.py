@@ -46,8 +46,8 @@ DEFAULT_CENTS = 0           # Default detune in cents (0 = no detune)
 MIN_PITCH_CENTS = -50       # Maximum detune down (cents)
 MAX_PITCH_CENTS = 50        # Maximum detune up (cents)
 
-DEFAULT_VOLUME = 100 
-MIN_VOLUME = 0 
+DEFAULT_VOLUME = 100
+MIN_VOLUME = 0
 MAX_VOLUME = 100
 
 STEPS_SEC_MOVE_1 = 5        # Seconds to move using the num keypad +/- min
@@ -55,7 +55,7 @@ STEPS_SEC_MOVE_2 = 10       # Seconds to move using the num keypad +/- med
 STEPS_SEC_MOVE_3 = 15       # Seconds to move using the num keypad +/- max
 
 # Song position update interval in milliseconds
-UPDATE_INTERVAL = 20        
+UPDATE_INTERVAL = 20
 
 # Status bar message disappear time
 STATUS_BAR_TIMEOUT = 3000
@@ -97,7 +97,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # Sets the app icon
         self.wm_iconphoto(False, PhotoImage(file=f"{resources_dir}/Icona-32.png"))
-        
+
         # Instanciate the GStreamer player
         self.player = slowPlayer(args.sink)
         self.player.updateInterval = UPDATE_INTERVAL
@@ -111,7 +111,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # tkInter auto-variables
         self.songTime = ctk.StringVar(self)                 # Holds the song time clock
-        self.songTime.set(dt.timedelta(seconds = 0))        
+        self.songTime.set(dt.timedelta(seconds = 0))
         self.songProgress = ctk.DoubleVar(self, value=0)    # Holds the value of progress bar
         self.songProgress.set(0)
 
@@ -120,10 +120,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.mediaUri = ""                  # Media URI
         self.mediaFileName = ""             # Media simple filename
         self.mediaPath = ""                 # Media absolute path
-        
+
         self.bValuesChanging = False        # Flag turned when the user is changing some values
                                             # used to stop automatic updates
-        
+
         self.lastOpenDir = ""               # Last used dir in opening file
         self.lastSaveDir = ""               # Last used dir in saving file
         self.afterCancelID = ""             # ID of the last scheduled after action
@@ -291,7 +291,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         finally:
             self.bind_all('<1>', self._click_manager_)
             self.bind_all('<KeyPress>', self._hotkey_manager_)
-        
+
         return(filename)
 
     # Reset all values
@@ -311,7 +311,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             Uri = "file://" + fname
         else:
             Uri = fname
-        
+
         return(Uri)
 
 
@@ -322,7 +322,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(not filename or filename == ''):
             return
         elif not os.path.isfile(filename):
-            CTkMessagebox(master = self, title = "Error: file not found", message=f"Unable to open file: {filename}", 
+            CTkMessagebox(master = self, title = "Error: file not found", message=f"Unable to open file: {filename}",
                           icon = "cancel", font = ("", LBL_FONT_SIZE))
             return
 
@@ -358,7 +358,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # Check for a valid path
         if(os.path.exists(os.path.dirname(filename)) == False):
-            CTkMessagebox(master = self, title = "Filename error...", message = f"Unable to save file: {filename}", 
+            CTkMessagebox(master = self, title = "Filename error...", message = f"Unable to save file: {filename}",
                           icon = "cancel", font=("", LBL_FONT_SIZE))
             return
 
@@ -370,7 +370,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Check once again if the file exists and ask confirmation
         # to overwrite it
         if(os.path.isfile(filename)):
-            res = CTkMessagebox(master = self, title = "Overwrite confirmation", 
+            res = CTkMessagebox(master = self, title = "Overwrite confirmation",
                                 message = f"{filename}\nalready exists.\n\nDo you want to overwrite it?",
                                 icon = "warning", option_1 = "Yes", option_2="No", font = ("", LBL_FONT_SIZE),
                                 option_focus = "2")
@@ -388,7 +388,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Saves the path for future saves
         self.lastSaveDir = os.path.dirname(filename)
 
-        # Actually asks the player to save the file and destroy 
+        # Actually asks the player to save the file and destroy
         # the progress bar afterwards
         self.statusBarMessage(F"Saving file: {filename}...", static = True)
         try:
@@ -427,7 +427,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(self.player.canPlay == False):
             self.statusBarMessage("Please open a file...")
             return
-        
+
         if self.player.isPlaying == False:
             self.player.Play()
         else:
@@ -486,7 +486,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     def validate_neg_int(self, S, P):
         #print("d=", d, " i=", i, " P=",P," s=", s," S=", S, " v=",v," V=", V, " W=",W)
-        
+
         regex = re.compile("^(-)?[0-9]*$")
         #print(regex.match(P))
         if(regex.match(P) == None):
@@ -622,14 +622,14 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 return
 
     # Scrive un messaggio di info sulla barra di stato e lo
-    # cancella dopo il timeout. Se il messaggio è statico 
+    # cancella dopo il timeout. Se il messaggio è statico
     # non imposta il timeout
     def statusBarMessage(self, message, static = False):
         if(message is None):
             return
 
         self.statusBarUpdate(message)
-       
+
         if(static == False):
             # Imposta il timeout e resetta la barra di stato.
             self.afterCancelID = self.after(STATUS_BAR_TIMEOUT, self.statusBarUpdate)
@@ -720,6 +720,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         #print("Widget: ", widget.winfo_class())
         #pass
 
+    # Handles drop event
     def _drop_manager_(self, event):
         dropped_file = str(self.tk.splitlist(event.data)[0])
         self.setFile(dropped_file)
