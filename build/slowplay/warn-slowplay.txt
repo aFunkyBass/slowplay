@@ -14,12 +14,12 @@ Types if import:
 IMPORTANT: Do NOT post this list to the issue-tracker. Use it as a basis for
             tracking down the missing module yourself. Thanks!
 
-missing module named org - imported by copy (optional)
+missing module named 'org.python' - imported by copy (optional), xml.sax (delayed, conditional)
 missing module named urllib.urlencode - imported by urllib (optional), lazr.restfulclient.resource (optional), wadllib.application (optional), lazr.restfulclient._browser (optional), oauthlib.common (optional), oauthlib.oauth1.rfc5849.endpoints.authorization (optional), launchpadlib.credentials (optional)
 missing module named urllib.quote - imported by urllib (optional), apport.packaging_impl (optional), oauthlib.common (optional)
 missing module named urllib.unquote - imported by urllib (conditional), apport.report (conditional), apport.packaging_impl (optional), lazr.restfulclient.resource (optional), oauthlib.common (optional)
 missing module named urllib.urlopen - imported by urllib (conditional), apport.report (conditional), apport.packaging_impl (optional)
-missing module named 'org.python' - imported by pickle (optional), xml.sax (delayed, conditional)
+missing module named org - imported by pickle (optional)
 missing module named winreg - imported by importlib._bootstrap_external (conditional), platform (delayed, optional), darkdetect._windows_detect (top-level), mimetypes (optional), urllib.request (delayed, conditional, optional), distutils.msvc9compiler (top-level), requests.utils (delayed, conditional, optional), distutils._msvccompiler (top-level), pkg_resources._vendor.platformdirs.windows (delayed, optional), platformdirs.windows (delayed, optional), setuptools.msvc (conditional), setuptools._distutils._msvccompiler (top-level), setuptools._distutils.msvc9compiler (top-level), setuptools._distutils.msvccompiler (optional)
 missing module named nt - imported by os (delayed, conditional, optional), ntpath (optional), shutil (conditional), importlib._bootstrap_external (conditional), pathlib (conditional), ctypes (delayed, conditional)
 missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional), zipimport (top-level)

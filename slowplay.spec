@@ -35,6 +35,7 @@ gst_include_plugins = [
     "flac",
     "id3demux",
     "lame",
+    "apetag",
     "mpg123",
     "osxaudio",  # macOS audio output
     "pulseaudio",  # Linux audio output

@@ -74,7 +74,7 @@
  [],
  False,
  False,
- 1740071851,
+ 1740135509,
  [('run',
    '/home/guido/.local/lib/python3.8/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run',
    'EXECUTABLE')],
