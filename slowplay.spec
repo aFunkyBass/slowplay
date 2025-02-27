@@ -2,6 +2,7 @@
 from PyInstaller.utils.hooks import collect_all
 
 datas = [('slowplay/resources/*', 'slowplay/resources')]
+datas += [("/home/guido/.local/lib/python3.8/site-packages/tkinterdnd2/tkdnd/linux-x64/*", "tkinterdnd2/tkdnd/linux-x64")]
 binaries = []
 hiddenimports = ['PIL._tkinter_finder']
 tmp_ret = collect_all('tkinterdnd2')
@@ -62,7 +63,7 @@ a = Analysis(
         },
     },
     runtime_hooks=[],
-    excludes=[],
+    excludes=['PyQt5'],
     noarchive=False,
     optimize=0,
 )

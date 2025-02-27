@@ -1,6 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
+datas = [('slowplay/resources/*', 'slowplay/resources')]
+datas += [("/home/guido/.local/lib/python3.8/site-packages/tkinterdnd2/tkdnd/linux-x64/*", "tkinterdnd2/tkdnd/linux-x64")]
+binaries = []
+hiddenimports = ['PIL._tkinter_finder']
+tmp_ret = collect_all('tkinterdnd2')
+datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
+
 gst_include_plugins = [
     # gstreamer
     "coreelements",
@@ -29,6 +36,7 @@ gst_include_plugins = [
     "flac",
     "id3demux",
     "lame",
+    "apetag",
     "mpg123",
     "osxaudio",  # macOS audio output
     "pulseaudio",  # Linux audio output
@@ -42,20 +50,11 @@ gst_include_plugins = [
     "soundtouch",  # soundtouch plugins
 ]
 
-datas = [('slowplay/resources/*', 'slowplay/resources')]
-binaries = []
-hiddenimports = ['PIL._tkinter_finder', 'filedialpy']
-tmp_ret = collect_all('tkinterdnd2')
-datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
-
 a = Analysis(
     ['sp-launch.py'],
     pathex=[],
-    #binaries=[],
     binaries=binaries,
-    #datas=[('slowplay/resources/*', 'slowplay/resources')],
     datas=datas,
-    #hiddenimports=['PIL._tkinter_finder', 'filedialpy'],
     hiddenimports=hiddenimports,
     hookspath=['.'],
     hooksconfig={
@@ -93,6 +92,6 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=True,
-    upx_exclude=[],
-    name='slowplay',
+        upx_exclude=[],
+        name='slowplay',
 )
