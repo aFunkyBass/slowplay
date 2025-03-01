@@ -1,7 +1,7 @@
 from CTkMessagebox import CTkMessagebox
 import gi
 gi.require_version('Gst', '1.0')
-from gi.repository import Gst
+from gi.repository import Gst # type: ignore
 
 Gst.init(None)
 
@@ -11,12 +11,6 @@ PERCENT_FORMAT = Gst.Format(Gst.Format.PERCENT)
 NANOSEC = 1000000000
 
 GST_DEFAULT_SINK = "autoaudiosink"
-
-SAVE_PIPELINE_STRING = "filesrc name=""save_src"" ! decodebin3 ! \
-audioconvert ! pitch name=""save_pitch"" ! \
-audioconvert ! \
-""audio/x-raw, format=(string)S16LE, rate=(int)44100, channels=(int)2"" ! \
-{0} ! filesink name=""save_sink"""
 
 WAV_ENCODER = "wavenc"
 MP3_ENCODER = "lamemp3enc"

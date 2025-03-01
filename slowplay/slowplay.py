@@ -22,6 +22,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from player import slowPlayer
 import filedialogs
+import appsettings
+
 #from CTkRangeSlider import *
 
 INITIAL_GEOMETRY = "800x350"
@@ -87,6 +89,9 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         super().__init__(className=APP_TITLE, *orig_args, **orig_kwargs)
         self.TkdndVersion = TkinterDnD._require(self)
 
+        # Load app settings
+        self.settings = appsettings.AppSettings()
+
         # Mark app directories
         working_dir = os.path.dirname(__file__)
         resources_dir = "".join([working_dir, "/resources"])
@@ -124,8 +129,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.bValuesChanging = False        # Flag turned when the user is changing some values
                                             # used to stop automatic updates
 
-        self.lastOpenDir = ""               # Last used dir in opening file
-        self.lastSaveDir = ""               # Last used dir in saving file
         self.afterCancelID = ""             # ID of the last scheduled after action
 
         # Build the 3 main frames principali: Left (shrinkable), Right (buttons)
@@ -277,16 +280,13 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     # Open the file selection dialog
     def selectFileToOpen(self) -> str:
-        if(self.lastOpenDir == ""):
-            self.lastOpenDir = os.path.expanduser("~")
-
         # Temporarily disables all the keypress and mouse binding
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
         try:
             filename = filedialogs.openFileDialog(
-                title='Open a file',
-                initialdir=self.lastOpenDir,
+                title = 'Open a file',
+                initialdir = self.settings.getVal("App", "LastOpenDir", os.path.expanduser("~")),
                 filter = OPEN_EXTENSIONS_FILTER)
         finally:
             self.bind_all('<1>', self._click_manager_)
@@ -330,7 +330,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.media = os.path.realpath(filename)
         self.mediaFileName = os.path.basename(self.media)
         self.mediaPath = os.path.dirname(self.media)
-        self.lastOpenDir = self.mediaPath
+        self.settings.setVal("App", "LastOpenDir", self.mediaPath)
 
         # Compose a valid uri
         self.mediaUri = self.filename2Uri(self.media)
@@ -338,11 +338,58 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Actually load the media
         self.player.MediaLoad(self.mediaUri)
         self.player.update_position()
-        self.resetValues()
 
         # Updates window title and status bar
         self.statusBarMessage(self.mediaFileName, static = True)
         self.title(f"{APP_TITLE} - {self.mediaFileName}")
+
+        # if the file was recently open, it loads its settings
+        # otherwise saves it into the list
+        filePlabackOptions = self.settings.getRecentFile(self.media)
+
+        if(filePlabackOptions is not None and isinstance(filePlabackOptions, dict)):
+            self.settings.bUpdateForbidden = True
+            self.stopPlaying()
+            try:
+                if(filePlabackOptions["Speed"] >= MIN_SPEED_PERCENT 
+                            and filePlabackOptions["Speed"] <= MAX_SPEED_PERCENT):
+                    self.varSpeed.set(filePlabackOptions["Speed"])
+
+                if(filePlabackOptions["Semitones"] >= MIN_PITCH_SEMITONES
+                            and filePlabackOptions["Semitones"] <= MAX_PITCH_SEMITONES):
+                    self.varPitchST.set(filePlabackOptions["Semitones"])
+
+                if(filePlabackOptions["Cents"] >= MIN_PITCH_CENTS
+                            and filePlabackOptions["Cents"] <= MAX_PITCH_CENTS):
+                    self.varPitchCents.set(filePlabackOptions["Cents"])
+
+                if(filePlabackOptions["Volume"] >= MIN_VOLUME
+                            and filePlabackOptions["Volume"] <= MAX_VOLUME):
+                    self.varVolume.set(filePlabackOptions["Volume"])
+            finally:
+                self.settings.bUpdateForbidden = False
+        else:
+            self.setRecentFilePBOptions(self.media)
+            self.resetValues()
+
+    # Saves the playback options to the recent files list
+    def setRecentFilePBOptions(self, filename):
+        if(filename == ""):
+            return(True)
+
+        sp = self.varSpeed.get()
+        st = self.varPitchST.get()
+        ce = self.varPitchCents.get()
+        vl = self.varVolume.get()
+
+        filePlabackOptions = {
+                "Speed": sp,
+                "Semitones": st,
+                "Cents": ce,
+                "Volume": vl
+            }
+
+        self.settings.addRecentFile(filename, filePlabackOptions)
 
     # Saves an audio file with the pitch and tempo settings
     def saveAs(self):
@@ -386,7 +433,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.update_idletasks()
 
         # Saves the path for future saves
-        self.lastSaveDir = os.path.dirname(filename)
+        self.settings.setVal("App", "LastSaveDir", os.path.dirname(filename))
 
         # Actually asks the player to save the file and destroy
         # the progress bar afterwards
@@ -400,16 +447,14 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     # Open the save file dialog
     def selectFileToSave(self) -> str:
-        if(self.lastSaveDir == ""):
-            self.lastSaveDir = os.path.expanduser("~")
-
+        # Temporarily disables all the keypress and mouse binding
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
         try:
             filename = filedialogs.saveFileDialog(
                 title='Save as..',
                 initialfile = self.mediaFileName,
-                initialdir = self.lastSaveDir,
+                initialdir = self.settings.getVal("App", "LastSaveDir", os.path.expanduser("~")),
                 filter = SAVE_EXTENSIONS_FILTER,
                 overwrite = False)
         finally:
@@ -502,11 +547,14 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(newtempo == self.player.tempo):
             return
 
+        # Save the current value on the recent files list
+        self.setRecentFilePBOptions(self.media)
+
         self.bValuesChanging = True
         try:
             # converte dalla percentuale a 1x
             # es: 80% = 0.8
-            self.player.tempo = self.varSpeed.get() * 0.01
+            self.player.tempo = newtempo
             curpos = self.player.songPosition
             self.player.set_speed(self.player.tempo)
             # hack to get gstreamer to calculate the position again
@@ -535,6 +583,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entPitchST.delete(0, 'end')
         self.entPitchST.insert(0, value)
         self.player.semitones = self.varPitchST.get()
+        # Save the current value on the recent files list
+        self.setRecentFilePBOptions(self.media)
         self.changePitch()
 
     def centsChanged(self, a, b, c):
@@ -542,6 +592,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entPitchCents.delete(0, 'end')
         self.entPitchCents.insert(0, value)
         self.player.cents = self.varPitchCents.get()
+        # Save the current value on the recent files list
+        self.setRecentFilePBOptions(self.media)
         self.changePitch()
 
     def volumeChanged(self, a, b, c):
@@ -549,6 +601,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entVolume.delete(0, 'end')
         self.entVolume.insert(0, value)
         self.player.volume = self.varVolume.get() * 0.01
+        # Save the current value on the recent files list
+        self.setRecentFilePBOptions(self.media)
         self.player.set_volume(self.player.volume)
 
     def changePitch(self):
