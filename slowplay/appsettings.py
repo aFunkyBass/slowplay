@@ -7,7 +7,10 @@ USER_CFG_DIR = f"{USER_HOME_DIR}/.config"
 APP_CFG_DIR = f"{USER_CFG_DIR}/slowplay"
 APP_CFG_FILENAME = f"{APP_CFG_DIR}/slowplaycfg.json"
 
-MAX_RECENTFILE_LIST = 3
+MAX_RECENTFILE_LIST = 16
+
+CFG_APP_SECTION = "App"
+CFG_RECENTFILE_SECTION = "Files"
 
 class AppSettings(object):
     def __init__(self, filename = ""):
@@ -15,12 +18,12 @@ class AppSettings(object):
         self.bUpdateForbidden = False     # Disallow setting new values
 
         self.settings = {
-            "App" : {
+            CFG_APP_SECTION : {
                 "LastOpenDir": USER_HOME_DIR,
                 "LastSaveDir": USER_HOME_DIR,
                 "MaxRecentFileList": MAX_RECENTFILE_LIST
             },
-            "Files": {}
+            CFG_RECENTFILE_SECTION: {}
         }
     
     # Fetches a value from the settings dict
@@ -63,7 +66,7 @@ class AppSettings(object):
         if(filename == ""):
             return(None)
         
-        return(self.getVal("Files", filename, None))
+        return(self.getVal(CFG_RECENTFILE_SECTION, filename, None))
    
     # Add playback options to the list of recent files
     def addRecentFile(self, filename, data, saveSettings = True):
@@ -75,11 +78,11 @@ class AppSettings(object):
 
         # Checks the max number of recent files and
         # pops out the first in case maximum is reached
-        if(filename not in self.settings["Files"] and
-                     self.recentFilesNum() >= self.getVal("App", "MaxRecentFileList", MAX_RECENTFILE_LIST)):
+        if(filename not in self.settings[CFG_RECENTFILE_SECTION] and
+                     self.recentFilesNum() >= self.getVal(CFG_APP_SECTION, "MaxRecentFileList", MAX_RECENTFILE_LIST)):
             self.popFirstItem()
         
-        self.settings["Files"][filename] = data
+        self.settings[CFG_RECENTFILE_SECTION][filename] = data
 
         # Optionally saves the config on disk
         if(saveSettings == True):
@@ -89,17 +92,17 @@ class AppSettings(object):
     
     # Gets the number of recent files in the list
     def recentFilesNum(self):
-        if("Files" in self.settings and isinstance(self.settings["Files"], dict)):
-            return(len(self.settings["Files"]))
+        if(CFG_RECENTFILE_SECTION in self.settings and isinstance(self.settings[CFG_RECENTFILE_SECTION], dict)):
+            return(len(self.settings[CFG_RECENTFILE_SECTION]))
         else:
             return(0)
     
     # Pops out the first file in the recent list
     # to make room for a new one.
     def popFirstItem(self):
-        if(isinstance(self.settings["Files"], dict) and len(self.settings["Files"]) > 0):
-            first_key = next(iter(self.settings["Files"]))
-            del(self.settings["Files"][first_key])
+        if(isinstance(self.settings[CFG_RECENTFILE_SECTION], dict) and len(self.settings[CFG_RECENTFILE_SECTION]) > 0):
+            first_key = next(iter(self.settings[CFG_RECENTFILE_SECTION]))
+            del(self.settings[CFG_RECENTFILE_SECTION][first_key])
             return(True)
         else:
             return(False)

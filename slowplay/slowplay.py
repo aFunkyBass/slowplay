@@ -23,6 +23,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from player import slowPlayer
 import filedialogs
 import appsettings
+from appsettings import CFG_APP_SECTION
 
 #from CTkRangeSlider import *
 
@@ -286,7 +287,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         try:
             filename = filedialogs.openFileDialog(
                 title = 'Open a file',
-                initialdir = self.settings.getVal("App", "LastOpenDir", os.path.expanduser("~")),
+                initialdir = self.settings.getVal(CFG_APP_SECTION, "LastOpenDir", os.path.expanduser("~")),
                 filter = OPEN_EXTENSIONS_FILTER)
         finally:
             self.bind_all('<1>', self._click_manager_)
@@ -330,7 +331,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.media = os.path.realpath(filename)
         self.mediaFileName = os.path.basename(self.media)
         self.mediaPath = os.path.dirname(self.media)
-        self.settings.setVal("App", "LastOpenDir", self.mediaPath)
+        self.settings.setVal(CFG_APP_SECTION, "LastOpenDir", self.mediaPath)
 
         # Compose a valid uri
         self.mediaUri = self.filename2Uri(self.media)
@@ -433,7 +434,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.update_idletasks()
 
         # Saves the path for future saves
-        self.settings.setVal("App", "LastSaveDir", os.path.dirname(filename))
+        self.settings.setVal(CFG_APP_SECTION, "LastSaveDir", os.path.dirname(filename))
 
         # Actually asks the player to save the file and destroy
         # the progress bar afterwards
@@ -454,7 +455,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             filename = filedialogs.saveFileDialog(
                 title='Save as..',
                 initialfile = self.mediaFileName,
-                initialdir = self.settings.getVal("App", "LastSaveDir", os.path.expanduser("~")),
+                initialdir = self.settings.getVal(CFG_APP_SECTION, "LastSaveDir", os.path.expanduser("~")),
                 filter = SAVE_EXTENSIONS_FILTER,
                 overwrite = False)
         finally:

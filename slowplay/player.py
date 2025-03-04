@@ -53,11 +53,11 @@ class slowPlayer():
         self.bin.add(self.pipevolume)
         self.bin.add(self.sink)
 
-        self.tempopitch.link(self.converter)
-        self.converter.link(self.pipevolume)
+        self.converter.link(self.tempopitch)
+        self.tempopitch.link(self.pipevolume)
         self.pipevolume.link(self.sink)
 
-        sink_pad = Gst.GhostPad.new("sink", self.tempopitch.get_static_pad("sink"))
+        sink_pad = Gst.GhostPad.new("sink", self.converter.get_static_pad("sink"))
         self.bin.add_pad(sink_pad)
 
         self.audiosrc.set_property("audio-sink", self.bin)
