@@ -3,9 +3,9 @@ import sys, pathlib
 import json
 
 USER_HOME_DIR = os.path.expanduser("~")
-USER_CFG_DIR = f"{USER_HOME_DIR}/.config"
-APP_CFG_DIR = f"{USER_CFG_DIR}/slowplay"
-APP_CFG_FILENAME = f"{APP_CFG_DIR}/slowplaycfg.json"
+USER_CFG_DIR = os.path.join(USER_HOME_DIR, ".config")
+APP_CFG_DIR = os.path.join(USER_CFG_DIR, "slowplay")
+APP_CFG_FILENAME = os.path.join(APP_CFG_DIR, "slowplaycfg.json")
 
 MAX_RECENTFILE_LIST = 16
 
@@ -15,8 +15,14 @@ CFG_RECENTFILE_SECTION = "Files"
 class AppSettings(object):
     def __init__(self, filename = ""):
 
+        # Check for the existence of the config directory
+        # and creates it if not
+        if(not os.path.exists(APP_CFG_DIR)):
+            os.makedirs(APP_CFG_DIR)
+
         self.bUpdateForbidden = False     # Disallow setting new values
 
+        # Dictionary containing all the app settings
         self.settings = {
             CFG_APP_SECTION : {
                 "LastOpenDir": USER_HOME_DIR,
@@ -107,8 +113,17 @@ class AppSettings(object):
         else:
             return(False)
     
+    # Saves the current settings on the cfg file
     def saveSettings(self):
         if(self.bUpdateForbidden == True):
             return(True)
+        
         print(json.dumps(self.settings, indent = 2))
-        return(True)
+
+        try:
+            with open(APP_CFG_FILENAME, mode="w", encoding="utf-8") as outfile:
+                json.dump(self.settings, outfile, ensure_ascii = False, indent = 2)
+
+            return(True)
+        except:
+            return(False)
