@@ -24,6 +24,7 @@ from player import slowPlayer
 import filedialogs
 import appsettings
 from appsettings import CFG_APP_SECTION
+import recentdialog
 
 #from CTkRangeSlider import *
 
@@ -92,6 +93,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # Load app settings
         self.settings = appsettings.AppSettings()
+        self.settings.loadSettings()
 
         # Mark app directories
         working_dir = os.path.dirname(__file__)
@@ -259,6 +261,9 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.openButton = ctk.CTkButton(self.RFrame, text="Open", font=("", 18), command=self.openFile)
         self.openButton.grid(row=1, column=0, pady=(8, 0), sticky="w")
 
+        # Activate the recent file list with right-click
+        self.openButton.bind("<Button-3>", self.openRecentFileDialog)
+
         self.saveasButton = ctk.CTkButton(self.RFrame, text="Save as...", font=("", 18), command=self.saveAs)
         self.saveasButton.grid(row=2, column=0, pady=(8, 0), sticky="w")
 
@@ -349,29 +354,28 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         filePlabackOptions = self.settings.getRecentFile(self.media)
 
         if(filePlabackOptions is not None and isinstance(filePlabackOptions, dict)):
+            self.settings.moveToLastPosition(self.media)
+            
             self.settings.bUpdateForbidden = True
-            self.stopPlaying()
             try:
-                if(filePlabackOptions["Speed"] >= MIN_SPEED_PERCENT 
-                            and filePlabackOptions["Speed"] <= MAX_SPEED_PERCENT):
+                self.resetValues()
+                
+                if(filePlabackOptions["Speed"] in range(MIN_SPEED_PERCENT, MAX_SPEED_PERCENT + 1)):
                     self.varSpeed.set(filePlabackOptions["Speed"])
 
-                if(filePlabackOptions["Semitones"] >= MIN_PITCH_SEMITONES
-                            and filePlabackOptions["Semitones"] <= MAX_PITCH_SEMITONES):
+                if(filePlabackOptions["Semitones"] in range(MIN_PITCH_SEMITONES, MAX_PITCH_SEMITONES + 1)):
                     self.varPitchST.set(filePlabackOptions["Semitones"])
 
-                if(filePlabackOptions["Cents"] >= MIN_PITCH_CENTS
-                            and filePlabackOptions["Cents"] <= MAX_PITCH_CENTS):
+                if(filePlabackOptions["Cents"] in range(MIN_PITCH_CENTS, MAX_PITCH_CENTS + 1)):
                     self.varPitchCents.set(filePlabackOptions["Cents"])
 
-                if(filePlabackOptions["Volume"] >= MIN_VOLUME
-                            and filePlabackOptions["Volume"] <= MAX_VOLUME):
+                if(filePlabackOptions["Volume"] in range(MIN_VOLUME, MAX_VOLUME + 1)):
                     self.varVolume.set(filePlabackOptions["Volume"])
             finally:
                 self.settings.bUpdateForbidden = False
         else:
-            self.setRecentFilePBOptions(self.media)
             self.resetValues()
+            self.setRecentFilePBOptions(self.media)
 
     # Saves the playback options to the recent files list
     def setRecentFilePBOptions(self, filename):
@@ -463,6 +467,24 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.bind_all('<KeyPress>', self._hotkey_manager_)
 
         return(filename)
+
+    # Open a dialog with the list of recent files
+    def openRecentFileDialog(self, event):
+        RecentFileList = self.settings.getRecentFiles()
+
+        if(isinstance(RecentFileList, dict)):
+            if(len(RecentFileList) <= 0):
+                CTkMessagebox(master = self, title = "Error", message=f"No file was recently open with this software. "
+                              "Please open one by clicking the open button", icon = "cancel", font = ("", LBL_FONT_SIZE))
+                return
+
+            popup = recentdialog.recentDialog(self, RecentFileList.keys())
+            rFile = popup.show()
+            
+            if(rFile == ""):
+                return(False)
+            
+            self.setFile(rFile)
 
     # Updates the save progress bars
     def saveProgress(self, value):

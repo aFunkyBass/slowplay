@@ -1,1 +1,1 @@
-from . import appsettings, slowplay, player, filedialogs
+from . import appsettings, slowplay, player, filedialogs, recentdialog

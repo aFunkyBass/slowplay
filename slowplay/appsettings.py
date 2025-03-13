@@ -31,6 +31,12 @@ class AppSettings(object):
             },
             CFG_RECENTFILE_SECTION: {}
         }
+
+        if(filename == ""):
+            self.settingsFilename = APP_CFG_FILENAME
+        else:
+            self.settingsFilename = filename
+
     
     # Fetches a value from the settings dict
     # If value is not present return defval
@@ -65,6 +71,10 @@ class AppSettings(object):
             return(self.settings[Section])
         else:
             return(None)
+    
+    # Gets the entire block of recent files as a dictionary
+    def getRecentFiles(self):
+        return(self.getSection(CFG_RECENTFILE_SECTION))
 
     # Gets the playback options for a recent opened file
     # If no file is found returns None
@@ -73,6 +83,8 @@ class AppSettings(object):
             return(None)
         
         return(self.getVal(CFG_RECENTFILE_SECTION, filename, None))
+   
+   
    
     # Add playback options to the list of recent files
     def addRecentFile(self, filename, data, saveSettings = True):
@@ -84,9 +96,14 @@ class AppSettings(object):
 
         # Checks the max number of recent files and
         # pops out the first in case maximum is reached
-        if(filename not in self.settings[CFG_RECENTFILE_SECTION] and
-                     self.recentFilesNum() >= self.getVal(CFG_APP_SECTION, "MaxRecentFileList", MAX_RECENTFILE_LIST)):
-            self.popFirstItem()
+        #
+        # If the file is already present deletes the old entry
+        # and adds it again, to make it the last one
+        if(filename not in self.settings[CFG_RECENTFILE_SECTION]):
+            if(self.recentFilesNum() >= self.getVal(CFG_APP_SECTION, "MaxRecentFileList", MAX_RECENTFILE_LIST)):
+                self.popFirstItem()
+        else:
+            self.delRecentFile(filename)
         
         self.settings[CFG_RECENTFILE_SECTION][filename] = data
 
@@ -96,6 +113,14 @@ class AppSettings(object):
         else:
             return(True)
     
+    # Deletes a recent file from the list
+    def delRecentFile(self, filename):
+        if(filename not in self.settings[CFG_RECENTFILE_SECTION]):
+            return(False)
+        
+        del(self.settings[CFG_RECENTFILE_SECTION][filename])
+        return(True)
+    
     # Gets the number of recent files in the list
     def recentFilesNum(self):
         if(CFG_RECENTFILE_SECTION in self.settings and isinstance(self.settings[CFG_RECENTFILE_SECTION], dict)):
@@ -103,6 +128,18 @@ class AppSettings(object):
         else:
             return(0)
     
+    # If present, deletes the recent file from the list
+    # and adds it again to make it the last item
+    def moveToLastPosition(self, filename, saveSettings = True):
+        data = self.getRecentFile(filename)
+        
+        if(data is None):
+            return(False)
+
+        del(self.settings[CFG_RECENTFILE_SECTION][filename])
+
+        self.addRecentFile(filename, data, saveSettings)
+
     # Pops out the first file in the recent list
     # to make room for a new one.
     def popFirstItem(self):
@@ -119,11 +156,26 @@ class AppSettings(object):
             return(True)
         
         print(json.dumps(self.settings, indent = 2))
+        print("SCRITTURA")
 
         try:
-            with open(APP_CFG_FILENAME, mode="w", encoding="utf-8") as outfile:
+            with open(self.settingsFilename, mode="w", encoding="utf-8") as outfile:
                 json.dump(self.settings, outfile, ensure_ascii = False, indent = 2)
 
+            return(True)
+        except:
+            return(False)
+
+    # Saves settings from the cfg file
+    def loadSettings(self):
+        try:
+            with open(self.settingsFilename, mode="r", encoding="utf-8") as infile:
+                loadedSettings = json.load(infile)
+
+                self.settings.update(loadedSettings)
+                
+                print(json.dumps(self.settings, indent = 2))
+                print("LETTURA")
             return(True)
         except:
             return(False)
