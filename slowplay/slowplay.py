@@ -763,6 +763,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         elif(key == 'KP_Subtract'):
             if(self.varPitchST.get() > MIN_PITCH_SEMITONES):
                 self.varPitchST.set(self.varPitchST.get() - STEPS_SEMITONES)
+        elif(key == 'r' and state == 20):
+            self.openRecentFileDialog(None)
         elif(key == 'q' and state == 20):
             self.destroy()
             exit()
