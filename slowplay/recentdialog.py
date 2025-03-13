@@ -8,9 +8,12 @@ class recentDialog(ctk.CTkToplevel):
         super().__init__(*args, **kwargs)
         
         self.title("Select recent file...")
-
+        
+        self.attributes("-topmost",True)
+        
         self.data = data
         self.geometry("600x300")
+        self.minsize(width = 400, height = 200)
 
         self.LFrame = ctk.CTkFrame(self)
         self.RFrame = ctk.CTkFrame(self, width=120)
@@ -56,8 +59,8 @@ class recentDialog(ctk.CTkToplevel):
 
     def show(self):
         self.fillListbox()
-        self.grab_set()
         self.deiconify()
+        self.grab_set()
         self.wm_protocol("WM_DELETE_WINDOW", self.destroy)
         self.wait_window(self)
         return(self.selection)

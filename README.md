@@ -18,6 +18,8 @@ Thank you Jonas for your work.
 
 You can import the most common audio files format (mp3, wav, flac, aif...). You can save your files either in mp3 or wav format, based on the extension of file to be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as variable bitrate quality=4. Volume setting and metadata are ignored in the export operation.
 
+SlowPlay keep tracks of the last 16 files played, and restore the playback parameters (speed, pitch, cents and volume) you set when you last played the songs. To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button
+
 ### Developement
 
 This software is my very first attempt to write "serious" Python code, so it may not look strictly pythonic to the purists, I apologize for that. I was born with C and quit my job as software developer many years ago, so not only I'm not a Python dev but I am also an obsolete dev! :)
@@ -30,13 +32,14 @@ Please download the `slowplay[version-num].tar.gz` from the [latest release](htt
 
 ### Requirements
 
-Slowplay distributable is compiled using pyinstaller, so it should be running out of the box on most modern systems as all the libraries are built-in. Please report your issues on this repository.
+Slowplay distributable is compiled using pyinstaller, so it should be running out of the box on most modern systems as all the libraries are built-in. Please report any issues on this repository.
 
 ## Shortcuts
 
 SlowPlay offers the following shortcuts:
 
-**CTRL+q**: Quit application
+- **Ctrl+R**: Open recent files list
+- **Ctrl+Q**: Quit application
 
 The following commands are used to control playback and they're all assigned to the numeric keypad. Refer to the drawing below for visual help.
 

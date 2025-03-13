@@ -1,5 +1,4 @@
 import os
-import sys, pathlib
 import json
 
 USER_HOME_DIR = os.path.expanduser("~")
@@ -155,8 +154,8 @@ class AppSettings(object):
         if(self.bUpdateForbidden == True):
             return(True)
         
-        print(json.dumps(self.settings, indent = 2))
-        print("SCRITTURA")
+        #print(json.dumps(self.settings, indent = 2))
+        #print("SCRITTURA")
 
         try:
             with open(self.settingsFilename, mode="w", encoding="utf-8") as outfile:
@@ -174,8 +173,8 @@ class AppSettings(object):
 
                 self.settings.update(loadedSettings)
                 
-                print(json.dumps(self.settings, indent = 2))
-                print("LETTURA")
+                #print(json.dumps(self.settings, indent = 2))
+                #print("LETTURA")
             return(True)
         except:
             return(False)
