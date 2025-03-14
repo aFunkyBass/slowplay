@@ -32,7 +32,7 @@ Please download the `slowplay[version-num].tar.gz` from the [latest release](htt
 
 ### Requirements
 
-Slowplay distributable is compiled using pyinstaller, so it should be running out of the box on most modern systems as all the libraries are built-in. Please report any issues on this repository.
+Slowplay distributable is compiled using pyinstaller, so it should be running out of the box on most modern Linux systems as all the libraries are built-in. Please report any issues on this repository.
 
 ## Shortcuts
 

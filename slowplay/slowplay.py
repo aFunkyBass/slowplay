@@ -732,13 +732,13 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         move = 0
         accel = 0
-        if(key == 'KP_1'):
+        if(key == 'KP_1' or key == 'Left'):
             move = -STEPS_SEC_MOVE_1
         elif(key == 'KP_4'):
             move = -STEPS_SEC_MOVE_2
         elif(key == 'KP_7'):
             move = -STEPS_SEC_MOVE_3
-        elif(key == 'KP_3'):
+        elif(key == 'KP_3' or key == 'Right'):
             move = STEPS_SEC_MOVE_1
         elif(key == 'KP_6'):
             move = STEPS_SEC_MOVE_2
