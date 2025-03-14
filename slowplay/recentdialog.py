@@ -37,23 +37,27 @@ class recentDialog(ctk.CTkToplevel):
         self.cancelButton = ctk.CTkButton(self.RFrame, text="Cancel", font=("", 18), command=self.destroy)
         self.cancelButton.grid(row=1, column=0, pady=(8, 0), sticky="w")
 
-        #self.togglePath = ctk.CTkCheckBox(self.RFrame, text="Show full path", command=self.checkBoxToggle)
-        #self.togglePath.grid(row=2, column=0, pady=(8, 0), sticky="w")
+        self.togglePath = ctk.CTkCheckBox(self.RFrame, text="Show full path", command=self.checkBoxToggle)
+        self.togglePath.grid(row=2, column=0, pady=(8, 0), sticky="w")
 
         self.selection = ""
 
-#    def checkBoxToggle(self):
-#        self.fillListbox()
+    def checkBoxToggle(self):
+        self.fillListbox()
 
     def fillListbox(self):
-        for k in reversed(self.data):
-            self.ListBox.insert(k, os.path.basename(k))
+        self.ListBox.delete("all")
+
+        if(self.togglePath.get() == 0):
+            for k in reversed(self.data):
+                self.ListBox.insert(k, os.path.basename(k))
+        else:
+            for k in reversed(self.data):
+                self.ListBox.insert(k, k)
         
         self.ListBox.activate(0)
 
-    def onOk(self):
-        #print(f"Selezione: {self.ListBox.curselection()}")
-        #print(f"Item: {list(self.data)[(len(self.data) - 1) - self.ListBox.curselection()]}")
+    def onOk(self, event = None):
         self.selection = list(self.data)[(len(self.data) - 1) - self.ListBox.curselection()]
         self.destroy()
 
