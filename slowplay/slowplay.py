@@ -135,6 +135,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.afterCancelID = ""             # ID of the last scheduled after action
 
+        self.bStatusBarTags = False         # Flag for the update of artist/song tags 
+                                            # on the status bar
+        self.songMetadata = ""
+
         # Build the 3 main frames principali: Left (shrinkable), Right (buttons)
         # and low (status bar)
         self.LFrame = ctk.CTkFrame(self, width=400, height=200)
@@ -323,6 +327,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.songProgress.set(0)
         self.songTime.set(dt.timedelta(seconds = 0))
         self.scale.set(0)
+        self.bStatusBarTags = False
 
     def filename2Uri(self, fname):
         # Compose a valid uri
@@ -359,7 +364,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.player.update_position()
 
         # Updates window title and status bar
-        self.statusBarMessage(self.mediaFileName, static = True)
+        self.songMetadata = self.mediaFileName
+        self.statusBarMessage(self.songMetadata, static = True)
         self.title(f"{APP_TITLE} - {self.mediaFileName}")
 
         # if the file was recently open, it loads its settings
@@ -461,7 +467,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         finally:
             self.save_prg.destroy()
             self.save_prg_var.__del__()
-            self.statusBarMessage(self.mediaFileName, static = True)
+            self.statusBarMessage(self.songMetadata, static = True)
 
     # Open the save file dialog
     def selectFileToSave(self) -> str:
@@ -554,6 +560,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.songProgress.set(curperc)
             self.scale.set(curperc)
 
+        # Updates the status bar with song and artists tag
+        if(self.bStatusBarTags == False):
+            if(self.player.artist != "" and self.player.title != "" ):
+                self.songMetadata = f"{self.player.artist} - {self.player.title}"
+                self.statusBarMessage(self.songMetadata, True)
+                self.bStatusBarTags = True
 
     #def validate_int(self, d, i, P, s, S, v, V, W):
     #    print("d=", d, " i=", i, " P=",P," s=", s," S=", S, " v=",v," V=", V, " W=",W)
@@ -736,7 +748,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(newText):
             self.fileLabel.configure(text = newText)
         else:
-            self.fileLabel.configure(text = self.mediaFileName)
+            self.fileLabel.configure(text = self.songMetadata)
 
     def parseHotkey(self, event):
         key = event.keysym
@@ -830,7 +842,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         _, fExt = os.path.splitext(str(fList[0]))
         if (fExt.replace(".", "") not in OPEN_EXTENSIONS_FILTER):
             return(REFUSE_DROP)
-
 
     def _tasks_(self):
         self.player.handle_message()

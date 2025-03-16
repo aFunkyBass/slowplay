@@ -77,10 +77,13 @@ class slowPlayer():
         self.endPoint = 0
         self.loopEnabled = False
 
+        self.title = ""
+        self.artist = ""
+
     def handle_message(self):
         message = self.bus.timed_pop_filtered(self.updateInterval * Gst.MSECOND,
             Gst.MessageType.STATE_CHANGED | Gst.MessageType.ERROR |
-            Gst.MessageType.EOS)# | Gst.MessageType.DURATION_CHANGED)
+            Gst.MessageType.TAG | Gst.MessageType.EOS)# | Gst.MessageType.DURATION_CHANGED)
 
         if(message):
             t = message.type
@@ -89,6 +92,21 @@ class slowPlayer():
                 #self.pipeline.set_state(Gst.State.NULL)
                 self.Pause()
                 self.Rewind()
+            elif t == Gst.MessageType.TAG:
+                if(self.artist == "" and self.title == ""):
+                    tags = message.parse_tag()
+                    
+                    ret = tags.get_string("artist")
+                    if(ret[0]):
+                        self.artist = ret[1]
+                    
+                    ret = tags.get_string("title")
+                    if(ret[0]):
+                        self.title = ret[1]
+                #tagsNum = tags.n_tags()
+                #for i in range(0, tagsNum):
+                #    print(tags.nth_tag_name(i))
+
             #elif t ==  Gst.MessageType.DURATION_CHANGED:
                 #self.query_duration()
                 #retval, duration = self.pipeline.query_duration(TIME_FORMAT)
@@ -175,6 +193,8 @@ class slowPlayer():
 
     def MediaLoad(self, mediafile):
         self.pipeline.set_state(Gst.State.NULL)
+        self.title = ""
+        self.artist = ""
 
         if(str(mediafile).startswith('/')):
             mediafile = "file://" + mediafile
