@@ -8,6 +8,7 @@
 #import tkinter as tk
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
+from CTkToolTip import *
 from tkinterdnd2 import *
 #from tkinter import ttk
 from tkinter import PhotoImage
@@ -179,6 +180,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.btnResetSpeed = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon,
                                            text=None, command= lambda: self.resetDefaultVar(self.varSpeed))
         self.btnResetSpeed.grid(row=0, column=4, padx=(0, 8), pady=8, sticky="w")
+        self.btnResetSpeed_tt = CTkToolTip(self.btnResetSpeed, message="Reset speed",
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
         self.entSpeed.bind('<Return>', self.checkSpeed)
         self.entSpeed.bind('<KP_Enter>', self.checkSpeed)
         self.entSpeed.bind('<FocusOut>', self.checkSpeed)
@@ -188,7 +191,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         vnegint = (self.register(self.validate_neg_int),'%S', '%P')
         self.varPitchST = ctk.IntVar(self, value=DEFAULT_SEMITONES)
         self.varPitchST.trace_add("write", self.semitonesChanged)
-        self.lblPitchST = ctk.CTkLabel(self.CTLFrame, text="Pitch (semitones):", font=("", LBL_FONT_SIZE))
+        self.lblPitchST = ctk.CTkLabel(self.CTLFrame, text="Transpose:", font=("", LBL_FONT_SIZE))
         self.lblPitchST.grid(row=1, column=0, pady=(4, 0), sticky="w")
         self.sldPitchST = ctk.CTkSlider(self.CTLFrame,from_= MIN_PITCH_SEMITONES,
                                         to = MAX_PITCH_SEMITONES, variable=self.varPitchST)
@@ -201,6 +204,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.btnResetPitchST = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon,
                                              text=None, command= lambda: self.resetDefaultVar(self.varPitchST))
         self.btnResetPitchST.grid(row=1, column=4, padx=(0, 8), pady=8, sticky="w")
+        self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchST, message="Reset transpose",
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
         self.entPitchST.bind('<Return>', self.checkSemitones)
         self.entPitchST.bind('<KP_Enter>', self.checkSemitones)
         self.entPitchST.bind('<FocusOut>', self.checkSemitones)
@@ -220,6 +225,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.lblPitchCentsEntry.grid(row=2, column=3, padx=(0, 8), pady=8, sticky="w")
         self.btnResetPitchCents = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon, text=None,
                                                 command= lambda: self.resetDefaultVar(self.varPitchCents))
+        self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchCents, message="Reset pitch",
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
         self.btnResetPitchCents.grid(row=2, column=4, padx=(0, 8), pady=8, sticky="w")
         self.entPitchCents.bind('<Return>', self.checkCents)
         self.entPitchCents.bind('<KP_Enter>', self.checkCents)
@@ -257,15 +264,21 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Widgets on right panel
         self.playButton = ctk.CTkButton(self.RFrame, text="Play", font=("", 18), command=self.togglePlay)
         self.playButton.grid(row=0, column=0, pady=(8, 0), sticky="w")
+        self.playButton_tt = CTkToolTip(self.playButton, message="Play/Pause",
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
 
         self.openButton = ctk.CTkButton(self.RFrame, text="Open", font=("", 18), command=self.openFile)
         self.openButton.grid(row=1, column=0, pady=(8, 0), sticky="w")
+        self.openButton_tt = CTkToolTip(self.openButton, message="Open a file.\nRight-click to reopen a recent file",
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
 
         # Activate the recent file list with right-click
         self.openButton.bind("<Button-3>", self.openRecentFileDialog)
 
         self.saveasButton = ctk.CTkButton(self.RFrame, text="Save as...", font=("", 18), command=self.saveAs)
         self.saveasButton.grid(row=2, column=0, pady=(8, 0), sticky="w")
+        self.saveasButton_tt = CTkToolTip(self.saveasButton, message="Save the file with current speed/pitch settings as MP3 or WAV",
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
 
         # Widget on status bar
         self.fileLabel = ctk.CTkLabel(self.BFrame, text="", font=("", LBL_FONT_SIZE))
