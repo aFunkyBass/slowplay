@@ -71,7 +71,7 @@ The following commands are used to control playback and they're all assigned to 
 
 If you like and use this little piece of software, please consider [donate](bitcoin:bc1qtgjpuu4g5530ypx3tn7af9nvn628cx6z40xh7k) some satoshi!
 
-![bc_qrcode](slowplay/resources/bc_qrcode.png)
+![bc_qrcode](slowplay/resources/bc_qrcode.png)    
 bc1qtgjpuu4g5530ypx3tn7af9nvn628cx6z40xh7k
 
 Thank you so much!
