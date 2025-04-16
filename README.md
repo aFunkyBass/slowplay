@@ -66,12 +66,3 @@ The following commands are used to control playback and they're all assigned to 
 ![Keypad shortcuts](slowplay/resources/Keypad.png)
 
 *(please make sure none of the input boxes have the focus. Click on an empty area of the app to take the focus back from an input box)*:
-
-## Show your love
-
-If you like and use this little piece of software, please consider [donate](bitcoin:bc1qtgjpuu4g5530ypx3tn7af9nvn628cx6z40xh7k) some satoshi!
-
-![bc_qrcode](slowplay/resources/bc_qrcode.png)    
-bc1qtgjpuu4g5530ypx3tn7af9nvn628cx6z40xh7k
-
-Thank you so much!
