@@ -1,0 +1,14 @@
+#Directories
+slowplay/resources/Working/
+**/__pycache__/
+hooks/
+build/
+dist/
+.venv/
+
+#files
+/slowplay.spec
+/sp-make-dist
+/sp
+/setup.py
+/hook-tkinterdnd2.py
