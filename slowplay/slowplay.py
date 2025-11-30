@@ -21,7 +21,7 @@ import re
 import sys, pathlib
 
 import gettext
-gettext.bindtextdomain('slowplay', "./locale")
+gettext.bindtextdomain('slowplay', "./locales")
 gettext.textdomain('slowplay')
 _ = gettext.gettext
 

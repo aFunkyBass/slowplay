@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2025-11-30 02:11+0100\n"
-"PO-Revision-Date: 2025-11-30 02:20+0100\n"
+"PO-Revision-Date: 2025-11-30 15:36+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -42,7 +42,7 @@ msgstr "Reimposta intonazione"
 
 #: slowplay.py:192
 msgid "Volume:"
-msgstr "\\"
+msgstr ""
 
 #: slowplay.py:219
 msgid "Play"
