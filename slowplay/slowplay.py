@@ -20,6 +20,11 @@ from PIL import Image
 import re
 import sys, pathlib
 
+import gettext
+gettext.bindtextdomain('slowplay', "./locale")
+gettext.textdomain('slowplay')
+_ = gettext.gettext
+
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from sp_constants import *
@@ -116,7 +121,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         vint = (self.register(self.validate_int),'%S')
         self.varSpeed = ctk.IntVar(self, value=DEFAULT_SPEED)
         self.varSpeed.trace_add("write", self.speedChanged)
-        self.lblSpeed = ctk.CTkLabel(self.CTLFrame, text="Speed:", font=("", LBL_FONT_SIZE))
+        self.lblSpeed = ctk.CTkLabel(self.CTLFrame, text=_("Speed:"), font=("", LBL_FONT_SIZE))
         self.lblSpeed.grid(row=0, column=0, pady=(4, 0), sticky="w")
         self.sldSpeed = ctk.CTkSlider(self.CTLFrame, from_=MIN_SPEED_PERCENT,
                                       to=MAX_SPEED_PERCENT, number_of_steps=20, variable=self.varSpeed)
@@ -129,7 +134,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.btnResetSpeed = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon,
                                            text=None, command= lambda: self.resetDefaultVar(self.varSpeed))
         self.btnResetSpeed.grid(row=0, column=4, padx=(0, 8), pady=8, sticky="w")
-        self.btnResetSpeed_tt = CTkToolTip(self.btnResetSpeed, message="Reset speed",
+        self.btnResetSpeed_tt = CTkToolTip(self.btnResetSpeed, message=_("Reset speed"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
         self.entSpeed.bind('<Return>', self.checkSpeed)
         self.entSpeed.bind('<KP_Enter>', self.checkSpeed)
@@ -140,7 +145,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         vnegint = (self.register(self.validate_neg_int),'%S', '%P')
         self.varPitchST = ctk.IntVar(self, value=DEFAULT_SEMITONES)
         self.varPitchST.trace_add("write", self.semitonesChanged)
-        self.lblPitchST = ctk.CTkLabel(self.CTLFrame, text="Transpose:", font=("", LBL_FONT_SIZE))
+        self.lblPitchST = ctk.CTkLabel(self.CTLFrame, text=_("Transpose:"), font=("", LBL_FONT_SIZE))
         self.lblPitchST.grid(row=1, column=0, pady=(4, 0), sticky="w")
         self.sldPitchST = ctk.CTkSlider(self.CTLFrame,from_= MIN_PITCH_SEMITONES,
                                         to = MAX_PITCH_SEMITONES, variable=self.varPitchST)
@@ -153,7 +158,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.btnResetPitchST = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon,
                                              text=None, command= lambda: self.resetDefaultVar(self.varPitchST))
         self.btnResetPitchST.grid(row=1, column=4, padx=(0, 8), pady=8, sticky="w")
-        self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchST, message="Reset transpose",
+        self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchST, message=_("Reset transpose"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
         self.entPitchST.bind('<Return>', self.checkSemitones)
         self.entPitchST.bind('<KP_Enter>', self.checkSemitones)
@@ -162,7 +167,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.varPitchCents = ctk.IntVar(self, value=DEFAULT_CENTS)
         self.varPitchCents.trace_add("write", self.centsChanged)
-        self.lblPitchCents = ctk.CTkLabel(self.CTLFrame, text="Pitch (cents):", font=("", LBL_FONT_SIZE))
+        self.lblPitchCents = ctk.CTkLabel(self.CTLFrame, text=_("Pitch (cents):"), font=("", LBL_FONT_SIZE))
         self.lblPitchCents.grid(row=2, column=0, pady=(4, 0), sticky="w")
         self.sldPitchCents = ctk.CTkSlider(self.CTLFrame,from_= MIN_PITCH_CENTS,
                                            to = MAX_PITCH_CENTS, variable=self.varPitchCents)
@@ -174,7 +179,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.lblPitchCentsEntry.grid(row=2, column=3, padx=(0, 8), pady=8, sticky="w")
         self.btnResetPitchCents = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon, text=None,
                                                 command= lambda: self.resetDefaultVar(self.varPitchCents))
-        self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchCents, message="Reset pitch",
+        self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchCents, message=_("Reset pitch"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
         self.btnResetPitchCents.grid(row=2, column=4, padx=(0, 8), pady=8, sticky="w")
         self.entPitchCents.bind('<Return>', self.checkCents)
@@ -184,7 +189,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.varVolume = ctk.IntVar(self, value=DEFAULT_VOLUME)
         self.varVolume.trace_add("write", self.volumeChanged)
-        self.lblVolume = ctk.CTkLabel(self.CTLFrame, text="Volume:", font=("", LBL_FONT_SIZE))
+        self.lblVolume = ctk.CTkLabel(self.CTLFrame, text=_("Volume:"), font=("", LBL_FONT_SIZE))
         self.lblVolume.grid(row=3, column=0, pady=(4, 0), sticky="w")
         self.sldVolume = ctk.CTkSlider(self.CTLFrame,from_= MIN_VOLUME,
                                            to = MAX_VOLUME, variable=self.varVolume)
@@ -211,27 +216,27 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.CTLFrame.columnconfigure(1, weight=1)
 
         # Widgets on right panel
-        self.playButton = ctk.CTkButton(self.RFrame, text="Play", font=("", 18), command=self.togglePlay)
+        self.playButton = ctk.CTkButton(self.RFrame, text=_("Play"), font=("", 18), command=self.togglePlay)
         self.playButton.grid(row=0, column=0, pady=(8, 0), sticky="w")
-        self.playButton_tt = CTkToolTip(self.playButton, message="Play/Pause",
+        self.playButton_tt = CTkToolTip(self.playButton, message=_("Play/Pause"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
-        self.openButton = ctk.CTkButton(self.RFrame, text="Open", font=("", 18), command=self.openFile)
+        self.openButton = ctk.CTkButton(self.RFrame, text=_("Open"), font=("", 18), command=self.openFile)
         self.openButton.grid(row=1, column=0, pady=(8, 0), sticky="w")
-        self.openButton_tt = CTkToolTip(self.openButton, message="Open a file.\nRight-click to reopen a recent file",
+        self.openButton_tt = CTkToolTip(self.openButton, message=_("Open a file.\nRight-click to reopen a recent file"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
         # Activate the recent file list with right-click
         self.openButton.bind("<Button-3>", self.openRecentFileDialog)
 
-        self.saveasButton = ctk.CTkButton(self.RFrame, text="Save as...", font=("", 18), command=self.saveAs)
+        self.saveasButton = ctk.CTkButton(self.RFrame, text=_("Save as..."), font=("", 18), command=self.saveAs)
         self.saveasButton.grid(row=2, column=0, pady=(8, 0), sticky="w")
-        self.saveasButton_tt = CTkToolTip(self.saveasButton, message="Save the file with current speed/pitch settings as MP3 or WAV",
+        self.saveasButton_tt = CTkToolTip(self.saveasButton, message=_("Save the file with current speed/pitch settings as MP3 or WAV"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
-        self.aboutButton = ctk.CTkButton(self.RFrame, text="About", font=("", 18), command=self.openAboutDialog)
+        self.aboutButton = ctk.CTkButton(self.RFrame, text=_("About"), font=("", 18), command=self.openAboutDialog)
         self.aboutButton.grid(row=3, column=0, pady=(8, 8), sticky="s")
-        self.aboutButton_tt = CTkToolTip(self.aboutButton, message="Show info about this software",
+        self.aboutButton_tt = CTkToolTip(self.aboutButton, message=_("Show info about this software"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
         
         self.RFrame.rowconfigure(3, weight=1)
@@ -263,7 +268,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.unbind_all('<1>')
         try:
             filename = filedialogs.openFileDialog(
-                title = 'Open a file',
+                title = _('Open a file'),
                 initialdir = self.settings.getVal(CFG_APP_SECTION, "LastOpenDir", os.path.expanduser("~")),
                 filter = OPEN_EXTENSIONS_FILTER)
         finally:
@@ -300,7 +305,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(not filename or filename == ''):
             return
         elif not os.path.isfile(filename):
-            CTkMessagebox(master = self, title = "Error: file not found", message=f"Unable to open file: {filename}",
+            CTkMessagebox(master = self, title = _("Error: file not found"), 
+                          message=_("Unable to open file: {}").format(filename),
                           icon = "cancel", font = ("", LBL_FONT_SIZE))
             return
 
@@ -372,7 +378,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
     # Saves an audio file with the pitch and tempo settings
     def saveAs(self):
         if(self.player.canPlay == False):
-            self.statusBarMessage("Please open a file...")
+            self.statusBarMessage(_("Please open a file..."))
             return
 
         # Open the file dialog
@@ -383,7 +389,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # Check for a valid path
         if(os.path.exists(os.path.dirname(filename)) == False):
-            CTkMessagebox(master = self, title = "Filename error...", message = f"Unable to save file: {filename}",
+            CTkMessagebox(master = self, title = _("Filename error..."), 
+                          message = _("Unable to save file: {}").format(filename),
                           icon = "cancel", font=("", LBL_FONT_SIZE))
             return
 
@@ -395,8 +402,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Check once again if the file exists and ask confirmation
         # to overwrite it
         if(os.path.isfile(filename)):
-            res = CTkMessagebox(master = self, title = "Overwrite confirmation",
-                                message = f"{filename}\nalready exists.\n\nDo you want to overwrite it?",
+            res = CTkMessagebox(master = self, title = _("Overwrite confirmation"),
+                                message = _("{}\nalready exists.\n\nDo you want to overwrite it?").format(filename),
                                 icon = "warning", option_1 = "Yes", option_2="No", font = ("", LBL_FONT_SIZE),
                                 option_focus = "2")
             if(res.get() != "Yes"):
@@ -416,7 +423,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                                        height=8, width=10, command=self.saveCancelButtonClick)
         self.save_canc.grid(row=0, column=2, padx=8, pady=8, sticky="e")
 
-        self.save_canc_tt = CTkToolTip(self.save_canc, message="Cancel file save",
+        self.save_canc_tt = CTkToolTip(self.save_canc, message=_("Cancel file save"),
                                         delay=0.5, alpha=0.5, justify="left", follow=False)
 
         self.update_idletasks()
@@ -426,7 +433,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # Actually asks the player to save the file and destroy
         # the progress bar afterwards
-        self.statusBarMessage(F"Saving file: {filename}...", static = True)
+        self.statusBarMessage(_("Saving file: {}...").format(filename), static = True)
         try:
             self.player.fileSave(self.mediaUri, filename, self.saveProgress)
         finally:
@@ -460,8 +467,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         if(isinstance(RecentFileList, dict)):
             if(len(RecentFileList) <= 0):
-                CTkMessagebox(master = self, title = "Error", message=f"No file was recently open with this software. "
-                              "Please open one by clicking the open button", icon = "cancel", font = ("", LBL_FONT_SIZE))
+                CTkMessagebox(master = self, title = _("Error"), 
+                              message=_("No file was recently open with this software. "
+                              "Please open one by clicking the open button"), 
+                              icon = "cancel", font = ("", LBL_FONT_SIZE))
                 return
 
             self.unbind_all('<KeyPress>')
@@ -496,7 +505,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     def togglePlay(self):
         if(self.player.canPlay == False):
-            self.statusBarMessage("Please open a file...")
+            self.statusBarMessage(_("Please open a file..."))
             return
 
         if self.player.isPlaying == False:
@@ -506,7 +515,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     def stopPlaying(self):
         if(self.player.canPlay == False):
-            self.statusBarMessage("Please open a file...")
+            self.statusBarMessage(_("Please open a file..."))
             return
 
         self.player.Pause()
@@ -847,8 +856,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
 def main():
     parser = argparse.ArgumentParser(description = APP_DESCRIPTION, prog = APP_NAME)
-    parser.add_argument("--sink", help="Specify a GStreamer custom sink")
-    parser.add_argument("media", nargs="?", help="URI of the media to open")
+    parser.add_argument("--sink", help=_("Specify a GStreamer custom sink"))
+    parser.add_argument("media", nargs="?", help=_("URI of the media to open"))
 
     args = parser.parse_args()
 
