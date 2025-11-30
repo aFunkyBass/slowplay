@@ -1,0 +1,139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-11-30 02:11+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: slowplay.py:124
+msgid "Speed:"
+msgstr ""
+
+#: slowplay.py:137
+msgid "Reset speed"
+msgstr ""
+
+#: slowplay.py:148
+msgid "Transpose:"
+msgstr ""
+
+#: slowplay.py:161
+msgid "Reset transpose"
+msgstr ""
+
+#: slowplay.py:170
+msgid "Pitch (cents):"
+msgstr ""
+
+#: slowplay.py:182
+msgid "Reset pitch"
+msgstr ""
+
+#: slowplay.py:192
+msgid "Volume:"
+msgstr ""
+
+#: slowplay.py:219
+msgid "Play"
+msgstr ""
+
+#: slowplay.py:221
+msgid "Play/Pause"
+msgstr ""
+
+#: slowplay.py:224
+msgid "Open"
+msgstr ""
+
+#: slowplay.py:226
+msgid ""
+"Open a file.\n"
+"Right-click to reopen a recent file"
+msgstr ""
+
+#: slowplay.py:232
+msgid "Save as..."
+msgstr ""
+
+#: slowplay.py:234
+msgid "Save the file with current speed/pitch settings as MP3 or WAV"
+msgstr ""
+
+#: slowplay.py:237
+msgid "About"
+msgstr ""
+
+#: slowplay.py:239
+msgid "Show info about this software"
+msgstr ""
+
+#: slowplay.py:271
+msgid "Open a file"
+msgstr ""
+
+#: slowplay.py:308
+msgid "Error: file not found"
+msgstr ""
+
+#: slowplay.py:309
+msgid "Unable to open file: {}"
+msgstr ""
+
+#: slowplay.py:381 slowplay.py:508 slowplay.py:518
+msgid "Please open a file..."
+msgstr ""
+
+#: slowplay.py:392
+msgid "Filename error..."
+msgstr ""
+
+#: slowplay.py:393
+msgid "Unable to save file: {}"
+msgstr ""
+
+#: slowplay.py:405
+msgid "Overwrite confirmation"
+msgstr ""
+
+#: slowplay.py:406
+msgid ""
+"{}\n"
+"already exists.\n"
+"\n"
+"Do you want to overwrite it?"
+msgstr ""
+
+#: slowplay.py:426
+msgid "Cancel file save"
+msgstr ""
+
+#: slowplay.py:436
+msgid "Saving file: {}..."
+msgstr ""
+
+#: slowplay.py:470
+msgid "Error"
+msgstr ""
+
+#: slowplay.py:471
+msgid "No file was recently open with this software. Please open one by clicking the open button"
+msgstr ""
+
+#: slowplay.py:859
+msgid "Specify a GStreamer custom sink"
+msgstr ""
+
+#: slowplay.py:860
+msgid "URI of the media to open"
+msgstr ""
+
