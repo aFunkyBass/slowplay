@@ -34,10 +34,10 @@ class recentDialog(ctk.CTkToplevel):
         self.LFrame.grid_columnconfigure(0, weight=1)
 
         self.okButton = ctk.CTkButton(self.RFrame, text=_("OK"), font=("", 18), command=self.onOk)
-        self.okButton.grid(row=0, column=0, pady=(8, 0), sticky="w")
+        self.okButton.grid(row=0, column=0, pady=(8, 0), sticky="we")
 
         self.cancelButton = ctk.CTkButton(self.RFrame, text=_("Cancel"), font=("", 18), command=self.destroy)
-        self.cancelButton.grid(row=1, column=0, pady=(8, 0), sticky="w")
+        self.cancelButton.grid(row=1, column=0, pady=(8, 0), sticky="we")
 
         self.togglePath = ctk.CTkCheckBox(self.RFrame, text=_("Show full path"), command=self.checkBoxToggle)
         self.togglePath.grid(row=2, column=0, pady=(8, 0), sticky="w")
