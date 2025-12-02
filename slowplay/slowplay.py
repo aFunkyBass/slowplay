@@ -21,8 +21,6 @@ import re
 import sys, pathlib
 
 import gettext
-gettext.bindtextdomain('slowplay', "./locales")
-gettext.textdomain('slowplay')
 _ = gettext.gettext
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
@@ -49,6 +47,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Mark app directories
         working_dir = os.path.dirname(__file__)
         resources_dir = "".join([working_dir, "/resources"])
+
+        # Localizations
+        gettext.bindtextdomain('slowplay', "".join([working_dir, "/locales"]))
+        gettext.textdomain('slowplay')
 
         # Sets app title and window size
         self.geometry(INITIAL_GEOMETRY)
@@ -450,7 +452,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.unbind_all('<1>')
         try:
             filename = filedialogs.saveFileDialog(
-                title='Save as..',
+                title=_('Save as..'),
                 initialfile = self.mediaFileName,
                 initialdir = self.settings.getVal(CFG_APP_SECTION, "LastSaveDir", os.path.expanduser("~")),
                 filter = SAVE_EXTENSIONS_FILTER,

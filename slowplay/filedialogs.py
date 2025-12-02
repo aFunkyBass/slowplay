@@ -1,6 +1,9 @@
 import subprocess
 import os
 
+import gettext
+_ = gettext.gettext
+
 ZEN_CMD = "zenity"
 
 # Checks to see id Zenity is installed on the system
@@ -81,10 +84,10 @@ def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = N
     filetypes = [f"{str(x).upper()} files: *.{x}" for x in filter]
     
     # Insert all the extension together as the first available filter
-    filetypes.insert(0, "Supported files: " + ' '.join(["*." + x for x in filter]))
+    filetypes.insert(0, _("Supported files: ") + ' '.join(["*." + x for x in filter]))
 
     # Append the "All files: *" at the end of filter
-    filetypes.append("All files: *")
+    filetypes.append(_("All files: *"))
     
     # traverse the array and adds the extension to filter
     for f in filetypes:
@@ -111,14 +114,14 @@ def __tk_dialog__(title = None, filter = None, initialdir = None, initialfile = 
   filetypes = []
 
   # Insert all the extension together as the first available filter
-  filetypes.append(("Supported files:",  ' '.join(["*." + x for x in filter])))
+  filetypes.append((_("Supported files:"),  ' '.join(["*." + x for x in filter])))
 
   # example: mp3 -> (MP3 files), (*.mp3)
   for x in filter:
     filetypes.append((f"{str(x).upper()} files", f"*.{x}"))
 
   # Append the "All files: *" at the end of filter
-  filetypes.append(("All files", "*.*"))
+  filetypes.append((_("All files"), "*.*"))
 
   # Creates a parent window without displaying it
   root = Tk()

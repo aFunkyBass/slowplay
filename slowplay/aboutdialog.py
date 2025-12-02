@@ -5,6 +5,8 @@ import webbrowser
 
 from sp_constants import *
 
+import gettext
+_ = gettext.gettext
 
 class imgDialog(ctk.CTkToplevel):
     def __init__(self, master, *args, **kwargs):
@@ -18,7 +20,7 @@ class imgDialog(ctk.CTkToplevel):
         working_dir = os.path.dirname(__file__)
         resources_dir = os.path.join(working_dir, "resources")
 
-        self.wm_title("Numeric Keypad Map")
+        self.wm_title(_("Numeric Keypad Map"))
         
         self.after(10)
 
@@ -71,7 +73,7 @@ class aboutDialog(ctk.CTkToplevel):
         working_dir = os.path.dirname(__file__)
         resources_dir = os.path.join(working_dir, "resources")
                 
-        self.wm_title("About")
+        self.wm_title(_("About"))
         
         #self.after(10)
 
@@ -96,15 +98,15 @@ class aboutDialog(ctk.CTkToplevel):
         self.tabview = ctk.CTkTabview(self)
         self.tabview.grid(row=0, column=1, padx=10, pady=10, sticky="ewsn")
         
-        self.closeButton = ctk.CTkButton(self, text="Close", font=("", 14), command=self.destroy)
+        self.closeButton = ctk.CTkButton(self, text=_("Close"), font=("", 14), command=self.destroy)
         self.closeButton.grid(row=1, column=1, pady=(8, 8), sticky="s")
 
         self.rowconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
-        tab1 = self.tabview.add("About")
-        tab2 = self.tabview.add("Shortcuts")
-        #tab3 = self.tabview.add("Donate")
+        tab1 = self.tabview.add(_("About"))
+        tab2 = self.tabview.add(_("Shortcuts"))
+        #tab3 = self.tabview.add(_("Donate"))
 
         # Widget on tab 1: "About"
         self.mainLabel = ctk.CTkLabel(tab1, text=APP_TITLE, justify="center", anchor="center", 
@@ -115,7 +117,7 @@ class aboutDialog(ctk.CTkToplevel):
                                       compound="center", font=("", 20))
         self.versLabel.grid(row=1, column=0, pady=(8, 0), sticky="n")
 
-        self.authLabel = ctk.CTkLabel(tab1, text="Created by Guido Pietrella", justify="center", anchor="center", 
+        self.authLabel = ctk.CTkLabel(tab1, text=_("Created by") + " Guido Pietrella", justify="center", anchor="center", 
                                       compound="center", font=("", LBL_FONT_SIZE))
         self.authLabel.grid(row=2, column=0, sticky="n")
 
@@ -126,28 +128,28 @@ class aboutDialog(ctk.CTkToplevel):
 
         # Widget on tab 2: "Shorcuts"
         sc_list = [
-            ("CTRL+R", "Open recent files list"),
-            ("CTRL+Q", "Quit"),
-            ("N. Keypad 0", "Play/Pause"),
-            ("N. Keypad .", "Stop and rewind"),
-            ("N. Keypad 1", "Rewind 5 seconds"),
-            ("N. Keypad 4", "Rewind 10 seconds"),
-            ("N. Keypad 7", "Rewind 15 seconds"),
-            ("N. Keypad 3", "Forward 5 seconds"),
-            ("N. Keypad 6", "Forward 10 seconds"),
-            ("N. Keypad 9", "Forward 15 seconds"),
-            ("Home", "Rewind"),
-            ("N. Keypad 2", "Playback speed +5%"),
-            ("N. Keypad 8", "Playback speed -5%"),
-            ("N. Keypad 5", "Reset playback speed to 100%"),
-            ("N. Keypad +", "Transpose +1 semitone"),
-            ("N. Keypad -", "Transpose -1 semitone"),
+            ("CTRL+R", _("Open recent files list")),
+            ("CTRL+Q", _("Quit")),
+            ("N. Keypad 0", _("Play/Pause")),
+            ("N. Keypad .", _("Stop and rewind")),
+            ("N. Keypad 1", _("Rewind 5 seconds")),
+            ("N. Keypad 4", _("Rewind 10 seconds")),
+            ("N. Keypad 7", _("Rewind 15 seconds")),
+            ("N. Keypad 3", _("Forward 5 seconds")),
+            ("N. Keypad 6", _("Forward 10 seconds")),
+            ("N. Keypad 9", _("Forward 15 seconds")),
+            ("Home", _("Rewind")),
+            ("N. Keypad 2", _("Playback speed +5%")),
+            ("N. Keypad 8", _("Playback speed -5%")),
+            ("N. Keypad 5", _("Reset playback speed to 100%")),
+            ("N. Keypad +", _("Transpose +1 semitone")),
+            ("N. Keypad -", _("Transpose -1 semitone")),
         ]
 
         scrollFrame = ctk.CTkScrollableFrame(tab2)
         scrollFrame.grid(row = 0, column = 0, padx = (4), pady = (4), sticky="nsew")
         
-        kpLabel = ctk.CTkButton(scrollFrame, text="SHOW NUM. KEYPAD MAP", command=self.imgShow)
+        kpLabel = ctk.CTkButton(scrollFrame, text=_("SHOW NUM. KEYPAD MAP"), command=self.imgShow)
         kpLabel.grid(row = 0, column = 0, columnspan = 2, sticky = "w", pady=(0, 10))
 
         scLabels = []
@@ -162,15 +164,15 @@ class aboutDialog(ctk.CTkToplevel):
 
         # Widget on tab 3: "Donate"
         """
-        self.donateMainLabel = ctk.CTkLabel(tab3, text="Show your love...", justify="center", anchor="center", 
+        self.donateMainLabel = ctk.CTkLabel(tab3, text=_("Show your love..."), justify="center", anchor="center", 
                                       compound="center", font=("", 20, "bold"))
         self.donateMainLabel.grid(row=0, column=0, pady=(10, 0), sticky="n")
 
-        self.donateSubLabel = ctk.CTkLabel(tab3, text="...donate some satoshi!", justify="center", anchor="center", 
+        self.donateSubLabel = ctk.CTkLabel(tab3, text=_("...donate some satoshi!"), justify="center", anchor="center", 
                                       compound="center")
         self.donateSubLabel.grid(row=1, column=0, sticky="n")
 
-        self.donateBtcAddess = ctk.CTkLabel(tab3, text="...donate some satoshi!", justify="center", anchor="center", 
+        self.donateBtcAddess = ctk.CTkLabel(tab3, text=_("...donate some satoshi!"), justify="center", anchor="center", 
                                       compound="center")
         self.donateBtcAddess.grid(row=4, column=0, pady=(8, 0), sticky="n")
         """

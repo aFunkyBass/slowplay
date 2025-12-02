@@ -2,12 +2,14 @@ import customtkinter as ctk
 from CTkListbox import *
 import os
 
+import gettext
+_ = gettext.gettext
 
 class recentDialog(ctk.CTkToplevel):
     def __init__(self, parent, data, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.title("Select recent file...")
+        self.title(_("Select recent file..."))
         
         self.attributes("-topmost",True)
         
@@ -31,13 +33,13 @@ class recentDialog(ctk.CTkToplevel):
         self.LFrame.grid_rowconfigure(0, weight=1)
         self.LFrame.grid_columnconfigure(0, weight=1)
 
-        self.okButton = ctk.CTkButton(self.RFrame, text="OK", font=("", 18), command=self.onOk)
+        self.okButton = ctk.CTkButton(self.RFrame, text=_("OK"), font=("", 18), command=self.onOk)
         self.okButton.grid(row=0, column=0, pady=(8, 0), sticky="w")
 
-        self.cancelButton = ctk.CTkButton(self.RFrame, text="Cancel", font=("", 18), command=self.destroy)
+        self.cancelButton = ctk.CTkButton(self.RFrame, text=_("Cancel"), font=("", 18), command=self.destroy)
         self.cancelButton.grid(row=1, column=0, pady=(8, 0), sticky="w")
 
-        self.togglePath = ctk.CTkCheckBox(self.RFrame, text="Show full path", command=self.checkBoxToggle)
+        self.togglePath = ctk.CTkCheckBox(self.RFrame, text=_("Show full path"), command=self.checkBoxToggle)
         self.togglePath.grid(row=2, column=0, pady=(8, 0), sticky="w")
 
         self.selection = ""

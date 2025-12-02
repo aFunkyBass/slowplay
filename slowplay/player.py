@@ -3,6 +3,9 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst # type: ignore
 
+import gettext
+_ = gettext.gettext
+
 Gst.init(None)
 
 TIME_FORMAT = Gst.Format(Gst.Format.TIME)
@@ -35,9 +38,8 @@ class slowPlayer():
         self.pipevolume = Gst.ElementFactory.make("volume")
         
         if self.tempopitch is None:
-            CTkMessagebox(title="Error", icon="cancel", 
-                          message="You need to install the Gstreamer soundtouch \
-                                    elements for this program to work.")
+            CTkMessagebox(title=_("Error"), icon="cancel", 
+                          message=_("You need to install the Gstreamer soundtouch elements for this program to work."))
             raise SystemExit()
 
         #self.resampler = Gst.ElementFactory.make("audioresample")
@@ -46,7 +48,7 @@ class slowPlayer():
         if(customsink is not None):
             self.sink = Gst.ElementFactory.make(customsink)
             if(self.sink is None):
-                print("Error: impossible to instantiate sink: '%s'. Reverting to default sink" % customsink)
+                print(_("Error: impossible to instantiate sink: '{}'. Reverting to default sink").format(customsink))
                 self.sink = Gst.ElementFactory.make(GST_DEFAULT_SINK)
         else:
             self.sink = Gst.ElementFactory.make(GST_DEFAULT_SINK)
