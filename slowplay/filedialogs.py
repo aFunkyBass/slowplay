@@ -71,7 +71,7 @@ def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = N
   cmd.append('--filename')
   cmd.append(filename)
 
-  # if save is true it open a save as dialgo box instead
+  # if save is true it open a save as dialog box instead
   if(save):
     cmd.append("--save")
     # enables the overwrite warning
@@ -84,7 +84,7 @@ def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = N
     filetypes = [f"{str(x).upper()} files: *.{x}" for x in filter]
     
     # Insert all the extension together as the first available filter
-    filetypes.insert(0, _("Supported files: ") + ' '.join(["*." + x for x in filter]))
+    filetypes.insert(0, _("Supported files") + ": " + ' '.join(["*." + x for x in filter]))
 
     # Append the "All files: *" at the end of filter
     filetypes.append(_("All files: *"))
@@ -114,7 +114,7 @@ def __tk_dialog__(title = None, filter = None, initialdir = None, initialfile = 
   filetypes = []
 
   # Insert all the extension together as the first available filter
-  filetypes.append((_("Supported files:"),  ' '.join(["*." + x for x in filter])))
+  filetypes.append((_("Supported files") + ":",  ' '.join(["*." + x for x in filter])))
 
   # example: mp3 -> (MP3 files), (*.mp3)
   for x in filter:

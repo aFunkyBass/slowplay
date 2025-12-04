@@ -105,16 +105,13 @@ msgid "SHOW NUM. KEYPAD MAP"
 msgstr "MOSTRA LA MAPPA DEI TASTI"
 
 #: filedialogs.py:87
-msgid "Supported files: "
-msgstr "File supportati:"
+#: filedialogs.py:117
+msgid "Supported files"
+msgstr "File supportati"
 
 #: filedialogs.py:90
 msgid "All files: *"
 msgstr "Tutti i file: *"
-
-#: filedialogs.py:117
-msgid "Supported files:"
-msgstr "File supportati:"
 
 #: filedialogs.py:124
 msgid "All files"
