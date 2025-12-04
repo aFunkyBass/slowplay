@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-12-02 01:30+0100\n"
-"PO-Revision-Date: 2025-12-02 01:31+0100\n"
+"POT-Creation-Date: 2025-12-04 21:26+0100\n"
+"PO-Revision-Date: 2025-12-04 21:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -104,8 +104,7 @@ msgstr "Trasponi di -1 semitono"
 msgid "SHOW NUM. KEYPAD MAP"
 msgstr "MOSTRA LA MAPPA DEI TASTI"
 
-#: filedialogs.py:87
-#: filedialogs.py:117
+#: filedialogs.py:87 filedialogs.py:117
 msgid "Supported files"
 msgstr "File supportati"
 
@@ -192,7 +191,7 @@ msgid ""
 "Open a file.\n"
 "Right-click to reopen a recent file"
 msgstr ""
-"Apre un file\n"
+"Apre un file.\n"
 "Click destro per aprire un file recente"
 
 #: slowplay.py:234
