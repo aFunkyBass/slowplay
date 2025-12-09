@@ -5,7 +5,7 @@ APP_NAME = "slowplay"
 APP_DESCRIPTION = "SlowPlay is a simple audio player with speed/pitch \
 change capabilities, based on GStreamer."
 
-APP_VERSION = "0.2.2"
+APP_VERSION = "0.2.3"
 
 APP_URL = "https://github.com/aFunkyBass/slowplay"
 
