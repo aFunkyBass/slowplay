@@ -32,6 +32,7 @@ import appsettings
 from appsettings import CFG_APP_SECTION
 import recentdialog
 import aboutdialog
+import ytmanage
 
 #from CTkRangeSlider import *
 
@@ -464,6 +465,22 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         return(filename)
 
     # Open a dialog with the list of recent files
+    def openYouTubeDialog(self, event):
+        self.unbind_all('<KeyPress>')
+        self.unbind_all('<1>')
+        try:
+            popup = ytmanage.ytDialog(self)
+            rFile = popup.show()
+        finally:
+            self.bind_all('<1>', self._click_manager_)
+            self.bind_all('<KeyPress>', self._hotkey_manager_)
+        
+        if(rFile == ""):
+            return(False)
+        
+        # self.setFile(rFile)
+
+    # Open a dialog with the list of recent files
     def openRecentFileDialog(self, event):
         RecentFileList = self.settings.getRecentFiles()
 
@@ -796,6 +813,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.varPitchST.set(self.varPitchST.get() - STEPS_SEMITONES)
         elif(key == 'r' and state == 20):
             self.openRecentFileDialog(None)
+        elif(key == 'y' and state == 20):
+            self.openYouTubeDialog(None)
         elif(key == 'q' and state == 20):
             self.destroy()
             exit()

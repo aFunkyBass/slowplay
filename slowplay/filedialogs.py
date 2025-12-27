@@ -1,5 +1,6 @@
 import subprocess
 import os
+import utils
 
 import gettext
 _ = gettext.gettext
@@ -8,29 +9,12 @@ ZEN_CMD = "zenity"
 
 # Checks to see id Zenity is installed on the system
 def __check_zenity__() -> bool:
-  curEnv = __get_env__()
+  curEnv = utils.__get_env__()
   try:
     subprocess.run([ZEN_CMD, "-h"], env = curEnv, capture_output = True, text = True)
     return(True)
   except:
     return(False)
-
-
-# Function to restore the original LD_LIBRARY_PATH environment
-# if the app is running as a frozen app with pyinstaller
-def __get_env__():
-  env = dict(os.environ)
-
-  lp_key = 'LD_LIBRARY_PATH'
-
-  lp_orig = env.get(lp_key + '_ORIG')
-
-  if lp_orig is not None:
-      env[lp_key] = lp_orig  # restore the original, unmodified value
-  else:
-      env.pop(lp_key, None)
-
-  return(env)
 
 # Start a file open dialog box
 # if zenity is installed calls it it falls back on 
@@ -96,7 +80,7 @@ def __z_dialog__(title = None, filter = None, initialdir = None, initialfile = N
   
   # restores the original LD_LIBRARY_PATH environment
   # Pyinstaller safe
-  curEnv = __get_env__()
+  curEnv = utils.__get_env__()
 
   # Launch zenity through a subprocess.run()
   try:
