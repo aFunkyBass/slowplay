@@ -25,12 +25,20 @@ def __get_env__():
   return(env)
 
 
+# Function to generate a filename on the temporary directory
+def __generate_temp_filename__(filename = ""):
+    if(filename == ""):
+        return("")
+    newname = os.path.join(tempfile.gettempdir(), filename)
+    #print(newname)
+    return(newname)
+
 # Function to generate a temporary filename
 def __generate_random_temp_filename__(suffix = ""):
     random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
     newname = os.path.join(tempfile.gettempdir(), random_string + suffix)
     #print(newname)
-    return newname
+    return(newname)
 
 def capture_subprocess_output(subprocess_args, callback_func = None, show_output = False):
     # Start subprocess
@@ -80,4 +88,4 @@ def capture_subprocess_output(subprocess_args, callback_func = None, show_output
     output = buf.getvalue()
     buf.close()
 
-    return (success, output)
+    return(success, output)

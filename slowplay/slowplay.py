@@ -90,9 +90,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.bStatusBarTags = False         # Flag for the update of artist/song tags 
                                             # on the status bar
-        self.songMetadata = ""
 
-        # Build the 3 main frames principali: Left (shrinkable), Right (buttons)
+        self.songMetadata = ""              # Metadata for the songs
+
+        self.bYouTubeFile = False           # Flag is True when the media is a YouTube video
+
+        # Build the 3 main frames: Left (shrinkable), Right (buttons)
         # and low (status bar)
         self.LFrame = ctk.CTkFrame(self, width=400, height=200)
         self.RFrame = ctk.CTkFrame(self)
@@ -262,7 +265,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     # Open file selection and sets it for playback
     def openFile(self):
-        self.setFile(self.selectFileToOpen())
+        newfile = self.selectFileToOpen()
+        if(newfile != ""):
+            self.bYouTubeFile = False
+            self.setFile(newfile)
 
     # Open the file selection dialog
     def selectFileToOpen(self) -> str:
@@ -362,6 +368,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
     # Saves the playback options to the recent files list
     def setRecentFilePBOptions(self, filename):
         if(filename == ""):
+            return(True)
+
+        # Checks for the permission to write to recent
+        if(self.bYouTubeFile == True):
             return(True)
 
         sp = self.varSpeed.get()
@@ -464,21 +474,36 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         return(filename)
 
-    # Open a dialog with the list of recent files
+    # Open a dialog to download a YouTube audio
     def openYouTubeDialog(self, event):
+        # Temporarily disables all the keypress and mouse binding
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
         try:
             popup = ytmanage.ytDialog(self)
-            rFile = popup.show()
+            rUrl = popup.show()
         finally:
             self.bind_all('<1>', self._click_manager_)
             self.bind_all('<KeyPress>', self._hotkey_manager_)
         
-        if(rFile == ""):
+        if(rUrl == False):
             return(False)
-        
-        # self.setFile(rFile)
+
+        # Instanciate a YouTube Manager objecy
+        manager = ytmanage.ytManage(rUrl)
+
+        # Download the video into a temporary file
+        if(manager.downloadAudioFile(process_callback = self.dispYoutubeProgress) == False):
+            CTkMessagebox(master = self, title = _("Error"), 
+                            message=_("Unable to download audio file from YouTube."),
+                            icon = "cancel", font = ("", LBL_FONT_SIZE))
+            return
+
+        # Prevent this temporary file to be added to recent
+        self.bYouTubeFile = True
+
+        # Set the temporary file to be played
+        self.setFile(manager.audioFile)
 
     # Open a dialog with the list of recent files
     def openRecentFileDialog(self, event):
@@ -500,11 +525,11 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             finally:
                 self.bind_all('<1>', self._click_manager_)
                 self.bind_all('<KeyPress>', self._hotkey_manager_)
-
             
             if(rFile == ""):
                 return(False)
             
+            self.bYouTubeFile = False
             self.setFile(rFile)
 
     # Updates the save progress bars
@@ -578,6 +603,13 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.songMetadata = f"{self.player.artist} - {self.player.title}"
                 self.statusBarMessage(self.songMetadata, True)
                 self.bStatusBarTags = True
+
+    # Display the YouTube download progress stripping any newline at the end of strings
+    def dispYoutubeProgress(self, line):
+        self.statusBarMessage(re.sub(pattern=r'(.+)\n$', repl=r'\1', string=line))
+
+        self.update()
+        self.update_idletasks()
 
     #def validate_int(self, d, i, P, s, S, v, V, W):
     #    print("d=", d, " i=", i, " P=",P," s=", s," S=", S, " v=",v," V=", V, " W=",W)
@@ -852,7 +884,9 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
     # Handles drop event
     def _drop_manager_(self, event):
         dropped_file = str(self.tk.splitlist(event.data)[0])
-        self.setFile(dropped_file)
+        if(dropped_file != ""):
+            self.bYouTubeFile = False
+            self.setFile(dropped_file)
 
     # Test the dropped file
     def _drop_check_(self, event):

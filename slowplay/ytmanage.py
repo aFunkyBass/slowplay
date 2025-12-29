@@ -1,3 +1,6 @@
+#
+# https://gist.github.com/nawatts/e2cdca610463200c12eac2a14efc0bfb
+#
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from CTkMessagebox import CTkMessagebox
@@ -5,10 +8,9 @@ from CTkToolTip import *
 import subprocess
 import os
 import utils
-import webbrowser
 import json
-import yt_dlp
 import json
+import hashlib
 
 from sp_constants import *
 
@@ -17,6 +19,7 @@ _ = gettext.gettext
 
 YTDLP_CMD = "yt-dlp"
 AUDIO_FORMAT_EXTENSION = "mp3"
+THUMB_FORMAT_EXTENSION = "png"
 
 class ytDialog(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -27,6 +30,8 @@ class ytDialog(ctk.CTkToplevel):
 
         # YouTube Manager object
         self.manager = ytManage()
+
+        self.retValue = False
 
         # Mark app directories
         working_dir = os.path.dirname(__file__)
@@ -49,7 +54,8 @@ class ytDialog(ctk.CTkToplevel):
         self.TopFrame = ctk.CTkFrame(self, width=400, height=200)
         self.TopFrame.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=10, pady=10)
 
-        self.dlButton = ctk.CTkButton(self, text=_("Open"), font=("", 14))
+        self.dlButton = ctk.CTkButton(self, text=_("Open"), font=("", 14), 
+                                      state = ctk.DISABLED, command = self.onDownload)
         self.dlButton.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="e")
 
         self.cancelButton = ctk.CTkButton(self, text=_("Cancel"), font=("", 14), command=self.destroy)
@@ -66,10 +72,14 @@ class ytDialog(ctk.CTkToplevel):
         self.URL_entry = ctk.CTkEntry(self.TopFrame, placeholder_text=_("Paste a YouTube URL here..."))
         self.URL_entry.grid(row=0, column=1, sticky="ew", padx=8, pady=8)
 
-        self.searchBtn = ctk.CTkButton(self.TopFrame, width=40, text=_("S"), font=("", 14), 
-                                       command= lambda: self.searchVideo())
-        self.searchBtn.grid(row=0, column=2, sticky="e", padx=8, pady=8)
+        YTIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/YT_ico.png"),
+                                 dark_image=Image.open(f"{resources_dir}//YT_ico.png"), size=(23, 16))
 
+        self.searchBtn = ctk.CTkButton(self.TopFrame, width=40, text="", font=("", 14), 
+                                       image=YTIcon, command= lambda: self.searchVideo())
+        self.searchBtn.grid(row=0, column=2, sticky="e", padx=8, pady=8)
+        self.searchBtn_tt = CTkToolTip(self.searchBtn, message=_("Click to search YouTube video"),
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
         self.InfoFrame = ctk.CTkFrame(self.TopFrame)
         self.InfoFrame.grid(row=1, column=0, columnspan=3, sticky="nsew", padx=10, pady=10)
 
@@ -77,17 +87,18 @@ class ytDialog(ctk.CTkToplevel):
         self.TopFrame.rowconfigure(1, weight=1)
 
         # Widget on InfoFrame
-        self.thumbNail = ctk.CTkLabel(self.InfoFrame, width=300, height=168)
-        self.thumbNail.grid(row = 0, column = 0, rowspan = 3, sticky = "n")
+        self.thumbnail = ctk.CTkLabel(self.InfoFrame, width=300, height=168, text="")
+        self.thumbnail.grid(row = 0, column = 0, rowspan = 3, sticky = "n", padx = 10, pady = 10)
 
         self.title = ctk.CTkLabel(self.InfoFrame, anchor = "w", wraplength=100,
-                                  justify="left", font=("", LBL_FONT_SIZE, "bold"))
-        self.title.grid(row = 0, column = 1, sticky = "nwe")
+                                  justify="left", font=("", LBL_FONT_SIZE, "bold"),
+                                  text="")
+        self.title.grid(row = 0, column = 1, sticky = "nwe", pady=10)
 
-        self.author = ctk.CTkLabel(self.InfoFrame, justify="left", anchor = "w")
+        self.author = ctk.CTkLabel(self.InfoFrame, justify="left", anchor = "w", text="")
         self.author.grid(row = 1, column = 1, sticky = "nwe")
 
-        self.views = ctk.CTkLabel(self.InfoFrame, justify="left", anchor = "w")
+        self.views = ctk.CTkLabel(self.InfoFrame, justify="left", anchor = "w", text="")
         self.views.grid(row = 2, column = 1, sticky = "nwe")
 
         self.InfoFrame.columnconfigure(1, weight=1)
@@ -95,8 +106,19 @@ class ytDialog(ctk.CTkToplevel):
 
         self.bind("<Configure>", self.adjust_wrap)
 
+    # Function to adjust the wraplength of title entry
     def adjust_wrap(self, event):
         self.title.configure(wraplength=self.title.winfo_width())
+
+    # Reset all the search parameters
+    def resetSearch(self):
+        self.thumbnail.configure(image = None)
+        self.title.configure(text = "")
+        self.author.configure(text = "")
+        self.views.configure(text = "")
+        
+        self.manager.reset()
+        self.dlButton.configure(state = ctk.DISABLED)
     
     def searchVideo(self):
         if(self.URL_entry.get() == ""):
@@ -105,10 +127,17 @@ class ytDialog(ctk.CTkToplevel):
                           icon = "cancel", font = ("", LBL_FONT_SIZE))
             return(False)
 
-        videoInfo = self.manager.getVideoInfoFields(self.URL_entry.get(),
-                                            ["title", "description", "uploader",
-                                             "timestamp", "view_count"])
+        # Reset search parameters and blank all the result fields
+        self.resetSearch()
+        self.update()
+        self.update_idletasks()
+
+        # set the URL and prepare the search
+        self.manager.setURL(self.URL_entry.get())
         
+        # Download the required info and fill the fields
+        videoInfo = self.manager.getVideoInfoFields(["title", "description", "uploader",
+                                                        "timestamp", "view_count"])
         if(videoInfo is None or not isinstance(videoInfo, dict)):
             CTkMessagebox(master = self, title = _("Error: unable to find the video..."), 
                           message=_("Unable to retrieve the required video\n\n"+
@@ -120,8 +149,30 @@ class ytDialog(ctk.CTkToplevel):
             self.title.configure(text = videoInfo["title"])
             self.author.configure(text = _("by: ") + videoInfo["uploader"])
             self.views.configure(text = _("Views: ") + f"{videoInfo["view_count"]}")
-        
+
+        # Download and display the video thumbnail
+        thmb = self.manager.getVideoThumbnail()
+        if(thmb == False):
+            CTkMessagebox(master = self, title = _("Error: unable to download the thumbnail..."), 
+                          message=_("Unable to retrieve the video thubnail\n\n"+
+                                    "Uhmmmmm... This is very strange"),
+                          icon = "cancel", font = ("", LBL_FONT_SIZE))
+            return(False)
+        else:
+            img = Image.open(self.manager.thumbnail)
+            thumbImage = ctk.CTkImage(dark_image = img, light_image = img,
+                                size=[self.thumbnail.winfo_width(), self.thumbnail.winfo_height()])
+            self.thumbnail.configure(image = thumbImage)
+
+        # Enable the download button
+        self.dlButton.configure(state=ctk.NORMAL)
+
         return(True)
+    
+    # Close the dialog and returns the current URL
+    def onDownload(self):
+        self.retValue = self.manager.curURL
+        self.destroy()
     
     def show(self):
         self.deiconify()
@@ -133,7 +184,7 @@ class ytDialog(ctk.CTkToplevel):
         self.attributes('-topmost',True)
         self.after_idle(self.attributes, '-topmost', False)
         self.wait_window(self)
-        return(True)
+        return(self.retValue)
     
     def _keybind_(self, event):
         key = event.keysym
@@ -148,10 +199,29 @@ class ytDialog(ctk.CTkToplevel):
 # with yt-dlp 
 #
 class ytManage:
-    def __init__(self):
+    def __init__(self, aUrl: str = ""):
+
+        # URL of the video
+        self.curURL = ""
+
+        # Output filename
+        self.outFile = ""
+
+        # Output audio filename
+        self.audioFile = ""
+
+        # Video info storage
+        self.videoInfo = {}
+
+        # Video thumbnail
+        self.thumbnail = None
+
+        if(aUrl != ""):
+            self.setURL(aUrl)
+
         self.bExternalCall = self.checkYTDLP()
 
-    # Checks to see if yt-dlp is installed on the systme     
+    # Checks to see if yt-dlp is installed on the system
     def checkYTDLP(self):
         curEnv = utils.__get_env__()
 
@@ -162,19 +232,18 @@ class ytManage:
             return(False)
     
     # Actually performs download the audio from the YouTube url
-    def downloadAudioFile(self, ytURL = "", ouput_file = "", process_callback = None, show_output = False):
+    def downloadAudioFile(self, process_callback = None, show_output = False):
         #print("Url: " + ytURL)
-        if(ytURL is None):
-            return(False)
+        if(self.curURL is None):
+            return(None)
 
-        # If no output filename is specified it generate a temporary filename
-        o_fname = utils.__generate_random_temp_filename__("." + AUDIO_FORMAT_EXTENSION) if ouput_file == "" else ouput_file
         command = [
             YTDLP_CMD,
              '-x',                                      # Extract audio
              '--audio-format', AUDIO_FORMAT_EXTENSION,  # Audio format
-             '-o', o_fname,                             # Output filename
-             ytURL                                      # Video URL
+             '--no-playlist',                           # Only consider the single file
+             '-o', self.outFile,                        # Output filename
+             self.curURL                                # Video URL
         ]
 
         # Performs the os call and capture the stdout
@@ -182,71 +251,102 @@ class ytManage:
 
         return(ytOut if ret != False else False)
 
-        '''
-        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
-            errs = []
-            for line in proc.stderr:
-                print(command[0], line)
-                errs.append(line)
-
-            stdout, _ = proc.communicate()
-        
-        ytReturn = subprocess.CompletedProcess(command, proc.returncode, stdout, "\n".join(errs))
-        '''
-
-        #ytReturn = subprocess.run(command, capture_output=True)
-        #print(ytReturn)
-
     # Retrieves the info from a Video and 
     # returns a dict with the fields requested in the list
     #
     # Example: getVideoInfoFields(["Title", "Author, Descritpion"]
     # -> {"Title" : "Video title", "Author": "The author"....}
-    def getVideoInfoFields(self, ytURL = "", fieldList = []):
+    def getVideoInfoFields(self, fieldList = []):
+        if(self.curURL is None):
+            return(None)
+
         if(len(fieldList) == 0):
             return(None)
 
         #print(fieldList)
         
         # Download the information about video in JSON format
-        ytJson = self.getVideoInfo(ytURL)
-        if(ytJson is None):
-            return(None)
-
-        # Transform the JSON into a Python dict        
-        infoData = json.loads(ytJson)
+        if(self.videoInfo is None or len(self.videoInfo) == 0):
+            if(self.getVideoInfo() == False):
+                return(None)
 
         # Retrieves the required fields and put them into a new dict
         retDict = {}
         for field in fieldList:
             try:
-                retDict[field] = infoData[field]
+                retDict[field] = self.videoInfo[field]
             except:
                 continue
-        
+
         return(retDict)
-        
+
+    # Download the thumbnail for the Video and saves it into a temporary PNG file
+    def getVideoThumbnail(self, process_callback = None, show_output = False):
+        if(self.curURL is None):
+            return(False)
+
+        if(self.thumbnail is not None):
+            return(True)
+
+        command = [
+            YTDLP_CMD,
+             '--skip-download',                             # Doesn't download the video
+             '--write-thumbnail',                           # Write thumbnail on disk
+             '--convert-thumbnail', THUMB_FORMAT_EXTENSION, # Audio format
+             '--no-playlist',                               # Only consider the single file
+             '-o', self.outFile,                            # Output filename
+             self.curURL                                    # Video URL
+        ]
+
+        # Performs the os call and capture the stdout
+        ret, _ = utils.capture_subprocess_output(command, process_callback, show_output)
+
+        if(ret):
+            self.thumbnail = '.'.join([self.outFile, THUMB_FORMAT_EXTENSION])
+            return(True)
+        else:
+            return(False)
+
 
     # Get video info and returns it into a Json object
-    def getVideoInfo(self, ytURL = ""):
-        if(ytURL is None):
+    def getVideoInfo(self):
+        if(self.curURL is None):
             return(None)
 
         command = [
             YTDLP_CMD,
              '-J', 
-             ytURL
+             '--no-playlist',                  # Only consider the single file
+             self.curURL
         ]
         
         ret, ytOut = utils.capture_subprocess_output(command)
 
-        return(ytOut if ret != False else None)
+        if(ret):
+            self.videoInfo = json.loads(ytOut)
+            return(True)
+        else:
+            return(False)
 
+    # Set the specified the URL and prepares the class to work on iy
+    def setURL(self, newURL):
+        if(newURL == ""):
+            return(False)
 
-#def gpOut(stream, mask):
-#    print("GP: ", stream.readline())
+        # Reset all values
+        self.reset()
 
-#process = ["yt-dlp", "https://www.youtube.com/watch?v=iwI6qiL8Ofo"]
+        # Makes a SHA256 hash of the specified URL and uses it as 
+        # name for temporary files. 
+        # This is done because if the same URL is specified twice in a
+        # session, the files is not downloaded again.
+        self.curURL = newURL
+        self.outFile = utils.__generate_temp_filename__(
+                                hashlib.sha256(str(newURL).encode('ASCII')).hexdigest())
+        self.audioFile = '.'.join([self.outFile, AUDIO_FORMAT_EXTENSION])
 
-#capture_subprocess_output(process, gpOut)
-#capture_subprocess_output(process)
+    def reset(self):
+        self.curURL = ""
+        self.outFile = ""
+        self.videoInfo = {}
+        self.thumbnail = None
