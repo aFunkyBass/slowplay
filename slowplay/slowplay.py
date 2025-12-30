@@ -223,29 +223,39 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # Widgets on right panel
         self.playButton = ctk.CTkButton(self.RFrame, text=_("Play"), font=("", 18), command=self.togglePlay)
-        self.playButton.grid(row=0, column=0, pady=(8, 0), sticky="w")
+        self.playButton.grid(row=0, column=0, pady=(8, 0), sticky="ew", columnspan=2)
         self.playButton_tt = CTkToolTip(self.playButton, message=_("Play/Pause"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
         self.openButton = ctk.CTkButton(self.RFrame, text=_("Open"), font=("", 18), command=self.openFile)
-        self.openButton.grid(row=1, column=0, pady=(8, 0), sticky="w")
+        self.openButton.grid(row=1, column=0, pady=(8, 0), sticky="ew")
         self.openButton_tt = CTkToolTip(self.openButton, message=_("Open a file.\nRight-click to reopen a recent file"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
         # Activate the recent file list with right-click
         self.openButton.bind("<Button-3>", self.openRecentFileDialog)
 
+        YTIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/YT_ico.png"),
+                                 dark_image=Image.open(f"{resources_dir}//YT_ico.png"), size=(23, 16))
+
+        self.YTBtn = ctk.CTkButton(self.RFrame, text="", width=40, font=("", 18),
+                                       image=YTIcon, command= lambda: self.openYouTubeDialog(None))
+        self.YTBtn.grid(row=1, column=1, sticky="e", pady=(8, 0), padx=(8, 0))
+        self.YTBtn_tt = CTkToolTip(self.YTBtn, message=_("Click to extract audio from a YouTube video"),
+                                        delay=0.8, alpha=0.5, justify="left", follow=False)
+
         self.saveasButton = ctk.CTkButton(self.RFrame, text=_("Save as..."), font=("", 18), command=self.saveAs)
-        self.saveasButton.grid(row=2, column=0, pady=(8, 0), sticky="w")
+        self.saveasButton.grid(row=2, column=0, pady=8, sticky="ew", columnspan=2)
         self.saveasButton_tt = CTkToolTip(self.saveasButton, message=_("Save the file with current speed/pitch settings as MP3 or WAV"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
         self.aboutButton = ctk.CTkButton(self.RFrame, text=_("About"), font=("", 18), command=self.openAboutDialog)
-        self.aboutButton.grid(row=3, column=0, pady=(8, 8), sticky="s")
+        self.aboutButton.grid(row=3, column=0, pady=(8, 8), sticky="sew", columnspan=2)
         self.aboutButton_tt = CTkToolTip(self.aboutButton, message=_("Show info about this software"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
         
         self.RFrame.rowconfigure(3, weight=1)
+        self.RFrame.columnconfigure(0, weight=1)
 
         # Widget on status bar
         self.fileLabel = ctk.CTkLabel(self.BFrame, text="", font=("", LBL_FONT_SIZE))
