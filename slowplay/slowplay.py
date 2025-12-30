@@ -77,7 +77,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.songProgress = ctk.DoubleVar(self, value=0)    # Holds the value of progress bar
         self.songProgress.set(0)
 
-        # Variabili globali
+        # Global variables
         self.media = ""                     # Media complete name
         self.mediaUri = ""                  # Media URI
         self.mediaFileName = ""             # Media simple filename
@@ -342,10 +342,16 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.player.MediaLoad(self.mediaUri)
         self.player.update_position()
 
+        # Set the metadata only if it's not a Youtube downloaded file
+        if(self.bYouTubeFile == False):
+            self.songMetadata = self.mediaFileName
+            self.title(f"{APP_TITLE} - {self.mediaFileName}")
+        else:
+            self.songMetadata = f"(YT) - {self.songMetadata}"
+            self.title(f"{APP_TITLE} - {self.songMetadata}")
+
         # Updates window title and status bar
-        self.songMetadata = self.mediaFileName
         self.statusBarMessage(self.songMetadata, static = True)
-        self.title(f"{APP_TITLE} - {self.mediaFileName}")
 
         # if the file was recently open, it loads its settings
         # otherwise saves it into the list
@@ -491,7 +497,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.unbind_all('<1>')
         try:
             popup = ytmanage.ytDialog(self)
-            rUrl = popup.show()
+            rUrl, videoInfo = popup.show()
         finally:
             self.bind_all('<1>', self._click_manager_)
             self.bind_all('<KeyPress>', self._hotkey_manager_)
@@ -499,7 +505,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(rUrl == False):
             return(False)
 
-        # Instanciate a YouTube Manager objecy
+        # Instanciate a YouTube Manager object
         manager = ytmanage.ytManage(rUrl)
 
         # Download the video into a temporary file
@@ -511,6 +517,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         # Prevent this temporary file to be added to recent
         self.bYouTubeFile = True
+
+        # Uses the video title as metadata to be displayed
+        # on the status bar
+        self.songMetadata = videoInfo["title"]
 
         # Set the temporary file to be played
         self.setFile(manager.audioFile)

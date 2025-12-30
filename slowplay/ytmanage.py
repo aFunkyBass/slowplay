@@ -184,7 +184,7 @@ class ytDialog(ctk.CTkToplevel):
         self.attributes('-topmost',True)
         self.after_idle(self.attributes, '-topmost', False)
         self.wait_window(self)
-        return(self.retValue)
+        return(self.retValue, self.manager.videoMetadata)
     
     def _keybind_(self, event):
         key = event.keysym
@@ -212,6 +212,9 @@ class ytManage:
 
         # Video info storage
         self.videoInfo = {}
+
+        # Video selected metadata
+        self.videoMetadata = {}
 
         # Video thumbnail
         self.thumbnail = None
@@ -271,14 +274,14 @@ class ytManage:
                 return(None)
 
         # Retrieves the required fields and put them into a new dict
-        retDict = {}
+        self.videoMetadata = {}
         for field in fieldList:
             try:
-                retDict[field] = self.videoInfo[field]
+                self.videoMetadata[field] = self.videoInfo[field]
             except:
                 continue
 
-        return(retDict)
+        return(self.videoMetadata)
 
     # Download the thumbnail for the Video and saves it into a temporary PNG file
     def getVideoThumbnail(self, process_callback = None, show_output = False):
