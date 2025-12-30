@@ -140,7 +140,7 @@ class ytDialog(ctk.CTkToplevel):
                                                         "timestamp", "view_count"])
         if(videoInfo is None or not isinstance(videoInfo, dict)):
             CTkMessagebox(master = self, title = _("Error: unable to find the video..."), 
-                          message=_("Unable to retrieve the required video\n\n"+
+                          message=_("Unable to retrieve the required video\n\n"
                                     "Please make sure you entered a valid YouTube URL."),
                           icon = "cancel", font = ("", LBL_FONT_SIZE))
             return(False)
@@ -154,7 +154,7 @@ class ytDialog(ctk.CTkToplevel):
         thmb = self.manager.getVideoThumbnail()
         if(thmb == False):
             CTkMessagebox(master = self, title = _("Error: unable to download the thumbnail..."), 
-                          message=_("Unable to retrieve the video thubnail\n\n"+
+                          message=_("Unable to retrieve the video thubnail\n\n"
                                     "Uhmmmmm... This is very strange"),
                           icon = "cancel", font = ("", LBL_FONT_SIZE))
             return(False)

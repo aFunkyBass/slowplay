@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-12-04 21:26+0100\n"
+"POT-Creation-Date: 2025-12-30 22:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 msgid "Numeric Keypad Map"
 msgstr ""
 
-#: aboutdialog.py:76 aboutdialog.py:107 slowplay.py:239
+#: aboutdialog.py:76 aboutdialog.py:107 slowplay.py:252
 msgid "About"
 msgstr ""
 
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: aboutdialog.py:133 slowplay.py:223
+#: aboutdialog.py:133 slowplay.py:227
 msgid "Play/Pause"
 msgstr ""
 
@@ -103,19 +103,19 @@ msgstr ""
 msgid "SHOW NUM. KEYPAD MAP"
 msgstr ""
 
-#: filedialogs.py:87 filedialogs.py:117
+#: filedialogs.py:71 filedialogs.py:101
 msgid "Supported files"
 msgstr ""
 
-#: filedialogs.py:90
+#: filedialogs.py:74
 msgid "All files: *"
 msgstr ""
 
-#: filedialogs.py:124
+#: filedialogs.py:108
 msgid "All files"
 msgstr ""
 
-#: player.py:41 slowplay.py:472
+#: player.py:41 slowplay.py:513 slowplay.py:534
 msgid "Error"
 msgstr ""
 
@@ -135,7 +135,7 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: recentdialog.py:39
+#: recentdialog.py:39 ytmanage.py:61
 msgid "Cancel"
 msgstr ""
 
@@ -143,89 +143,93 @@ msgstr ""
 msgid "Show full path"
 msgstr ""
 
-#: slowplay.py:126
+#: slowplay.py:130
 msgid "Speed:"
 msgstr ""
 
-#: slowplay.py:139
+#: slowplay.py:143
 msgid "Reset speed"
 msgstr ""
 
-#: slowplay.py:150
+#: slowplay.py:154
 msgid "Transpose:"
 msgstr ""
 
-#: slowplay.py:163
+#: slowplay.py:167
 msgid "Reset transpose"
 msgstr ""
 
-#: slowplay.py:172
+#: slowplay.py:176
 msgid "Pitch (cents):"
 msgstr ""
 
-#: slowplay.py:184
+#: slowplay.py:188
 msgid "Reset pitch"
 msgstr ""
 
-#: slowplay.py:194
+#: slowplay.py:198
 msgid "Volume:"
 msgstr ""
 
-#: slowplay.py:221
+#: slowplay.py:225
 msgid "Play"
 msgstr ""
 
-#: slowplay.py:226
+#: slowplay.py:230 ytmanage.py:57
 msgid "Open"
 msgstr ""
 
-#: slowplay.py:228
+#: slowplay.py:232
 msgid ""
 "Open a file.\n"
 "Right-click to reopen a recent file"
 msgstr ""
 
-#: slowplay.py:234
+#: slowplay.py:244
+msgid "Click to extract audio from a YouTube video"
+msgstr ""
+
+#: slowplay.py:247
 msgid "Save as..."
 msgstr ""
 
-#: slowplay.py:236
+#: slowplay.py:249
 msgid "Save the file with current speed/pitch settings as MP3 or WAV"
 msgstr ""
 
-#: slowplay.py:241
+#: slowplay.py:254
 msgid "Show info about this software"
 msgstr ""
 
-#: slowplay.py:273
+#: slowplay.py:290
 msgid "Open a file"
 msgstr ""
 
-#: slowplay.py:310
+#: slowplay.py:327
 msgid "Error: file not found"
 msgstr ""
 
-#: slowplay.py:311
+#: slowplay.py:328
 msgid "Unable to open file: {}"
 msgstr ""
 
-#: slowplay.py:383 slowplay.py:510 slowplay.py:520
+#: slowplay.py:410 slowplay.py:572 slowplay.py:582
 msgid "Please open a file..."
 msgstr ""
 
-#: slowplay.py:394
+#: slowplay.py:421
 msgid "Filename error..."
 msgstr ""
 
-#: slowplay.py:395
+#: slowplay.py:422
 msgid "Unable to save file: {}"
 msgstr ""
 
-#: slowplay.py:407
+#: slowplay.py:434
 msgid "Overwrite confirmation"
 msgstr ""
 
-#: slowplay.py:408
+#: slowplay.py:435
 msgid ""
 "{}\n"
 "already exists.\n"
@@ -233,27 +237,85 @@ msgid ""
 "Do you want to overwrite it?"
 msgstr ""
 
-#: slowplay.py:428
+#: slowplay.py:455
 msgid "Cancel file save"
 msgstr ""
 
-#: slowplay.py:438
+#: slowplay.py:465
 msgid "Saving file: {}..."
 msgstr ""
 
-#: slowplay.py:455
+#: slowplay.py:482
 msgid "Save as.."
 msgstr ""
 
-#: slowplay.py:473
+#: slowplay.py:514
+msgid "Unable to download audio file from YouTube."
+msgstr ""
+
+#: slowplay.py:535
 msgid "No file was recently open with this software. Please open one by clicking the open button"
 msgstr ""
 
-#: slowplay.py:861
+#: slowplay.py:934
 msgid "Specify a GStreamer custom sink"
 msgstr ""
 
-#: slowplay.py:862
+#: slowplay.py:935
 msgid "URI of the media to open"
+msgstr ""
+
+#: ytmanage.py:40
+msgid "Open YouTube Video..."
+msgstr ""
+
+#: ytmanage.py:68
+msgid "URL: "
+msgstr ""
+
+#: ytmanage.py:72
+msgid "Paste a YouTube URL here..."
+msgstr ""
+
+#: ytmanage.py:81
+msgid "Click to search YouTube video"
+msgstr ""
+
+#: ytmanage.py:125
+msgid "Error: no URL specified"
+msgstr ""
+
+#: ytmanage.py:126
+msgid "Please paste a YouTube URL into the edit box"
+msgstr ""
+
+#: ytmanage.py:142
+msgid "Error: unable to find the video..."
+msgstr ""
+
+#: ytmanage.py:143
+msgid ""
+"Unable to retrieve the required video\n"
+"\n"
+"Please make sure you entered a valid YouTube URL."
+msgstr ""
+
+#: ytmanage.py:150
+msgid "by: "
+msgstr ""
+
+#: ytmanage.py:151
+msgid "Views: "
+msgstr ""
+
+#: ytmanage.py:156
+msgid "Error: unable to download the thumbnail..."
+msgstr ""
+
+#: ytmanage.py:157
+msgid ""
+"Unable to retrieve the video thubnail\n"
+"\n"
+"Uhmmmmm... This is very strange"
 msgstr ""
 
