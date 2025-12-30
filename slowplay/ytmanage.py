@@ -176,6 +176,7 @@ class ytDialog(ctk.CTkToplevel):
     
     def show(self):
         self.deiconify()
+        self.wait_visibility()
         self.grab_set()
         self.wm_protocol("WM_DELETE_WINDOW", self.destroy)
         self.bind_all(sequence="<KeyPress>", func=self._keybind_)
