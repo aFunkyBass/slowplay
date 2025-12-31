@@ -27,7 +27,12 @@ class ytDialog(ctk.CTkToplevel):
         # YouTube Manager object
         self.manager = ytManage()
 
+        # Value rturned by this dialog
         self.retValue = False
+
+        # simple progress gadget
+        self.progValue = 0
+        self.progText = ["|", "/", "-", "\\"]
 
         # Mark app directories
         working_dir = os.path.dirname(__file__)
@@ -83,8 +88,8 @@ class ytDialog(ctk.CTkToplevel):
         self.TopFrame.rowconfigure(1, weight=1)
 
         # Widget on InfoFrame
-        self.thumbnail = ctk.CTkLabel(self.InfoFrame, width=300, height=168, text="")
-        self.thumbnail.grid(row = 0, column = 0, rowspan = 3, sticky = "n", padx = 10, pady = 10)
+        self.thumbnail = ctk.CTkLabel(self.InfoFrame, width=300, height=168, text=" ")
+        self.thumbnail.grid(row = 0, column = 0, rowspan = 4, sticky = "n", padx = 10, pady = 10)
 
         self.title = ctk.CTkLabel(self.InfoFrame, anchor = "w", wraplength=100,
                                   justify="left", font=("", LBL_FONT_SIZE, "bold"),
@@ -97,8 +102,11 @@ class ytDialog(ctk.CTkToplevel):
         self.views = ctk.CTkLabel(self.InfoFrame, justify="left", anchor = "w", text="")
         self.views.grid(row = 2, column = 1, sticky = "nwe")
 
+        self.progress = ctk.CTkLabel(self.InfoFrame, justify="center", anchor = "s", text=" ")
+        self.progress.grid(row = 3, column = 1, sticky = "s", pady=10)
+
         self.InfoFrame.columnconfigure(1, weight=1)
-        self.InfoFrame.rowconfigure(2, weight=1)
+        self.InfoFrame.rowconfigure(3, weight=1)
 
         self.bind("<Configure>", self.adjust_wrap)
 
@@ -132,8 +140,13 @@ class ytDialog(ctk.CTkToplevel):
         self.manager.setURL(self.URL_entry.get())
         
         # Download the required info and fill the fields
-        videoInfo = self.manager.getVideoInfoFields(["title", "description", "uploader",
-                                                        "timestamp", "view_count"])
+        try:
+            videoInfo = self.manager.getVideoInfoFields(["title", "description", "uploader",
+                                                    "timestamp", "view_count"],
+                                                    self.progressGadgetUpdate)
+        finally:
+            self.progress.configure(text = " ")
+
         if(videoInfo is None or not isinstance(videoInfo, dict)):
             CTkMessagebox(master = self, title = _("Error: unable to find the video..."), 
                           message=_("Unable to retrieve the required video\n\n"
@@ -147,7 +160,11 @@ class ytDialog(ctk.CTkToplevel):
             self.views.configure(text = _("Views: ") + str(videoInfo["view_count"]))
 
         # Download and display the video thumbnail
-        thmb = self.manager.getVideoThumbnail()
+        try:
+            thmb = self.manager.getVideoThumbnail(self.progressGadgetUpdate)
+        finally:
+            self.progress.configure(text = " ")
+
         if(thmb == False):
             CTkMessagebox(master = self, title = _("Error: unable to download the thumbnail..."), 
                           message=_("Unable to retrieve the video thubnail\n\n"
@@ -165,6 +182,13 @@ class ytDialog(ctk.CTkToplevel):
 
         return(True)
     
+    def progressGadgetUpdate(self, line):
+        self.progress.configure(text = self.progText[self.progValue])
+        self.progValue = (self.progValue + 1) % len(self.progText)
+
+        self.update()
+        self.update_idletasks()
+
     # Close the dialog and returns the current URL
     def onDownload(self):
         self.retValue = self.manager.curURL
@@ -240,7 +264,7 @@ class ytManage:
         command = [
             YTDLP_CMD,
              '-x',                                      # Extract audio
-             '--audio-format', AUDIO_FORMAT_EXTENSION,  # Audio format
+             '--audio-format', YT_AUDIO_FORMAT_EXTENSION,  # Audio format
              '--no-playlist',                           # Only consider the single file
              '-o', self.outFile,                        # Output filename
              self.curURL                                # Video URL
@@ -256,7 +280,7 @@ class ytManage:
     #
     # Example: getVideoInfoFields(["Title", "Author, Descritpion"]
     # -> {"Title" : "Video title", "Author": "The author"....}
-    def getVideoInfoFields(self, fieldList = []):
+    def getVideoInfoFields(self, fieldList = [], callback_func = None):
         if(self.curURL is None):
             return(None)
 
@@ -267,7 +291,7 @@ class ytManage:
         
         # Download the information about video in JSON format
         if(self.videoInfo is None or len(self.videoInfo) == 0):
-            if(self.getVideoInfo() == False):
+            if(self.getVideoInfo(callback_func) == False):
                 return(None)
 
         # Retrieves the required fields and put them into a new dict
@@ -292,7 +316,7 @@ class ytManage:
             YTDLP_CMD,
              '--skip-download',                             # Doesn't download the video
              '--write-thumbnail',                           # Write thumbnail on disk
-             '--convert-thumbnail', THUMB_FORMAT_EXTENSION, # Audio format
+             '--convert-thumbnail', YT_THUMB_FORMAT_EXTENSION, # Audio format
              '--no-playlist',                               # Only consider the single file
              '-o', self.outFile,                            # Output filename
              self.curURL                                    # Video URL
@@ -302,14 +326,14 @@ class ytManage:
         ret, _ = utils.capture_subprocess_output(command, process_callback, show_output)
 
         if(ret):
-            self.thumbnail = '.'.join([self.outFile, THUMB_FORMAT_EXTENSION])
+            self.thumbnail = '.'.join([self.outFile, YT_THUMB_FORMAT_EXTENSION])
             return(True)
         else:
             return(False)
 
 
     # Get video info and returns it into a Json object
-    def getVideoInfo(self):
+    def getVideoInfo(self, callback_func = None):
         if(self.curURL is None):
             return(None)
 
@@ -320,7 +344,7 @@ class ytManage:
              self.curURL
         ]
         
-        ret, ytOut = utils.capture_subprocess_output(command)
+        ret, ytOut = utils.capture_subprocess_output(command, callback_func)
 
         if(ret):
             self.videoInfo = json.loads(ytOut)
@@ -343,7 +367,7 @@ class ytManage:
         self.curURL = newURL
         self.outFile = utils.__generate_temp_filename__(
                                 hashlib.sha256(str(newURL).encode('ASCII')).hexdigest())
-        self.audioFile = '.'.join([self.outFile, AUDIO_FORMAT_EXTENSION])
+        self.audioFile = '.'.join([self.outFile, YT_AUDIO_FORMAT_EXTENSION])
 
     def reset(self):
         self.curURL = ""

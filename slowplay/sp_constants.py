@@ -65,6 +65,6 @@ SAVE_EXTENSIONS_FILTER = (
 SAVE_DEFAULT_EXTENSION = "mp3"
 
 # YouTube constants
-YTDLP_CMD = "yt-dlp"                # Command to execute for video managing
-AUDIO_FORMAT_EXTENSION = "mp3"      # default audio extraction format 
-THUMB_FORMAT_EXTENSION = "png"      # default thumbnail extraction format
+YTDLP_CMD = "yt-dlp"                   # Command to execute for video managing
+YT_AUDIO_FORMAT_EXTENSION = "mp3"      # default audio extraction format 
+YT_THUMB_FORMAT_EXTENSION = "png"      # default thumbnail extraction format
