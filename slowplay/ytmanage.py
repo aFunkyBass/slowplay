@@ -148,7 +148,7 @@ class ytDialog(ctk.CTkToplevel):
             #print(videoInfo)
             self.title.configure(text = videoInfo["title"])
             self.author.configure(text = _("by: ") + videoInfo["uploader"])
-            self.views.configure(text = _("Views: ") + f"{videoInfo["view_count"]}")
+            self.views.configure(text = _("Views: ") + str(videoInfo["view_count"]))
 
         # Download and display the video thumbnail
         thmb = self.manager.getVideoThumbnail()
