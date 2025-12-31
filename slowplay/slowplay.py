@@ -493,6 +493,17 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     # Open a dialog to download a YouTube audio
     def openYouTubeDialog(self, event):
+        # Instanciate a YouTube Manager object
+        manager = ytmanage.ytManage()
+
+        if(manager.checkYTDLP() == False):
+            # Unable to find yt-dlp
+            a = CTkMessagebox(master = self, title = _("Error: unable to find ") + YTDLP_CMD, 
+                          message=_("Please install ") + YTDLP_CMD + _(" on your system and retry."),
+                          icon = "cancel", font = ("", LBL_FONT_SIZE))
+            return(False)
+
+
         # Temporarily disables all the keypress and mouse binding
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
@@ -506,8 +517,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(rUrl == False):
             return(False)
 
-        # Instanciate a YouTube Manager object
-        manager = ytmanage.ytManage(rUrl)
+        # Set the URL
+        manager.setURL(rUrl)
 
         # Download the video into a temporary file
         if(manager.downloadAudioFile(process_callback = self.dispYoutubeProgress) == False):

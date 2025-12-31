@@ -17,10 +17,6 @@ from sp_constants import *
 import gettext
 _ = gettext.gettext
 
-YTDLP_CMD = "yt-dlp"
-AUDIO_FORMAT_EXTENSION = "mp3"
-THUMB_FORMAT_EXTENSION = "png"
-
 class ytDialog(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
