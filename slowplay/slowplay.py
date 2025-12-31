@@ -96,7 +96,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.bYouTubeFile = False           # Flag is True when the media is a YouTube video
 
         # Build the 3 main frames: Left (shrinkable), Right (buttons)
-        # and low (status bar)
+        # and low (status ba
         self.LFrame = ctk.CTkFrame(self, width=400, height=200)
         self.RFrame = ctk.CTkFrame(self)
         self.BFrame = ctk.CTkFrame(self, height=24)
@@ -227,7 +227,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.playButton_tt = CTkToolTip(self.playButton, message=_("Play/Pause"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
-        self.openButton = ctk.CTkButton(self.RFrame, text=_("Open"), font=("", 18), command=self.openFile)
+        self.openButton = ctk.CTkButton(self.RFrame, text=_("Open"), font=("", 18), 
+                                        command=self.openFile, width=110)
         self.openButton.grid(row=1, column=0, pady=(8, 0), sticky="ew")
         self.openButton_tt = CTkToolTip(self.openButton, message=_("Open a file.\nRight-click to reopen a recent file"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
@@ -238,7 +239,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         YTIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/YT_ico.png"),
                                  dark_image=Image.open(f"{resources_dir}//YT_ico.png"), size=(23, 16))
 
-        self.YTBtn = ctk.CTkButton(self.RFrame, text="", width=40, font=("", 18),
+        self.YTBtn = ctk.CTkButton(self.RFrame, text="", width=20, font=("", 18),
                                        image=YTIcon, command= lambda: self.openYouTubeDialog(None))
         self.YTBtn.grid(row=1, column=1, sticky="e", pady=(8, 0), padx=(8, 0))
         self.YTBtn_tt = CTkToolTip(self.YTBtn, message=_("Click to extract audio from a YouTube video"),
