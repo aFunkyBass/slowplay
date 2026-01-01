@@ -9,7 +9,7 @@ APP_VERSION = "0.3.0b"
 
 APP_URL = "https://github.com/aFunkyBass/slowplay"
 
-INITIAL_GEOMETRY = "800x350"
+INITIAL_GEOMETRY = "800x400"
 
 THEME_NAME = "clam"         # tkInter Theme
 LBL_FONT_SIZE = 14          # Label standard size

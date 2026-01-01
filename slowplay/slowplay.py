@@ -33,8 +33,7 @@ from appsettings import CFG_APP_SECTION
 import recentdialog
 import aboutdialog
 import ytmanage
-
-#from CTkRangeSlider import *
+from CTkRangeSlider import *
 
 class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def __init__(self, args, *orig_args, **orig_kwargs):
@@ -118,26 +117,32 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.scale = ctk.CTkSlider(self.LFrame, command=self.songSeek)
         self.scale.grid(row=2, column=0, padx=8, sticky="ew")
 
-        self.LFrame.grid_columnconfigure(0, weight=1)
+        #self.CTLFrame = ctk.CTkFrame(self.LFrame)
+        self.CTLFrame = ctk.CTkTabview(self.LFrame)
+        self.CTLFrame.grid(row=3, column=0, padx=8, pady=8, sticky="nsew")
+        self.CTLFrame._segmented_button.configure( font=("", LBL_FONT_SIZE))
 
-        self.CTLFrame = ctk.CTkFrame(self.LFrame)
-        self.CTLFrame.grid(row=3, column=0, padx=8, pady=8, sticky="ew")
+        self.PlaybackTab = self.CTLFrame.add(_("Playback controls"))
+        self.LoopTab = self.CTLFrame.add(_("Loop controls"))
+
+        self.LFrame.grid_columnconfigure(0, weight=1)
+        self.LFrame.grid_rowconfigure(3, weight=1)
 
         #vint = (self.register(self.validate_int),'%d','%i','%P','%s','%S','%v','%V','%W')
         vint = (self.register(self.validate_int),'%S')
         self.varSpeed = ctk.IntVar(self, value=DEFAULT_SPEED)
         self.varSpeed.trace_add("write", self.speedChanged)
-        self.lblSpeed = ctk.CTkLabel(self.CTLFrame, text=_("Speed:"), font=("", LBL_FONT_SIZE))
+        self.lblSpeed = ctk.CTkLabel(self.PlaybackTab, text=_("Speed:"), font=("", LBL_FONT_SIZE))
         self.lblSpeed.grid(row=0, column=0, pady=(4, 0), sticky="w")
-        self.sldSpeed = ctk.CTkSlider(self.CTLFrame, from_=MIN_SPEED_PERCENT,
+        self.sldSpeed = ctk.CTkSlider(self.PlaybackTab, from_=MIN_SPEED_PERCENT,
                                       to=MAX_SPEED_PERCENT, number_of_steps=20, variable=self.varSpeed)
         self.sldSpeed.grid(row=0, column=1, padx=8, sticky="ew")
-        self.entSpeed = ctk.CTkEntry(self.CTLFrame, width=50, justify="center",
+        self.entSpeed = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center",
                                      validate='key', validatecommand=vint)
         self.entSpeed.grid(row=0, column=2, padx=8, pady=8, sticky="w")
-        self.lblSpeedEntry = ctk.CTkLabel(self.CTLFrame, text="%", font=("", LBL_FONT_SIZE))
+        self.lblSpeedEntry = ctk.CTkLabel(self.PlaybackTab, text="%", font=("", LBL_FONT_SIZE))
         self.lblSpeedEntry.grid(row=0, column=3, padx=(0, 8), pady=8, sticky="w")
-        self.btnResetSpeed = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon,
+        self.btnResetSpeed = ctk.CTkButton(self.PlaybackTab, width=40, image=resetIcon,
                                            text=None, command= lambda: self.resetDefaultVar(self.varSpeed))
         self.btnResetSpeed.grid(row=0, column=4, padx=(0, 8), pady=8, sticky="w")
         self.btnResetSpeed_tt = CTkToolTip(self.btnResetSpeed, message=_("Reset speed"),
@@ -151,17 +156,17 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         vnegint = (self.register(self.validate_neg_int),'%S', '%P')
         self.varPitchST = ctk.IntVar(self, value=DEFAULT_SEMITONES)
         self.varPitchST.trace_add("write", self.semitonesChanged)
-        self.lblPitchST = ctk.CTkLabel(self.CTLFrame, text=_("Transpose:"), font=("", LBL_FONT_SIZE))
+        self.lblPitchST = ctk.CTkLabel(self.PlaybackTab, text=_("Transpose:"), font=("", LBL_FONT_SIZE))
         self.lblPitchST.grid(row=1, column=0, pady=(4, 0), sticky="w")
-        self.sldPitchST = ctk.CTkSlider(self.CTLFrame,from_= MIN_PITCH_SEMITONES,
+        self.sldPitchST = ctk.CTkSlider(self.PlaybackTab,from_= MIN_PITCH_SEMITONES,
                                         to = MAX_PITCH_SEMITONES, variable=self.varPitchST)
         self.sldPitchST.grid(row=1, column=1, padx=8, sticky="ew")
-        self.entPitchST = ctk.CTkEntry(self.CTLFrame, width=50, justify="center",
+        self.entPitchST = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center",
                                        validate='all', validatecommand=vnegint)
         self.entPitchST.grid(row=1, column=2, padx=8, pady=8, sticky="w")
-        self.lblPitchSTEntry = ctk.CTkLabel(self.CTLFrame, text="s/t", font=("", LBL_FONT_SIZE))
+        self.lblPitchSTEntry = ctk.CTkLabel(self.PlaybackTab, text="s/t", font=("", LBL_FONT_SIZE))
         self.lblPitchSTEntry.grid(row=1, column=3, padx=(0, 8), pady=8, sticky="w")
-        self.btnResetPitchST = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon,
+        self.btnResetPitchST = ctk.CTkButton(self.PlaybackTab, width=40, image=resetIcon,
                                              text=None, command= lambda: self.resetDefaultVar(self.varPitchST))
         self.btnResetPitchST.grid(row=1, column=4, padx=(0, 8), pady=8, sticky="w")
         self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchST, message=_("Reset transpose"),
@@ -173,17 +178,17 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.varPitchCents = ctk.IntVar(self, value=DEFAULT_CENTS)
         self.varPitchCents.trace_add("write", self.centsChanged)
-        self.lblPitchCents = ctk.CTkLabel(self.CTLFrame, text=_("Pitch (cents):"), font=("", LBL_FONT_SIZE))
+        self.lblPitchCents = ctk.CTkLabel(self.PlaybackTab, text=_("Pitch (cents):"), font=("", LBL_FONT_SIZE))
         self.lblPitchCents.grid(row=2, column=0, pady=(4, 0), sticky="w")
-        self.sldPitchCents = ctk.CTkSlider(self.CTLFrame,from_= MIN_PITCH_CENTS,
+        self.sldPitchCents = ctk.CTkSlider(self.PlaybackTab,from_= MIN_PITCH_CENTS,
                                            to = MAX_PITCH_CENTS, variable=self.varPitchCents)
         self.sldPitchCents.grid(row=2, column=1, padx=8, sticky="ew")
-        self.entPitchCents = ctk.CTkEntry(self.CTLFrame, width=50, justify="center",
+        self.entPitchCents = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center",
                                           validate='all', validatecommand=vnegint)
         self.entPitchCents.grid(row=2, column=2, padx=8, pady=8, sticky="w")
-        self.lblPitchCentsEntry = ctk.CTkLabel(self.CTLFrame, text="c.", font=("", LBL_FONT_SIZE))
+        self.lblPitchCentsEntry = ctk.CTkLabel(self.PlaybackTab, text="c.", font=("", LBL_FONT_SIZE))
         self.lblPitchCentsEntry.grid(row=2, column=3, padx=(0, 8), pady=8, sticky="w")
-        self.btnResetPitchCents = ctk.CTkButton(self.CTLFrame, width=40, image=resetIcon, text=None,
+        self.btnResetPitchCents = ctk.CTkButton(self.PlaybackTab, width=40, image=resetIcon, text=None,
                                                 command= lambda: self.resetDefaultVar(self.varPitchCents))
         self.btnResetPitchST_tt = CTkToolTip(self.btnResetPitchCents, message=_("Reset pitch"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
@@ -195,12 +200,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.varVolume = ctk.IntVar(self, value=DEFAULT_VOLUME)
         self.varVolume.trace_add("write", self.volumeChanged)
-        self.lblVolume = ctk.CTkLabel(self.CTLFrame, text=_("Volume:"), font=("", LBL_FONT_SIZE))
+        self.lblVolume = ctk.CTkLabel(self.PlaybackTab, text=_("Volume:"), font=("", LBL_FONT_SIZE))
         self.lblVolume.grid(row=3, column=0, pady=(4, 0), sticky="w")
-        self.sldVolume = ctk.CTkSlider(self.CTLFrame,from_= MIN_VOLUME,
+        self.sldVolume = ctk.CTkSlider(self.PlaybackTab,from_= MIN_VOLUME,
                                            to = MAX_VOLUME, variable=self.varVolume)
         self.sldVolume.grid(row=3, column=1, padx=8, sticky="ew")
-        self.entVolume = ctk.CTkEntry(self.CTLFrame, width=50, justify="center",
+        self.entVolume = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center",
                                           validate='all', validatecommand=vint)
         self.entVolume.grid(row=3, column=2, padx=8, pady=8, sticky="w")
         self.entVolume.bind('<Return>', self.checkVolume)
@@ -211,15 +216,15 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         """
         self.varLoopStart = ctk.DoubleVar(self, value=0)
         self.varLoopEnd = ctk.DoubleVar(self, value=0)
-        self.entLoopStart = ctk.CTkEntry(self.CTLFrame, width=50, justify="center")
+        self.entLoopStart = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center")
         self.entLoopStart.grid(row=4, column=0, padx=8, pady=8, sticky="e")
-        self.entLoopEnd = ctk.CTkEntry(self.CTLFrame, width=50, justify="center")
+        self.entLoopEnd = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center")
         self.entLoopEnd.grid(row=4, column=2, padx=8, pady=8, sticky="w")
-        self.sldLoop = CTkRangeSlider(self.CTLFrame)
+        self.sldLoop = CTkRangeSlider(self.PlaybackTab)
         self.sldLoop.grid(row=4, column=1, padx=8, pady=8, sticky="ew")
         """
 
-        self.CTLFrame.columnconfigure(1, weight=1)
+        self.PlaybackTab.columnconfigure(1, weight=1)
 
         # Widgets on right panel
         self.loopIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/Loop Icon.png"),
@@ -305,6 +310,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def resetValues(self):
         self.player.startPoint = 0
         self.player.endPoint = 0
+        self.loopToggle(bForceDisable = True)
         self.player.Pause()
         self.player.Rewind()
         self.varSpeed.set(DEFAULT_SPEED)
@@ -570,20 +576,23 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.bYouTubeFile = False
             self.setFile(rFile)
 
-    def loopToggle(self):
-        self.player.loopEnabled = not self.player.loopEnabled
+    # Toggle loop playing
+    def loopToggle(self, bForceDisable = False):
+        if(bForceDisable == False):
+            self.player.loopEnabled = not self.player.loopEnabled
+        else:
+            self.player.loopEnabled = False
 
         if(self.player.loopEnabled):
             self.playButton.configure(image = self.loopIcon, require_redraw=True)
-            self.statusBarMessage(_("Loop enabled"))
+            self.statusBarMessage(_("Loop enabled"), timeout=1000)
         else:
             self.playButton.configure(image = None, require_redraw=True)
-            self.statusBarMessage(_("Loop disabled"))
-        
+            self.statusBarMessage(_("Loop disabled"), timeout=1000)
 
     # Sets loop start point
     def setLoopStart(self, loopPoint = 0):
-        print(f"Loopstart: {loopPoint}")
+        #print(f"Loopstart: {loopPoint}")
         
         # Checks for overlapping points
         if(self.player.endPoint > 0 and loopPoint >= (self.player.endPoint - LOOP_MINIMUM_GAP)):
@@ -594,20 +603,22 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     # Sets loop end point
     def setLoopEnd(self, loopPoint = 0):
-        print(f"Loopend: {loopPoint}")
+        #print(f"Loopend: {loopPoint}")
         
         # Checks for overlapping points
-        if(self.player.startPoint > 0 and loopPoint <= (self.player.endPoint + LOOP_MINIMUM_GAP)):
+        if(self.player.startPoint > 0 and loopPoint <= (self.player.startPoint + LOOP_MINIMUM_GAP)):
             return(False)
 
         # set the end point
         # Make sure the endpoint is at least LOOP_MINIMUM_GAP
         # from the end of song
-        maxEndpoint = self.player.query_duration() - LOOP_MINIMUM_GAP
-        if(loopPoint > maxEndpoint):
-            loopPoint = maxEndpoint
-
-        self.player.endPoint = loopPoint
+        duration = self.player.query_duration()
+        if(duration):
+            maxEndpoint = duration - LOOP_MINIMUM_GAP
+            if(loopPoint > maxEndpoint):
+                self.player.endPoint = maxEndpoint
+            else:
+                self.player.endPoint = loopPoint
 
     # Updates the save progress bars
     def saveProgress(self, value):
@@ -650,6 +661,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             if(duration and position and duration > 0 and position >= duration):
                 self.stopPlaying()
         else:
+            #print(f"Position: {position} - Loopstart = {self.player.startPoint} - Loopend = {self.player.endPoint}")
             if(position and (position < self.player.startPoint or 
                position >= self.player.endPoint)):
                 self.player.seek_absolute(self.player.startPoint)
@@ -686,6 +698,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.songMetadata = f"{self.player.artist} - {self.player.title}"
                 self.statusBarMessage(self.songMetadata, True)
                 self.bStatusBarTags = True
+
+        # Sets the default loop end to duration (if not already set)
+        if(self.player.endPoint <= 0):
+            self.setLoopEnd(self.player.query_duration())
 
     # Display the YouTube download progress stripping any newline at the end of strings
     def dispYoutubeProgress(self, line):
@@ -861,21 +877,21 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.bind_all('<1>', self._click_manager_)
             self.bind_all('<KeyPress>', self._hotkey_manager_)
 
-    # Scrive un messaggio di info sulla barra di stato e lo
-    # cancella dopo il timeout. Se il messaggio è statico
-    # non imposta il timeout
-    def statusBarMessage(self, message, static = False):
+    # Writes an info message on status bar and enable erasing
+    # after the timeout. If static flag is set, message
+    # will be permanent with erasing timeout
+    def statusBarMessage(self, message, static = False, timeout = STATUS_BAR_TIMEOUT):
         if(message is None):
             return
 
         self.statusBarUpdate(message)
 
         if(static == False):
-            # Imposta il timeout e resetta la barra di stato.
-            self.afterCancelID = self.after(STATUS_BAR_TIMEOUT, self.statusBarUpdate)
+            # Sets the timeout and update the status bar
+            self.afterCancelID = self.after(timeout, self.statusBarUpdate)
 
-    # Aggiorna il testo della barra di stato
-    # se non viene specificato nessun testo, scrive il nome del brano
+    # Updates the statusbar text
+    # if no text is specified, it writes the song metadata
     def statusBarUpdate(self, newText = ""):
         #print(f"Messaggio {newText} - ID Cancel: {self.afterCancelID}")
 
@@ -953,16 +969,16 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         elif(key == 'l' or key == 'L'):
             self.loopToggle()
         # Set loop start
-        elif(key == 'a' or key == 'A'):
+        elif((key == 'a' or key == 'A') and state != 20):
             self.setLoopStart(self.player.query_position())
         # Set loop end
-        elif(key == 'b' or key == 'B'):
+        elif((key == 'b' or key == 'B') and state != 20):
             self.setLoopEnd(self.player.query_position())
         # Ctrl + a: Reset loop start
-        elif(key == 'a' or state == 20):
+        elif(key == 'a' and state == 20):
             self.setLoopStart(0)
         # Ctrl + b: reset loop end
-        elif(key == 'b' or state == 20):
+        elif(key == 'b' and state == 20):
             self.setLoopEnd(self.player.query_duration())
 
         # Ctrl + q: quit
