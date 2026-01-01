@@ -285,7 +285,10 @@ class slowPlayer():
         save_pipeline = None
     
     def Rewind(self):
-        self.seek_absolute(self.startPoint)
+        if(self.loopEnabled):
+            self.seek_absolute(self.startPoint)
+        else:
+            self.seek_absolute(0)
 
     def Play(self):
         self.pipeline.set_state(Gst.State.PLAYING)

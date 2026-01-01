@@ -222,7 +222,11 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.CTLFrame.columnconfigure(1, weight=1)
 
         # Widgets on right panel
-        self.playButton = ctk.CTkButton(self.RFrame, text=_("Play"), font=("", 18), command=self.togglePlay)
+        self.loopIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/Loop Icon.png"),
+                                 dark_image=Image.open(f"{resources_dir}/Loop Icon.png"), size=(26, 16))
+
+        self.playButton = ctk.CTkButton(self.RFrame, text=_("Play"), font=("", 18), 
+                                        image=None, compound="right", command=self.togglePlay)
         self.playButton.grid(row=0, column=0, pady=(8, 0), sticky="ew", columnspan=2)
         self.playButton_tt = CTkToolTip(self.playButton, message=_("Play/Pause"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
@@ -299,6 +303,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     # Reset all values
     def resetValues(self):
+        self.player.startPoint = 0
+        self.player.endPoint = 0
         self.player.Pause()
         self.player.Rewind()
         self.varSpeed.set(DEFAULT_SPEED)
@@ -564,6 +570,45 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.bYouTubeFile = False
             self.setFile(rFile)
 
+    def loopToggle(self):
+        self.player.loopEnabled = not self.player.loopEnabled
+
+        if(self.player.loopEnabled):
+            self.playButton.configure(image = self.loopIcon, require_redraw=True)
+            self.statusBarMessage(_("Loop enabled"))
+        else:
+            self.playButton.configure(image = None, require_redraw=True)
+            self.statusBarMessage(_("Loop disabled"))
+        
+
+    # Sets loop start point
+    def setLoopStart(self, loopPoint = 0):
+        print(f"Loopstart: {loopPoint}")
+        
+        # Checks for overlapping points
+        if(self.player.endPoint > 0 and loopPoint >= (self.player.endPoint - LOOP_MINIMUM_GAP)):
+            return(False)
+
+        # set the start point
+        self.player.startPoint = loopPoint
+
+    # Sets loop end point
+    def setLoopEnd(self, loopPoint = 0):
+        print(f"Loopend: {loopPoint}")
+        
+        # Checks for overlapping points
+        if(self.player.startPoint > 0 and loopPoint <= (self.player.endPoint + LOOP_MINIMUM_GAP)):
+            return(False)
+
+        # set the end point
+        # Make sure the endpoint is at least LOOP_MINIMUM_GAP
+        # from the end of song
+        maxEndpoint = self.player.query_duration() - LOOP_MINIMUM_GAP
+        if(loopPoint > maxEndpoint):
+            loopPoint = maxEndpoint
+
+        self.player.endPoint = loopPoint
+
     # Updates the save progress bars
     def saveProgress(self, value):
         self.save_prg_var.set(value)
@@ -599,9 +644,15 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.dispSongTime(Force=True)
 
     def songControl(self):
-        dd, pp = self.player.update_position()
-        if(dd and pp and dd > 0 and pp >= dd):
-            self.stopPlaying()
+        duration, position = self.player.update_position()
+
+        if(self.player.loopEnabled == False):
+            if(duration and position and duration > 0 and position >= duration):
+                self.stopPlaying()
+        else:
+            if(position and (position < self.player.startPoint or 
+               position >= self.player.endPoint)):
+                self.player.seek_absolute(self.player.startPoint)
 
     def dispSongTime(self, Force = False):
         if(self.bValuesChanging):
@@ -844,41 +895,77 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         move = 0
         accel = 0
+        # Moves left by N seconds
         if(key == 'KP_1' or key == 'Left'):
             move = -STEPS_SEC_MOVE_1
         elif(key == 'KP_4'):
             move = -STEPS_SEC_MOVE_2
         elif(key == 'KP_7'):
             move = -STEPS_SEC_MOVE_3
+        
+        # Moves right by N seconds
         elif(key == 'KP_3' or key == 'Right'):
             move = STEPS_SEC_MOVE_1
         elif(key == 'KP_6'):
             move = STEPS_SEC_MOVE_2
         elif(key == 'KP_9'):
             move = STEPS_SEC_MOVE_3
-        elif(key == 'KP_8'):
-            accel = STEPS_SPEED
-        elif(key == 'KP_5'):
-            self.resetDefaultVar(self.varSpeed)
-        elif(key == 'KP_2'):
-            accel = -STEPS_SPEED
-        elif(key == 'space' or key == 'KP_0'):
-            self.togglePlay()
-        elif(key == 'KP_Decimal'):
-            self.stopPlaying()
+        # Rewind to top or to loop start
         elif(key == 'Home'):
             self.player.Rewind()
             self.dispSongTime(Force=True)
+        
+        # Speed song up
+        elif(key == 'KP_8'):
+            accel = STEPS_SPEED
+        # Reset Speed
+        elif(key == 'KP_5'):
+            self.resetDefaultVar(self.varSpeed)
+        # Speed song down
+        elif(key == 'KP_2'):
+            accel = -STEPS_SPEED
+
+        # Play / Pause
+        elif(key == 'space' or key == 'KP_0'):
+            self.togglePlay()
+        # Stop
+        elif(key == 'KP_Decimal'):
+            self.stopPlaying()
+
+        # Transpose + 1 semitone
         elif(key == 'KP_Add'):
             if(self.varPitchST.get() < MAX_PITCH_SEMITONES):
                 self.varPitchST.set(self.varPitchST.get() + STEPS_SEMITONES)
+        # Transpose - 1 semitone
         elif(key == 'KP_Subtract'):
             if(self.varPitchST.get() > MIN_PITCH_SEMITONES):
                 self.varPitchST.set(self.varPitchST.get() - STEPS_SEMITONES)
+
+        # Ctrl + r: open recent files dialog box
         elif(key == 'r' and state == 20):
             self.openRecentFileDialog(None)
+
+        # Ctrl + y: open YouTube dialog box
         elif(key == 'y' and state == 20):
             self.openYouTubeDialog(None)
+
+        # Toggle loop    
+        elif(key == 'l' or key == 'L'):
+            self.loopToggle()
+        # Set loop start
+        elif(key == 'a' or key == 'A'):
+            self.setLoopStart(self.player.query_position())
+        # Set loop end
+        elif(key == 'b' or key == 'B'):
+            self.setLoopEnd(self.player.query_position())
+        # Ctrl + a: Reset loop start
+        elif(key == 'a' or state == 20):
+            self.setLoopStart(0)
+        # Ctrl + b: reset loop end
+        elif(key == 'b' or state == 20):
+            self.setLoopEnd(self.player.query_duration())
+
+        # Ctrl + q: quit
         elif(key == 'q' and state == 20):
             self.destroy()
             exit()

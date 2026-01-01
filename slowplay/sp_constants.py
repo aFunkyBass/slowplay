@@ -68,3 +68,12 @@ SAVE_DEFAULT_EXTENSION = "mp3"
 YTDLP_CMD = "yt-dlp"                   # Command to execute for video managing
 YT_AUDIO_FORMAT_EXTENSION = "mp3"      # default audio extraction format 
 YT_THUMB_FORMAT_EXTENSION = "png"      # default thumbnail extraction format
+
+
+# Defines the minimum gap for loop, which is the gap between loop start and loop end
+# Also it defines the minimum distance from the loop end and the song end.
+#
+# Since the song control routine runs every UPDATE_INTERVAL, we define this gap
+# to be at least twice as much, to make sure it will fall in one of the
+# routine execution time.
+LOOP_MINIMUM_GAP = ((UPDATE_INTERVAL * 2) * 10)     # Loop minimum gap in microseconds
