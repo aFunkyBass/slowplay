@@ -6,6 +6,7 @@ import subprocess
 import io
 import selectors
 import sys
+from datetime import datetime
 
 
 # Function to restore the original LD_LIBRARY_PATH environment
@@ -89,3 +90,7 @@ def capture_subprocess_output(subprocess_args, callback_func = None, show_output
     buf.close()
 
     return(success, output)
+
+# Return current time in milliseconds
+def millis() -> int:
+    return(datetime.now().microsecond * 10)

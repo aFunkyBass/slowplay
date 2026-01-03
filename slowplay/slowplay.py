@@ -26,6 +26,7 @@ _ = gettext.gettext
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from sp_constants import *
+import utils
 from player import slowPlayer
 import filedialogs
 import appsettings
@@ -122,12 +123,13 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.CTLFrame.grid(row=3, column=0, padx=8, pady=8, sticky="nsew")
         self.CTLFrame._segmented_button.configure( font=("", LBL_FONT_SIZE))
 
-        self.PlaybackTab = self.CTLFrame.add(_("Playback controls"))
-        self.LoopTab = self.CTLFrame.add(_("Loop controls"))
+        self.PlaybackTab = self.CTLFrame.add(_("Playback control"))
+        self.LoopTab = self.CTLFrame.add(_("Loop control"))
 
         self.LFrame.grid_columnconfigure(0, weight=1)
         self.LFrame.grid_rowconfigure(3, weight=1)
 
+        # Widgets on Playback Tab
         #vint = (self.register(self.validate_int),'%d','%i','%P','%s','%S','%v','%V','%W')
         vint = (self.register(self.validate_int),'%S')
         self.varSpeed = ctk.IntVar(self, value=DEFAULT_SPEED)
@@ -212,19 +214,34 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entVolume.bind('<KP_Enter>', self.checkVolume)
         self.entVolume.bind('<FocusOut>', self.checkVolume)
         self.volumeChanged(None, None, None)
-
-        """
-        self.varLoopStart = ctk.DoubleVar(self, value=0)
-        self.varLoopEnd = ctk.DoubleVar(self, value=0)
-        self.entLoopStart = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center")
-        self.entLoopStart.grid(row=4, column=0, padx=8, pady=8, sticky="e")
-        self.entLoopEnd = ctk.CTkEntry(self.PlaybackTab, width=50, justify="center")
-        self.entLoopEnd.grid(row=4, column=2, padx=8, pady=8, sticky="w")
-        self.sldLoop = CTkRangeSlider(self.PlaybackTab)
-        self.sldLoop.grid(row=4, column=1, padx=8, pady=8, sticky="ew")
-        """
-
         self.PlaybackTab.columnconfigure(1, weight=1)
+
+        # Widgets on Loop Tab
+        self.varLoopStart = ctk.DoubleVar(self, value=0)
+        self.varLoopStart.trace_add("write", self.loopStartChanged)
+        
+        self.varLoopEnd = ctk.DoubleVar(self, value=100)
+        self.varLoopEnd.trace_add("write", self.loopEndChanged)
+
+        self.sldLoop = CTkRangeSlider(self.LoopTab, variables=(self.varLoopStart,self.varLoopEnd),
+                                      from_=0, to=100)
+        self.sldLoop.grid(row=0, column=0, columnspan=3, padx=8, pady=8, sticky="ew")
+
+        self.lblLoopStart = ctk.CTkLabel(self.LoopTab, anchor="w", width=80, font=("", LBL_FONT_SIZE))
+        self.lblLoopStart.grid(row=1, column=0, padx=8, pady=8, sticky="w")
+
+        self.lblLoopEnd = ctk.CTkLabel(self.LoopTab, anchor="e", width=80, font=("", LBL_FONT_SIZE))
+        self.lblLoopEnd.grid(row=1, column=2, padx=8, pady=8, sticky="e")
+
+        #self.varLoopEnabled = ctk.BooleanVar(self, value=False)
+        #self.entLoopEnabled = ctk.CTkCheckBox(self.LoopTab, text=_("Loop enabled"), width=25,
+        #                                      font=("", LBL_FONT_SIZE))
+        #self.entLoopEnabled.grid(row=2, column=0, columnspan=3, sticky="we")
+
+        self.loopStartChanged(None, None, None)
+        self.loopEndChanged(None, None, None)
+
+        self.LoopTab.columnconfigure(1, weight=1)
 
         # Widgets on right panel
         self.loopIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/Loop Icon.png"),
@@ -654,13 +671,18 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.player.Rewind()
         self.dispSongTime(Force=True)
 
+    # Controls the song playback
     def songControl(self):
         duration, position = self.player.update_position()
 
+        # If loop is not enabled and we have reached the end
+        # playback is stopped
         if(self.player.loopEnabled == False):
             if(duration and position and duration > 0 and position >= duration):
                 self.stopPlaying()
         else:
+            # If loop is enabled and playback is not within
+            # the loop range, it seeks the playback at loop start
             #print(f"Position: {position} - Loopstart = {self.player.startPoint} - Loopend = {self.player.endPoint}")
             if(position and (position < self.player.startPoint or 
                position >= self.player.endPoint)):
@@ -700,8 +722,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.bStatusBarTags = True
 
         # Sets the default loop end to duration (if not already set)
-        if(self.player.endPoint <= 0):
-            self.setLoopEnd(self.player.query_duration())
+        if(self.player.endPoint and self.player.endPoint <= 0):
+            duration = self.player.query_duration()
+            if(duration and duration > 0):
+                self.sldLoop.configure(to = duration)
+                self.varLoopEnd.set(duration)
+                self.setLoopEnd(duration)
 
     # Display the YouTube download progress stripping any newline at the end of strings
     def dispYoutubeProgress(self, line):
@@ -735,7 +761,9 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entSpeed.insert(0, str(self.varSpeed.get()))
 
         newtempo = self.varSpeed.get() * 0.01
-        if(newtempo == self.player.tempo):
+        oldtempo = self.player.tempo
+        
+        if(newtempo == oldtempo):
             return
 
         # Save the current value on the recent files list
@@ -751,6 +779,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             # hack to get gstreamer to calculate the position again
             if(curpos):
                 self.player.seek_absolute(self.player.pipeline_time(curpos))
+            
+            # recalculate loop boundaries based on new tempo
+            self.player.startPoint = (self.player.startPoint * oldtempo) / newtempo
+            self.player.endPoint = (self.player.endPoint * oldtempo) / newtempo
         finally:
             self.bValuesChanging = False
 
@@ -795,6 +827,22 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Save the current value on the recent files list
         self.setRecentFilePBOptions(self.media)
         self.player.set_volume(self.player.volume)
+
+    def loopStartChanged(self, a, b, c):
+        value = str(self.varLoopStart.get())
+        self.lblLoopStart.configure(text = f"{value} (ms.)")
+        #self.player.volume = self.varVolume.get() * 0.01
+        # Save the current value on the recent files list
+        #self.setRecentFilePBOptions(self.media)
+        #self.player.set_volume(self.player.volume)
+
+    def loopEndChanged(self, a, b, c):
+        value = str(self.varLoopEnd.get())
+        self.lblLoopEnd.configure(text = f"{value} (ms.)")
+        #self.player.volume = self.varVolume.get() * 0.01
+        # Save the current value on the recent files list
+        #self.setRecentFilePBOptions(self.media)
+        #self.player.set_volume(self.player.volume)
 
     def changePitch(self):
         # converte da semitoni + centesimi
