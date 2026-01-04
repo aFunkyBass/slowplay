@@ -94,3 +94,7 @@ def capture_subprocess_output(subprocess_args, callback_func = None, show_output
 # Return current time in milliseconds
 def millis() -> int:
     return(datetime.now().microsecond * 10)
+
+# Return the fratcional part of a double rounded to ndigits
+def get_fractional(value, ndigits = 0) -> int:
+    return(int((round(value, ndigits) % 1) * 100))
