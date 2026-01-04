@@ -113,6 +113,7 @@ class slowPlayer():
                 #    print(tags.nth_tag_name(i))
 
             #elif t ==  Gst.MessageType.DURATION_CHANGED:
+                #print("Duration changed")
                 #self.query_duration()
                 #retval, duration = self.pipeline.query_duration(TIME_FORMAT)
                 #print(f"Retval: {retval} - Duration: {duration}")

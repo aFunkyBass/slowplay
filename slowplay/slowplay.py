@@ -231,24 +231,29 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.loopAFrame.grid(row=1, column=0, pady=8, sticky="w")
 
         self.lblLoopStart = ctk.CTkLabel(self.loopAFrame, anchor="w", width=80, font=("", LBL_FONT_SIZE))
-        self.btnResetLoopStart = ctk.CTkButton(self.loopAFrame, width=40, image=resetIcon,
-                                             text=None, command=None)
+        self.btnResetLoopStart = ctk.CTkButton(self.loopAFrame, width=40, image=resetIcon, text=None,
+                                               command=lambda: self.setLoopStart(0))
         self.btnResetLoopStart_tt = CTkToolTip(self.btnResetLoopStart, message=_("Reset loop start point\nShortcut: Ctrl+A"),
                                             delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopASet = ctk.CTkButton(self.loopAFrame, width=40, text=" | ", command=None)
+        self.btnLoopASet = ctk.CTkButton(self.loopAFrame, width=40, text=" | ", 
+                                         command=lambda: self.setLoopStart(self.player.query_position()))
         self.btnLoopASet_tt = CTkToolTip(self.btnLoopASet, message=_("Set loop start point\nShortcut: A"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
         
-        self.btnLoopABack2 = ctk.CTkButton(self.loopAFrame, width=40, text="<<", command=None)
+        self.btnLoopABack2 = ctk.CTkButton(self.loopAFrame, width=40, text="<<", 
+                                           command=lambda: self.moveLoopStart(-MOVE_LOOP_POINTS_COARSE))
         self.btnLoopABack2_tt = CTkToolTip(self.btnLoopABack2, message=_("Move loop start left by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopABack1 = ctk.CTkButton(self.loopAFrame, width=40, text="<", command=None)
+        self.btnLoopABack1 = ctk.CTkButton(self.loopAFrame, width=40, text="<",
+                                            command=lambda: self.moveLoopStart(-MOVE_LOOP_POINTS_FINE))
         self.btnLoopABack1_tt = CTkToolTip(self.btnLoopABack1, message=_("Move loop start left by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopAFwd1 = ctk.CTkButton(self.loopAFrame, width=40, text=">", command=None)
+        self.btnLoopAFwd1 = ctk.CTkButton(self.loopAFrame, width=40, text=">",
+                                          command=lambda: self.moveLoopStart(MOVE_LOOP_POINTS_FINE))
         self.btnLoopAFwd1_tt = CTkToolTip(self.btnLoopAFwd1, message=_("Move loop start right by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopAFwd2 = ctk.CTkButton(self.loopAFrame, width=40, text=">>", command=None)
+        self.btnLoopAFwd2 = ctk.CTkButton(self.loopAFrame, width=40, text=">>",
+                                          command=lambda: self.moveLoopStart(MOVE_LOOP_POINTS_COARSE))
         self.btnLoopAFwd2_tt = CTkToolTip(self.btnLoopAFwd2, message=_("Move loop start right by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
@@ -264,24 +269,29 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.loopBFrame.grid(row=1, column=2, pady=8, sticky="e")
 
         self.lblLoopEnd = ctk.CTkLabel(self.loopBFrame, anchor="e", width=80, font=("", LBL_FONT_SIZE))
-        self.btnResetLoopEnd = ctk.CTkButton(self.loopBFrame, width=40, image=resetIcon,
-                                             text=None, command=None)
+        self.btnResetLoopEnd = ctk.CTkButton(self.loopBFrame, width=40, image=resetIcon, text=None,
+                                             command=lambda: self.setLoopEnd(self.player.query_duration()))
         self.btnResetLoopStart_tt = CTkToolTip(self.btnResetLoopEnd, message=_("Reset loop end point\nShortcut: Ctrl+B"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBSet = ctk.CTkButton(self.loopBFrame, width=40, text=" | ", command=None)
+        self.btnLoopBSet = ctk.CTkButton(self.loopBFrame, width=40, text=" | ", 
+                                         command=lambda: self.setLoopEnd(self.player.query_position()))
         self.btnLoopBSet_tt = CTkToolTip(self.btnLoopBSet, message=_("Set loop end point\nShortcut: B"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
-        self.btnLoopBBack2 = ctk.CTkButton(self.loopBFrame, width=40, text="<<", command=None)
+        self.btnLoopBBack2 = ctk.CTkButton(self.loopBFrame, width=40, text="<<",
+                                           command=lambda: self.moveLoopEnd(-MOVE_LOOP_POINTS_COARSE))
         self.btnLoopBBack2_tt = CTkToolTip(self.btnLoopBBack2, message=_("Move loop end left by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBBack1 = ctk.CTkButton(self.loopBFrame, width=40, text="<", command=None)
+        self.btnLoopBBack1 = ctk.CTkButton(self.loopBFrame, width=40, text="<",
+                                           command=lambda: self.moveLoopEnd(-MOVE_LOOP_POINTS_FINE))
         self.btnLoopBBack1_tt = CTkToolTip(self.btnLoopBBack1, message=_("Move loop end left by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBFwd1 =  ctk.CTkButton(self.loopBFrame, width=40, text=">", command=None)
+        self.btnLoopBFwd1 =  ctk.CTkButton(self.loopBFrame, width=40, text=">",
+                                           command=lambda: self.moveLoopEnd(MOVE_LOOP_POINTS_FINE))
         self.btnLoopBFwd1_tt = CTkToolTip(self.btnLoopBFwd1, message=_("Move loop end right by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBFwd2 =  ctk.CTkButton(self.loopBFrame, width=40, text=">>", command=None)
+        self.btnLoopBFwd2 =  ctk.CTkButton(self.loopBFrame, width=40, text=">>",
+                                           command=lambda: self.moveLoopEnd(MOVE_LOOP_POINTS_COARSE))
         self.btnLoopBFwd2_tt = CTkToolTip(self.btnLoopBFwd2, message=_("Move loop end right by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
@@ -707,13 +717,45 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(duration):
             maxEndpoint = duration - self.player.pipeline_time(LOOP_MINIMUM_GAP)
             if(loopPoint > maxEndpoint):
-                #self.player.endPoint = maxEndpoint
+                #print(f"Loopend: {maxEndpoint}")
                 self.varLoopEnd.set(maxEndpoint)
                 return(maxEndpoint)
             else:
-                #self.player.endPoint = loopPoint
+                #print(f"Loopend: {loopPoint}")
                 self.varLoopEnd.set(loopPoint)
                 return(loopPoint)
+
+    # Move the loop start by shift milliseconds
+    def moveLoopStart(self, shift = 0):
+        if(shift == 0):
+            return(False)
+
+        try:
+            shiftPipeLineTime = self.player.pipeline_time(shift / 1000)
+        except:
+            return(False)
+        
+        if(self.player.startPoint < 0 or (self.player.startPoint + shiftPipeLineTime) < 0):
+            return(False)
+
+        self.setLoopStart(self.player.startPoint + shiftPipeLineTime)
+        return(True)
+
+    # Move the loop end by shift milliseconds
+    def moveLoopEnd(self, shift = 0):
+        if(shift == 0):
+            return(False)
+
+        try:
+            shiftPipeLineTime = self.player.pipeline_time(shift / 1000)
+        except:
+            return(False)
+
+        if(self.player.endPoint < 0 or (self.player.endPoint + shiftPipeLineTime) < 0):
+            return(False)
+
+        self.setLoopEnd(self.player.endPoint + shiftPipeLineTime)
+        return(True)
 
     # Updates the save progress bars
     def saveProgress(self, value):
@@ -762,6 +804,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             # If loop is enabled and playback is not within
             # the loop range, it seeks the playback at loop start
             #print(f"Position: {position} - Loopstart = {self.player.startPoint} - Loopend = {self.player.endPoint}")
+            #print(f"Distanza durata: {self.player.song_time(duration - position)} - Distanza looppoint: {self.player.song_time(self.player.endPoint - position)}")
             if(position and (position < self.player.startPoint or 
                position >= self.player.endPoint)):
                 self.player.seek_absolute(self.player.startPoint)
@@ -865,8 +908,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.player.seek_absolute(self.player.pipeline_time(curpos))
             
             # recalculate loop boundaries based on new tempo
-            self.player.startPoint = (self.player.startPoint * oldtempo) / newtempo
-            self.player.endPoint = (self.player.endPoint * oldtempo) / newtempo
+            newLoopStart = (self.player.startPoint * oldtempo) / newtempo
+            newLoopEnd = (self.player.endPoint * oldtempo) / newtempo
+            self.player.startPoint = newLoopStart
+            self.player.endPoint = newLoopEnd
         finally:
             self.bValuesChanging = False
 
