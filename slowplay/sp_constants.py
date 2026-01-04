@@ -76,4 +76,4 @@ YT_THUMB_FORMAT_EXTENSION = "png"      # default thumbnail extraction format
 # Since the song control routine runs every UPDATE_INTERVAL, we define this gap
 # to be at least twice as much, to make sure it will fall in one of the
 # routine execution time.
-LOOP_MINIMUM_GAP = ((UPDATE_INTERVAL * 2) * 10)     # Loop minimum gap in microseconds
+LOOP_MINIMUM_GAP = ((UPDATE_INTERVAL * 2) / 1000)     # Loop minimum gap in seconds

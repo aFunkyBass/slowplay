@@ -327,6 +327,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def resetValues(self):
         self.player.startPoint = 0
         self.player.endPoint = 0
+        self.varLoopStart.set(0)
+        #self.varLoopEnd.set(100)
         self.loopToggle(bForceDisable = True)
         self.player.Pause()
         self.player.Rewind()
@@ -612,18 +614,21 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         #print(f"Loopstart: {loopPoint}")
         
         # Checks for overlapping points
-        if(self.player.endPoint > 0 and loopPoint >= (self.player.endPoint - LOOP_MINIMUM_GAP)):
+        if(self.player.endPoint > 0 and 
+           loopPoint >= (self.player.endPoint - self.player.pipeline_time(LOOP_MINIMUM_GAP))):
             return(False)
 
         # set the start point
-        self.player.startPoint = loopPoint
+        #self.player.startPoint = loopPoint
+        self.varLoopStart.set(loopPoint)
 
     # Sets loop end point
     def setLoopEnd(self, loopPoint = 0):
         #print(f"Loopend: {loopPoint}")
         
         # Checks for overlapping points
-        if(self.player.startPoint > 0 and loopPoint <= (self.player.startPoint + LOOP_MINIMUM_GAP)):
+        if(self.player.startPoint > 0 and 
+           loopPoint <= (self.player.startPoint + self.player.pipeline_time(LOOP_MINIMUM_GAP))):
             return(False)
 
         # set the end point
@@ -631,11 +636,15 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # from the end of song
         duration = self.player.query_duration()
         if(duration):
-            maxEndpoint = duration - LOOP_MINIMUM_GAP
+            maxEndpoint = duration - self.player.pipeline_time(LOOP_MINIMUM_GAP)
             if(loopPoint > maxEndpoint):
-                self.player.endPoint = maxEndpoint
+                #self.player.endPoint = maxEndpoint
+                self.varLoopEnd.set(maxEndpoint)
+                return(maxEndpoint)
             else:
-                self.player.endPoint = loopPoint
+                #self.player.endPoint = loopPoint
+                self.varLoopEnd.set(loopPoint)
+                return(loopPoint)
 
     # Updates the save progress bars
     def saveProgress(self, value):
@@ -722,12 +731,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.bStatusBarTags = True
 
         # Sets the default loop end to duration (if not already set)
-        if(self.player.endPoint and self.player.endPoint <= 0):
+        if(self.player.endPoint != None and self.player.endPoint <= 0):
             duration = self.player.query_duration()
-            if(duration and duration > 0):
-                self.sldLoop.configure(to = duration)
-                self.varLoopEnd.set(duration)
-                self.setLoopEnd(duration)
+            if(duration != None and duration > 0):
+                actualEndloop = self.setLoopEnd(duration)
+                self.sldLoop.configure(to = actualEndloop, require_redraw=True)
+
 
     # Display the YouTube download progress stripping any newline at the end of strings
     def dispYoutubeProgress(self, line):
@@ -829,20 +838,23 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.player.set_volume(self.player.volume)
 
     def loopStartChanged(self, a, b, c):
-        value = str(self.varLoopStart.get())
-        self.lblLoopStart.configure(text = f"{value} (ms.)")
-        #self.player.volume = self.varVolume.get() * 0.01
-        # Save the current value on the recent files list
-        #self.setRecentFilePBOptions(self.media)
-        #self.player.set_volume(self.player.volume)
+        value = self.varLoopStart.get()
+        self.player.startPoint = value
+        stVal = self.player.song_time(value)
+        if(stVal == None):
+            stVal = 0
+        frac = int((round(stVal, ndigits=2) % 1) * 100)
+        self.lblLoopStart.configure(text = f"{dt.timedelta(seconds=round(stVal))}.{frac:02d}")
+
 
     def loopEndChanged(self, a, b, c):
-        value = str(self.varLoopEnd.get())
-        self.lblLoopEnd.configure(text = f"{value} (ms.)")
-        #self.player.volume = self.varVolume.get() * 0.01
-        # Save the current value on the recent files list
-        #self.setRecentFilePBOptions(self.media)
-        #self.player.set_volume(self.player.volume)
+        value = self.varLoopEnd.get()
+        self.player.endPoint = value
+        stVal = self.player.song_time(value)
+        if(stVal != None):
+            frac = int((round(stVal, ndigits=2) % 1) * 100)
+            self.lblLoopEnd.configure(text = f"{dt.timedelta(seconds=round(stVal))}.{frac:02d}")
+
 
     def changePitch(self):
         # converte da semitoni + centesimi
