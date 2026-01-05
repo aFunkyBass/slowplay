@@ -2,6 +2,8 @@
 
 **SlowPlay** is a simple audio player with speed/pitch change capabilities, based on GStreamer. It is meant to help music students/teachers transcribe music and play along with it.
 
+**Made by a musician for musicians**
+
 ![Screenshot](slowplay/resources/Screenshot.png)
 
 ## Inspiration
@@ -34,13 +36,13 @@ This function allows you to loop playback a section of the song. Please click on
 
 Use the "Set loop start" (shortcut "A") and "Set loop end" (shortcut "B") buttons while playing to mark the loop boundaries. Toggle the "Enable loop" switch (shortcut "L") to engage/disengage loop playing. You can reset the A/B point using the reset buttons or pressing "Ctrl+A" and "Ctrl+B" on your keyboard.
 
-To achieve maximum execution precision, you can fine adjust the loop points by moving them left and right by 10 or 100 milliseconds using the associated buttons. *NOTE: Please keep in mind that there can be very short silence gap when restarting the loop. This is normale and it can't be avoided*
+To achieve maximum execution precision, you can fine adjust the loop points by moving them left and right by 10 or 100 milliseconds using the associated buttons. *NOTE: Please keep in mind that there can be very short silence gap when restarting the loop. This is normal and it can't be avoided*
 
 ### Export modified audio
 It is possible to export modified songs by using the "Save as..." button. You can save your files either in mp3 or wav format, based on the extension of file to be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as variable bitrate quality=4. Volume setting and metadata are ignored in the export operation.
 
 ### Other features:
-- SlowPlay keeps track of the last 16 played files, and restores the playback parameters (speed, pitch, cents and volume) you set when you last played the songs. To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. If the software is launched with no media specified on the command line, it tries to re-open last played track. *NOTE: currently recently YouTube video played are not included in the list*
+- SlowPlay keeps track of the last 16 played files, and restores the playback parameters (speed, pitch, cents and volume) you set when you last played the songs. To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. If the software is launched with no media specified on the command line, it tries to re-open last played track. *NOTE: currently recently YouTube played video are not included in the list*
 - SlowPlay supports drag-n-drop to open local audio files. You can drop audio files straight from your file manager or from other applications.
 - You can specify a different gstreamer sink for particular needs by supplying the **--sink** option from the command line. Example: the following command will send output to a JACK audio system `slowplay --sink jackaudiosink`
 
