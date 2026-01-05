@@ -44,7 +44,6 @@ It is possible to export modified songs by using the "Save as..." button. You ca
 - SlowPlay supports drag-n-drop to open local audio files. You can drop audio files straight from your file manager or from other applications.
 - You can specify a different gstreamer sink for particular needs by supplying the **--sink** option from the command line. Example: the following command will send output to a JACK audio system `slowplay --sink jackaudiosink`
 
-
 ## Developement
 
 This software is my very first attempt to write "serious" Python code, so it may not look strictly pythonic to the purists, I apologize for that. I was born with C and quit my job as software developer many years ago, so not only I'm not a Python dev but I am also an obsolete dev! :)
