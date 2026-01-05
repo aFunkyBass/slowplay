@@ -96,5 +96,15 @@ def millis() -> int:
     return(datetime.now().microsecond * 10)
 
 # Return the fratcional part of a double rounded to ndigits
-def get_fractional(value, ndigits = 0) -> int:
-    return(int((round(value, ndigits) % 1) * 100))
+def get_fractional(value, ndigits = 2) -> int:
+    if(ndigits <= 0):
+        return(0)
+    
+    # remove the integer part
+    frac = (value % 1)
+
+    # convert the fratcional part into integer by ndigits and 
+    # return
+    retval = frac * (10 ** ndigits)
+
+    return(round(retval))

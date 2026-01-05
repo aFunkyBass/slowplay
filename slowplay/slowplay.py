@@ -217,14 +217,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.PlaybackTab.columnconfigure(1, weight=1)
 
         # Widgets on Loop Tab
-        self.varLoopStart = ctk.DoubleVar(self, value=-2)
-        self.varLoopStart.trace_add("write", self.loopStartChanged)
-        
-        self.varLoopEnd = ctk.DoubleVar(self, value=-1)
-        self.varLoopEnd.trace_add("write", self.loopEndChanged)
-
-        self.sldLoop = CTkRangeSlider(self.LoopTab, variables=(self.varLoopStart,self.varLoopEnd),
-                                      from_=-2, to=-1)
+        self.sldLoop = CTkRangeSlider(self.LoopTab, from_=-2, to=-1, 
+                                      command=(self.setLoopStart, self.setLoopEnd))
         self.sldLoop.grid(row=0, column=0, columnspan=3, padx=8, pady=8, sticky="ew")
 
         self.loopAFrame = ctk.CTkFrame(self.LoopTab)
@@ -235,24 +229,24 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                                                command=lambda: self.setLoopStart(0))
         self.btnResetLoopStart_tt = CTkToolTip(self.btnResetLoopStart, message=_("Reset loop start point\nShortcut: Ctrl+A"),
                                             delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopASet = ctk.CTkButton(self.loopAFrame, width=40, text=" | ", 
+        self.btnLoopASet = ctk.CTkButton(self.loopAFrame, width=40, text=" | ", font=("", LBL_FONT_SIZE),
                                          command=lambda: self.setLoopStart(self.player.query_position()))
         self.btnLoopASet_tt = CTkToolTip(self.btnLoopASet, message=_("Set loop start point\nShortcut: A"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
         
-        self.btnLoopABack2 = ctk.CTkButton(self.loopAFrame, width=40, text="<<", 
+        self.btnLoopABack2 = ctk.CTkButton(self.loopAFrame, width=40, text="<<", font=("", LBL_FONT_SIZE),
                                            command=lambda: self.moveLoopStart(-MOVE_LOOP_POINTS_COARSE))
         self.btnLoopABack2_tt = CTkToolTip(self.btnLoopABack2, message=_("Move loop start left by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopABack1 = ctk.CTkButton(self.loopAFrame, width=40, text="<",
+        self.btnLoopABack1 = ctk.CTkButton(self.loopAFrame, width=40, text="<", font=("", LBL_FONT_SIZE),
                                             command=lambda: self.moveLoopStart(-MOVE_LOOP_POINTS_FINE))
         self.btnLoopABack1_tt = CTkToolTip(self.btnLoopABack1, message=_("Move loop start left by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopAFwd1 = ctk.CTkButton(self.loopAFrame, width=40, text=">",
+        self.btnLoopAFwd1 = ctk.CTkButton(self.loopAFrame, width=40, text=">", font=("", LBL_FONT_SIZE),
                                           command=lambda: self.moveLoopStart(MOVE_LOOP_POINTS_FINE))
         self.btnLoopAFwd1_tt = CTkToolTip(self.btnLoopAFwd1, message=_("Move loop start right by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopAFwd2 = ctk.CTkButton(self.loopAFrame, width=40, text=">>",
+        self.btnLoopAFwd2 = ctk.CTkButton(self.loopAFrame, width=40, text=">>", font=("", LBL_FONT_SIZE),
                                           command=lambda: self.moveLoopStart(MOVE_LOOP_POINTS_COARSE))
         self.btnLoopAFwd2_tt = CTkToolTip(self.btnLoopAFwd2, message=_("Move loop start right by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
@@ -273,24 +267,24 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                                              command=lambda: self.setLoopEnd(self.player.query_duration()))
         self.btnResetLoopStart_tt = CTkToolTip(self.btnResetLoopEnd, message=_("Reset loop end point\nShortcut: Ctrl+B"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBSet = ctk.CTkButton(self.loopBFrame, width=40, text=" | ", 
+        self.btnLoopBSet = ctk.CTkButton(self.loopBFrame, width=40, text=" | ", font=("", LBL_FONT_SIZE), 
                                          command=lambda: self.setLoopEnd(self.player.query_position()))
         self.btnLoopBSet_tt = CTkToolTip(self.btnLoopBSet, message=_("Set loop end point\nShortcut: B"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
-        self.btnLoopBBack2 = ctk.CTkButton(self.loopBFrame, width=40, text="<<",
+        self.btnLoopBBack2 = ctk.CTkButton(self.loopBFrame, width=40, text="<<", font=("", LBL_FONT_SIZE),
                                            command=lambda: self.moveLoopEnd(-MOVE_LOOP_POINTS_COARSE))
         self.btnLoopBBack2_tt = CTkToolTip(self.btnLoopBBack2, message=_("Move loop end left by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBBack1 = ctk.CTkButton(self.loopBFrame, width=40, text="<",
+        self.btnLoopBBack1 = ctk.CTkButton(self.loopBFrame, width=40, text="<", font=("", LBL_FONT_SIZE),
                                            command=lambda: self.moveLoopEnd(-MOVE_LOOP_POINTS_FINE))
         self.btnLoopBBack1_tt = CTkToolTip(self.btnLoopBBack1, message=_("Move loop end left by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBFwd1 =  ctk.CTkButton(self.loopBFrame, width=40, text=">",
+        self.btnLoopBFwd1 =  ctk.CTkButton(self.loopBFrame, width=40, text=">", font=("", LBL_FONT_SIZE),
                                            command=lambda: self.moveLoopEnd(MOVE_LOOP_POINTS_FINE))
         self.btnLoopBFwd1_tt = CTkToolTip(self.btnLoopBFwd1, message=_("Move loop end right by") + f" {MOVE_LOOP_POINTS_FINE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-        self.btnLoopBFwd2 =  ctk.CTkButton(self.loopBFrame, width=40, text=">>",
+        self.btnLoopBFwd2 =  ctk.CTkButton(self.loopBFrame, width=40, text=">>", font=("", LBL_FONT_SIZE),
                                            command=lambda: self.moveLoopEnd(MOVE_LOOP_POINTS_COARSE))
         self.btnLoopBFwd2_tt = CTkToolTip(self.btnLoopBFwd2, message=_("Move loop end right by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
@@ -303,8 +297,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.btnLoopBFwd1.grid(row = 1, column = 2, padx=(4, 0), pady = (8, 0))
         self.btnLoopBFwd2.grid(row = 1, column = 3, padx=(4, 0), pady = (8, 0))
 
-        #self.varLoopEnabled = ctk.BooleanVar(self, value=False)
-        
         self.loopCenterFrame = ctk.CTkFrame(self.LoopTab,bg_color="transparent")
         self.loopCenterFrame.grid(row=1, column=1, pady=8, sticky="nsew")
         
@@ -314,9 +306,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.swtLoopEnabled.pack(anchor = "n")
         self.swtLoopEnabled_tt = CTkToolTip(self.swtLoopEnabled, message=_("Toggle loop playing\nShortcut: L"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
-
-        self.loopStartChanged(None, None, None)
-        self.loopEndChanged(None, None, None)
 
         self.LoopTab.columnconfigure(1, weight=1)
 
@@ -404,8 +393,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def resetValues(self):
         self.player.startPoint = 0
         self.player.endPoint = 0
-        self.varLoopStart.set(-2)
-        self.varLoopEnd.set(-1)
         self.loopToggle(bForceDisable = True)
         self.player.Pause()
         self.player.Rewind()
@@ -698,8 +685,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             return(False)
 
         # set the start point
-        #self.player.startPoint = loopPoint
-        self.varLoopStart.set(loopPoint)
+        self.player.startPoint = loopPoint
+        self.sldLoop.set((loopPoint, self.player.endPoint))
+        secs = self.player.song_time(loopPoint)
+        if(secs is None):
+            secs = 0
+        self.lblLoopStart.configure(text = f"{dt.timedelta(seconds=round(secs))}.{utils.get_fractional(secs, 3):03d}")
 
     # Sets loop end point
     def setLoopEnd(self, loopPoint = 0):
@@ -717,13 +708,13 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(duration):
             maxEndpoint = duration - self.player.pipeline_time(LOOP_MINIMUM_GAP)
             if(loopPoint > maxEndpoint):
-                #print(f"Loopend: {maxEndpoint}")
-                self.varLoopEnd.set(maxEndpoint)
-                return(maxEndpoint)
-            else:
-                #print(f"Loopend: {loopPoint}")
-                self.varLoopEnd.set(loopPoint)
-                return(loopPoint)
+                loopPoint = maxEndpoint
+
+            self.player.endPoint = loopPoint
+            self.sldLoop.set((self.player.startPoint, loopPoint))
+            secs = self.player.song_time(loopPoint)
+            self.lblLoopEnd.configure(text = f"{dt.timedelta(seconds=round(secs))}.{utils.get_fractional(secs, 3):03d}")
+            return(loopPoint)
 
     # Move the loop start by shift milliseconds
     def moveLoopStart(self, shift = 0):
@@ -841,18 +832,19 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.songMetadata = f"{self.player.artist} - {self.player.title}"
                 self.statusBarMessage(self.songMetadata, True)
                 self.bStatusBarTags = True
+        
 
         # Sets the default loop end to duration (if not already set)
         if(self.player.endPoint != None and self.player.endPoint <= 0):
             duration = self.player.query_duration()
             if(duration != None and duration > 0):
                 actualEndloop = self.setLoopEnd(duration)
-                self.sldLoop.configure(to = actualEndloop, require_redraw=True)
+                self.sldLoop.configure(to = actualEndloop)#, require_redraw=True)
 
         # Sets loop start point to 0 if it is not set
-        if(self.player.startPoint != None and self.player.startPoint <= 0):
+        if(self.player.startPoint != None and self.sldLoop._from_ != 0):
             self.setLoopStart(0)
-            self.sldLoop.configure(from_ = 0, require_redraw=True)
+            self.sldLoop.configure(from_ = 0)#, require_redraw=True)
 
 
     # Display the YouTube download progress stripping any newline at the end of strings
@@ -912,6 +904,11 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             newLoopEnd = (self.player.endPoint * oldtempo) / newtempo
             self.player.startPoint = newLoopStart
             self.player.endPoint = newLoopEnd
+
+            duration = self.player.query_duration()
+            if(duration is not None):
+                self.sldLoop.configure(to = duration)
+                self.sldLoop.set((self.player.startPoint, self.player.endPoint))
         finally:
             self.bValuesChanging = False
 
@@ -956,30 +953,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Save the current value on the recent files list
         self.setRecentFilePBOptions(self.media)
         self.player.set_volume(self.player.volume)
-
-    def loopStartChanged(self, a, b, c):
-        value = self.varLoopStart.get()
-        self.player.startPoint = value
-        stVal = self.player.song_time(value)
-        if(stVal == None):
-            stVal = 0
-
-        # Sets the corresponing labet to display the loop boundary
-        # in the format h:mm:ss.ms
-        frac = utils.get_fractional(stVal, ndigits=2) # Gets the milliseconds part
-        self.lblLoopStart.configure(text = f"{dt.timedelta(seconds=round(stVal))}.{frac:02d}")
-
-
-    def loopEndChanged(self, a, b, c):
-        value = self.varLoopEnd.get()
-        self.player.endPoint = value
-        stVal = self.player.song_time(value)
-
-        if(stVal != None):
-            # Sets the corresponing labet to display the loop boundary
-            # in the format h:mm:ss.ms
-            frac = utils.get_fractional(stVal, ndigits=2) # Gets the milliseconds part
-            self.lblLoopEnd.configure(text = f"{dt.timedelta(seconds=round(stVal))}.{frac:02d}")
 
 
     def changePitch(self):
