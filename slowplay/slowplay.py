@@ -839,12 +839,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             duration = self.player.query_duration()
             if(duration != None and duration > 0):
                 actualEndloop = self.setLoopEnd(duration)
-                self.sldLoop.configure(to = actualEndloop)#, require_redraw=True)
+                self.sldLoop.configure(to = actualEndloop, require_redraw=True)
 
         # Sets loop start point to 0 if it is not set
         if(self.player.startPoint != None and self.sldLoop._from_ != 0):
             self.setLoopStart(0)
-            self.sldLoop.configure(from_ = 0)#, require_redraw=True)
+            self.sldLoop.configure(from_ = 0, require_redraw=True)
 
 
     # Display the YouTube download progress stripping any newline at the end of strings

@@ -14,13 +14,18 @@ Thank you Jonas for your work.
 
 ## Features
 
-**SlowPlay** can speed down/up songs or change their pitch independently "on the fly". It is possible to export modified songs by using the "Save as..." button.
+### Speed and pitch change
+**SlowPlay** can speed down/up songs or change their pitch independently "on the fly". You can import all the most common audio files format (mp3, wav, flac, aif...). To quickly modify speed and pitch, you can use the numeric keypad shortcuts, please take a look at the shortcut list further on in this document. Slowplay supports **drag-n-drop**, thus you can drop audio files straight from your file manager or from other applications.
 
-You can import the most common audio files format (mp3, wav, flac, aif...). You can save your files either in mp3 or wav format, based on the extension of file to be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as variable bitrate quality=4. Volume setting and metadata are ignored in the export operation.
+### YouTube audio extraction
+
+
+It is possible to export modified songs by using the "Save as..." button. You can save your files either in mp3 or wav format, based on the extension of file to be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as variable bitrate quality=4. Volume setting and metadata are ignored in the export operation.
+
 
 SlowPlay keeps track of the last 16 files played, and restores the playback parameters (speed, pitch, cents and volume) you set when you last played the songs. To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. If the software is launched with no media specified on the command line, it tries to re-open last played track.
 
-### Developement
+## Developement
 
 This software is my very first attempt to write "serious" Python code, so it may not look strictly pythonic to the purists, I apologize for that. I was born with C and quit my job as software developer many years ago, so not only I'm not a Python dev but I am also an obsolete dev! :)
 
