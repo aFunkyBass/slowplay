@@ -4,6 +4,7 @@ slowplay/resources/Working/
 hooks/
 build/
 dist/
+binaries/
 .venv/
 
 #files
