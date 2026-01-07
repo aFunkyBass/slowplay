@@ -305,7 +305,7 @@ class ytManage:
         return(self.videoMetadata)
 
     # Download the thumbnail for the Video and saves it into a temporary PNG file
-    def getVideoThumbnail(self, process_callback = None, show_output = False):
+    def getVideoThumbnail(self, process_callback = None, show_output = False, include_stderr = False):
         if(self.curURL is None):
             return(False)
 
@@ -314,16 +314,16 @@ class ytManage:
 
         command = [
             YTDLP_CMD,
-             '--skip-download',                             # Doesn't download the video
-             '--write-thumbnail',                           # Write thumbnail on disk
-             '--convert-thumbnail', YT_THUMB_FORMAT_EXTENSION, # Audio format
-             '--no-playlist',                               # Only consider the single file
-             '-o', self.outFile,                            # Output filename
-             self.curURL                                    # Video URL
+             '--skip-download',                                 # Doesn't download the video
+             '--write-thumbnail',                               # Write thumbnail on disk
+             '--convert-thumbnail', YT_THUMB_FORMAT_EXTENSION,  # Image fornat
+             '--no-playlist',                                   # Only consider the single file
+             '-o', self.outFile,                                # Output filename
+             self.curURL                                        # Video URL
         ]
 
         # Performs the os call and capture the stdout
-        ret, _ = utils.capture_subprocess_output(command, process_callback, show_output)
+        ret, _ = utils.capture_subprocess_output(command, process_callback, show_output, include_stderr)
 
         if(ret):
             self.thumbnail = '.'.join([self.outFile, YT_THUMB_FORMAT_EXTENSION])

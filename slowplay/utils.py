@@ -12,18 +12,18 @@ from datetime import datetime
 # Function to restore the original LD_LIBRARY_PATH environment
 # if the app is running as a frozen app with pyinstaller
 def __get_env__():
-  env = dict(os.environ)
+    env = dict(os.environ)
 
-  lp_key = 'LD_LIBRARY_PATH'
+    lp_key = 'LD_LIBRARY_PATH'
 
-  lp_orig = env.get(lp_key + '_ORIG')
+    lp_orig = env.get(lp_key + '_ORIG')
 
-  if lp_orig is not None:
-      env[lp_key] = lp_orig  # restore the original, unmodified value
-  else:
-      env.pop(lp_key, None)
+    if lp_orig is not None:
+        env[lp_key] = lp_orig  # restore the original, unmodified value
+    else:
+        env.pop(lp_key, None)
 
-  return(env)
+    return(env)
 
 
 # Function to generate a filename on the temporary directory
@@ -41,15 +41,21 @@ def __generate_random_temp_filename__(suffix = ""):
     #print(newname)
     return(newname)
 
-def capture_subprocess_output(subprocess_args, callback_func = None, show_output = False):
+def capture_subprocess_output(subprocess_args, callback_func = None, show_output = False, include_stderr = False):
     # Start subprocess
     # bufsize = 1 means output is line buffered
     # universal_newlines = True is required for line buffering
+
+    # restores the original LD_LIBRARY_PATH environment
+    # Pyinstaller safe
+    curEnv = __get_env__()
+
     process = subprocess.Popen(subprocess_args,
                                bufsize=1,
                                stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE,
-                               universal_newlines=True)
+                               stderr=subprocess.PIPE if (include_stderr == False) else subprocess.STDOUT,
+                               universal_newlines=True,
+                               env=curEnv)
 
     # Create callback function for process output
     buf = io.StringIO()
