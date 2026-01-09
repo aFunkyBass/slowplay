@@ -88,9 +88,9 @@ class aboutDialog(ctk.CTkToplevel):
         #self.minsize(width = 400, height = 300)
 
 
-        img = ctk.CTkImage(dark_image=Image.open(os.path.join(resources_dir, "Icona-96.png")), 
-                                light_image=Image.open(os.path.join(resources_dir, "Icona-96.png")),
-                                size=(96, 96))
+        img = ctk.CTkImage(dark_image=Image.open(os.path.join(resources_dir, "Icona-64.png")), 
+                                light_image=Image.open(os.path.join(resources_dir, "Icona-64.png")),
+                                size=(64, 64))
 
         self.ico = ctk.CTkLabel(self, text="", image=img)
         self.ico.grid(row=0, column=0, rowspan=2, padx=10, sticky="ns")
@@ -127,9 +127,14 @@ class aboutDialog(ctk.CTkToplevel):
         self.linkLabel.bind("<1>", lambda e: self.openUrl(APP_URL))
 
         # Widget on tab 2: "Shorcuts"
+        SC_SECTION_TITLE = "-TITLE-"
+
         sc_list = [
+            (SC_SECTION_TITLE, _("GENERAL SHORTCUTS:")),
             ("CTRL+R", _("Open recent files list")),
+            ("CTRL+Y", _("Open YouTube dialog")),
             ("CTRL+Q", _("Quit")),
+            (SC_SECTION_TITLE, _("PLAYBACK SHORTCUTS:")),
             ("N. Keypad 0", _("Play/Pause")),
             ("N. Keypad .", _("Stop and rewind")),
             ("N. Keypad 1", _("Rewind 5 seconds")),
@@ -144,23 +149,36 @@ class aboutDialog(ctk.CTkToplevel):
             ("N. Keypad 5", _("Reset playback speed to 100%")),
             ("N. Keypad +", _("Transpose +1 semitone")),
             ("N. Keypad -", _("Transpose -1 semitone")),
+            (SC_SECTION_TITLE, _("LOOP SHORTCUTS:")),
+            ("L", _("Toggle loop playing")),
+            ("A", _("Set loop start")),
+            ("B", _("Set loop end")),
+            ("CTRL+A", _("Reset loop start")),
+            ("CTRL+B", _("Reset loop end")),
         ]
 
         scrollFrame = ctk.CTkScrollableFrame(tab2)
-        scrollFrame.grid(row = 0, column = 0, padx = (4), pady = (4), sticky="nsew")
+        scrollFrame.grid(row = 0, column = 0, padx = (0), pady = (0), sticky="nsew")
         
-        kpLabel = ctk.CTkButton(scrollFrame, text=_("SHOW NUM. KEYPAD MAP"), command=self.imgShow)
-        kpLabel.grid(row = 0, column = 0, columnspan = 2, sticky = "w", pady=(0, 10))
-
         scLabels = []
         i = 0
         for sc in sc_list:
-            scLabels.append(ctk.CTkLabel(scrollFrame, text=f"{sc[0]}: ", font=("", LBL_FONT_SIZE, "bold")))
-            scLabels.append(ctk.CTkLabel(scrollFrame, text=sc[1], font=("", LBL_FONT_SIZE)))
- 
-            scLabels[i].grid(row = i + 1, column = 0, sticky = "w")
-            scLabels[i + 1].grid(row = i + 1, column = 1, sticky = "w")
-            i = i + 2
+            if (sc[0] == SC_SECTION_TITLE):
+                scLabels.append(ctk.CTkLabel(scrollFrame, text=sc[1], font=("", LBL_FONT_SIZE, "bold")))
+                scLabels[i].grid(row = i, column = 0, sticky = "ew", columnspan = 2, pady=(10, 0))
+                i = i + 1
+            else:
+                scLabels.append(ctk.CTkLabel(scrollFrame, text=f"{sc[0]}: ", font=("", LBL_FONT_SIZE, "bold")))
+                scLabels.append(ctk.CTkLabel(scrollFrame, text=sc[1], font=("", LBL_FONT_SIZE)))
+    
+                scLabels[i].grid(row = i, column = 0, sticky = "w", pady=(0, 0))
+                scLabels[i + 1].grid(row = i, column = 1, sticky = "w", pady=(0, 0))
+                i = i + 2
+
+        kpLabel = ctk.CTkButton(scrollFrame, text=_("SHOW NUM. KEYPAD MAP"), command=self.imgShow)
+        kpLabel.grid(row = i + 1, column = 0, columnspan = 2, sticky = "w", pady=(10, 0))
+
+        scrollFrame.grid_columnconfigure(0, weight=1)
 
         # Widget on tab 3: "Donate"
         """
