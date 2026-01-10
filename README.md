@@ -54,7 +54,13 @@ Having said that, Slowplay is still at its early test stage, I had not the possi
 
 ## Installation
 
-Currenty Slowplay is only available for the Linux operating system. To install it, please download the `slowplay[version-num].tar.gz` from the [latest release](https://github.com/aFunkyBass/slowplay/releases/latest). Extract it on a folder that can be reached by your path (tipically `/opt` or `~/.local/bin`) and run the executable file `slowplay`
+To install SlowPlay please follow these simple steps:
+
+- Download the compressed file `slowplay[version-num].tar.gz` from the [latest release](https://github.com/aFunkyBass/slowplay/releases/latest).
+- Extract it on a folder that can be reached by your path (tipically `/opt` or `~/.local/bin`)
+- Run the executable file `slowplay`
+
+*NOTE: currenty Slowplay is only available for the Linux operating system.*
 
 ### Requirements
 
