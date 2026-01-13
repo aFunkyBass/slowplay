@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-01-05 16:22+0100\n"
-"PO-Revision-Date: 2026-01-05 16:33+0100\n"
+"POT-Creation-Date: 2026-01-13 11:44+0100\n"
+"PO-Revision-Date: 2026-01-13 11:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -36,71 +36,107 @@ msgstr "Scorciatoie"
 msgid "Created by"
 msgstr "Creato da"
 
-#: aboutdialog.py:131
+#: aboutdialog.py:133
+msgid "GENERAL SHORTCUTS:"
+msgstr "SCORCIATOIE GENERICHE:"
+
+#: aboutdialog.py:134
 msgid "Open recent files list"
 msgstr "Apre la lista dei file recenti"
 
-#: aboutdialog.py:132
+#: aboutdialog.py:135
+msgid "Open YouTube dialog"
+msgstr "Apri la finestra YouTube"
+
+#: aboutdialog.py:136
 msgid "Quit"
 msgstr "Esci"
 
-#: aboutdialog.py:133 slowplay.py:319
+#: aboutdialog.py:137
+msgid "PLAYBACK SHORTCUTS:"
+msgstr "RIPRODUZIONE:"
+
+#: aboutdialog.py:138 slowplay.py:319
 msgid "Play/Pause"
 msgstr "Play/pausa"
 
-#: aboutdialog.py:134
+#: aboutdialog.py:139
 msgid "Stop and rewind"
 msgstr "Stop e riposiziona da capo"
 
-#: aboutdialog.py:135
+#: aboutdialog.py:140
 msgid "Rewind 5 seconds"
 msgstr "Indietro di 5 secondi"
 
-#: aboutdialog.py:136
+#: aboutdialog.py:141
 msgid "Rewind 10 seconds"
 msgstr "Indietro di 10 secondi"
 
-#: aboutdialog.py:137
+#: aboutdialog.py:142
 msgid "Rewind 15 seconds"
 msgstr "Indietro di 15 secondi"
 
-#: aboutdialog.py:138
+#: aboutdialog.py:143
 msgid "Forward 5 seconds"
 msgstr "Avanti di 5 secondi"
 
-#: aboutdialog.py:139
+#: aboutdialog.py:144
 msgid "Forward 10 seconds"
 msgstr "Avanti di 10 secondi"
 
-#: aboutdialog.py:140
+#: aboutdialog.py:145
 msgid "Forward 15 seconds"
 msgstr "Avanti di 15 secondi"
 
-#: aboutdialog.py:141
+#: aboutdialog.py:146
 msgid "Rewind"
 msgstr "Riparte da capo"
 
-#: aboutdialog.py:142
+#: aboutdialog.py:147
 msgid "Playback speed +5%"
 msgstr "Aumenta la velocità del 5%"
 
-#: aboutdialog.py:143
+#: aboutdialog.py:148
 msgid "Playback speed -5%"
 msgstr "Diminuisce la velocità del 5%"
 
-#: aboutdialog.py:144
+#: aboutdialog.py:149
 msgid "Reset playback speed to 100%"
 msgstr "Reimposta la velocità al 100%"
 
-#: aboutdialog.py:145
+#: aboutdialog.py:150
 msgid "Transpose +1 semitone"
 msgstr "Trasponi di +1 semitono"
 
-#: aboutdialog.py:146
+#: aboutdialog.py:151
 msgid "Transpose -1 semitone"
 msgstr "Trasponi di -1 semitono"
 
 #: aboutdialog.py:152
+msgid "LOOP SHORTCUTS:"
+msgstr "LOOP:"
+
+#: aboutdialog.py:153
+msgid "Toggle loop playing"
+msgstr "Attiva/disattiva il loop"
+
+#: aboutdialog.py:154
+msgid "Set loop start"
+msgstr "Imposta il punto di inizio del loop"
+
+#: aboutdialog.py:155
+msgid "Set loop end"
+msgstr "Imposta il punto di fine del loop"
+
+#: aboutdialog.py:156
+msgid "Reset loop start"
+msgstr "Reimposta il punto di inizio del loop"
+
+#: aboutdialog.py:157
+msgid "Reset loop end"
+msgstr "Reimposta il punto di fine del loop"
+
+#: aboutdialog.py:178
 msgid "SHOW NUM. KEYPAD MAP"
 msgstr "MOSTRA LA MAPPA DEI TASTI"
 
