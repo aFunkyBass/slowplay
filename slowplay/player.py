@@ -229,17 +229,23 @@ class slowPlayer():
 
         save_tempopitch = Gst.ElementFactory.make("pitch")
         save_audioconvert = Gst.ElementFactory.make("audioconvert")
+        save_audioresample = Gst.ElementFactory.make("audioresample")
         save_encoder = Gst.ElementFactory.make(encoder)
+        save_mux = Gst.ElementFactory.make("id3v2mux")
         save_sink = Gst.ElementFactory.make("filesink")
 
         save_bin.add(save_tempopitch)
         save_bin.add(save_audioconvert)
+        save_bin.add(save_audioresample)
         save_bin.add(save_encoder)
+        save_bin.add(save_mux)
         save_bin.add(save_sink)
 
         save_tempopitch.link(save_audioconvert)
-        save_audioconvert.link(save_encoder)
-        save_encoder.link(save_sink)
+        save_audioconvert.link(save_audioresample)
+        save_audioresample.link(save_encoder)
+        save_encoder.link(save_mux)
+        save_mux.link(save_sink)
 
         save_sink_pad = Gst.GhostPad.new("sink", save_tempopitch.get_static_pad("sink"))
         save_bin.add_pad(save_sink_pad)
@@ -251,6 +257,12 @@ class slowPlayer():
         save_tempopitch.set_property("tempo", self.tempopitch.get_property("tempo"))
         save_tempopitch.set_property("pitch", self.tempopitch.get_property("pitch"))
         save_sink.set_property("location", dest)
+
+        # Sets the encoder to constant bitrate
+        if(encoder == MP3_ENCODER):
+            save_encoder.set_property("target", "bitrate")
+            save_encoder.set_property("bitrate", 192)
+            save_encoder.set_property("cbr", "true")
 
         save_pipeline.set_state(Gst.State.PLAYING)
 
