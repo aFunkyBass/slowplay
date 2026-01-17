@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from CTkListbox import *
 import os
+from appsettings import *
 
 import gettext
 _ = gettext.gettext
@@ -26,7 +27,7 @@ class recentDialog(ctk.CTkToplevel):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.ListBox = CTkListbox(self.LFrame, font=("", 16))
+        self.ListBox = CTkListbox(self.LFrame, font=("", 16), command=self.printSel)
         self.ListBox.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
         self.ListBox.bind("<Double-1>", self.onOk)
 
@@ -47,15 +48,37 @@ class recentDialog(ctk.CTkToplevel):
     def checkBoxToggle(self):
         self.fillListbox()
 
+    def printSel(self, event):
+        print(self.revKeysList[self.ListBox.curselection()])
+
     def fillListbox(self):
         self.ListBox.delete("all")
 
-        if(self.togglePath.get() == 0):
-            for k in reversed(self.data):
-                self.ListBox.insert(k, os.path.basename(k))
-        else:
-            for k in reversed(self.data):
-                self.ListBox.insert(k, k)
+        # Reverse the order of keys
+        self.revKeysList = list(self.data.keys())
+        self.revKeysList.reverse()
+
+        # Fills the listbox
+        for k in self.revKeysList:
+            v = self.data[k]
+            
+            # If it is a YouTube video use the URL as a key
+            if(v.get(PBO_DEF_YOUTUBE, False) == False):
+                lbK = k
+            else:
+                print(v.get(PBO_DEF_YOUTUBEURL, ""))
+                lbK = v.get(PBO_DEF_YOUTUBEURL, "")
+
+            # If there are metadata saved in the list display the metadata
+            # Otherwise display the filename
+            if(v.get(PBO_DEF_METADATA, "") == ""):
+                lbV = os.path.basename(k) if self.togglePath.get() == 0 else k
+            else:
+                lbV = v[PBO_DEF_METADATA]
+                if(self.togglePath.get() == 1):
+                    lbV += " - " + k
+            
+            self.ListBox.insert(lbK, lbV)
         
         self.ListBox.activate(0)
 

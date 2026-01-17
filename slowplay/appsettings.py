@@ -11,6 +11,16 @@ MAX_RECENTFILE_LIST = 16
 CFG_APP_SECTION = "App"
 CFG_RECENTFILE_SECTION = "Files"
 
+### Definitions of the JSON keys in the configuration file
+PBO_DEF_SPEED = "Speed"
+PBO_DEF_SEMITONES = "Semitones"
+PBO_DEF_CENTS = "Cents"
+PBO_DEF_VOLUME = "Volume"
+
+PBO_DEF_METADATA = "Metadata"
+PBO_DEF_YOUTUBE = "YouTube"
+PBO_DEF_YOUTUBEURL = "YouTubeURL"
+
 class AppSettings(object):
     def __init__(self, filename = ""):
 

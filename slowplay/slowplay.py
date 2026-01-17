@@ -29,8 +29,8 @@ from sp_constants import *
 import utils
 from player import slowPlayer
 import filedialogs
-import appsettings
-from appsettings import CFG_APP_SECTION
+from appsettings import *
+#from appsettings import CFG_APP_SECTION
 import recentdialog
 import aboutdialog
 import ytmanage
@@ -42,7 +42,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.TkdndVersion = TkinterDnD._require(self)
 
         # Load app settings
-        self.settings = appsettings.AppSettings()
+        self.settings = AppSettings()
         self.settings.loadSettings()
 
         # Mark app directories
@@ -94,6 +94,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.songMetadata = ""              # Metadata for the songs
 
         self.bYouTubeFile = False           # Flag is True when the media is a YouTube video
+        self.YouTubeUrl = ""                # Actual YouTube URL
 
         # Build the 3 main frames: Left (shrinkable), Right (buttons)
         # and low (status ba
@@ -360,17 +361,30 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.update()
         self.minsize(self.winfo_width(), self.winfo_height())
 
-        # print args
+        # Check if a filename is passed from the command line
         if(args.media != None):
             self.setFile(args.media)
         else:
-            self.setFile(self.settings.getLastPlayedFilename())
+            # If no file is specified tries to load the last played media
+            lastPlayed = self.settings.getLastPlayedFilename()
+
+            # Gather information about the last played file
+            # if it is a YouTube video does not automatically load
+            if(lastPlayed is not None):
+                filePlabackOptions = self.settings.getRecentFile(lastPlayed)
+                if(filePlabackOptions is not None and isinstance(filePlabackOptions, dict)):
+                    # Check for local file or youtube url
+                    if(filePlabackOptions[PBO_DEF_YOUTUBE] == False):
+                        self.setFile(lastPlayed)
+                    #else:
+                    #    self.setYouTubeUrl(filePlabackOptions[PBO_DEF_YOUTUBEURL], filePlabackOptions[PBO_DEF_METADATA])
 
     # Open file selection and sets it for playback
     def openFile(self):
         newfile = self.selectFileToOpen()
         if(newfile != ""):
             self.bYouTubeFile = False
+            self.YouTubeUrl = ""
             self.setFile(newfile)
 
     # Open the file selection dialog
@@ -460,17 +474,17 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             try:
                 self.resetValues()
                 
-                if(filePlabackOptions["Speed"] in range(MIN_SPEED_PERCENT, MAX_SPEED_PERCENT + 1)):
-                    self.varSpeed.set(filePlabackOptions["Speed"])
+                if(filePlabackOptions[PBO_DEF_SPEED] in range(MIN_SPEED_PERCENT, MAX_SPEED_PERCENT + 1)):
+                    self.varSpeed.set(filePlabackOptions[PBO_DEF_SPEED])
 
-                if(filePlabackOptions["Semitones"] in range(MIN_PITCH_SEMITONES, MAX_PITCH_SEMITONES + 1)):
-                    self.varPitchST.set(filePlabackOptions["Semitones"])
+                if(filePlabackOptions[PBO_DEF_SEMITONES] in range(MIN_PITCH_SEMITONES, MAX_PITCH_SEMITONES + 1)):
+                    self.varPitchST.set(filePlabackOptions[PBO_DEF_SEMITONES])
 
-                if(filePlabackOptions["Cents"] in range(MIN_PITCH_CENTS, MAX_PITCH_CENTS + 1)):
-                    self.varPitchCents.set(filePlabackOptions["Cents"])
+                if(filePlabackOptions[PBO_DEF_CENTS] in range(MIN_PITCH_CENTS, MAX_PITCH_CENTS + 1)):
+                    self.varPitchCents.set(filePlabackOptions[PBO_DEF_CENTS])
 
-                if(filePlabackOptions["Volume"] in range(MIN_VOLUME, MAX_VOLUME + 1)):
-                    self.varVolume.set(filePlabackOptions["Volume"])
+                if(filePlabackOptions[PBO_DEF_VOLUME] in range(MIN_VOLUME, MAX_VOLUME + 1)):
+                    self.varVolume.set(filePlabackOptions[PBO_DEF_VOLUME])
             finally:
                 self.settings.bUpdateForbidden = False
         else:
@@ -482,20 +496,19 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(filename == ""):
             return(True)
 
-        # Checks for the permission to write to recent
         if(self.bYouTubeFile == True):
-            return(True)
-
-        sp = self.varSpeed.get()
-        st = self.varPitchST.get()
-        ce = self.varPitchCents.get()
-        vl = self.varVolume.get()
+            fname = self.YouTubeUrl
+        else:
+            fname = self.media
 
         filePlabackOptions = {
-                "Speed": sp,
-                "Semitones": st,
-                "Cents": ce,
-                "Volume": vl
+                PBO_DEF_METADATA: self.songMetadata,
+                PBO_DEF_YOUTUBE: self.bYouTubeFile,
+                PBO_DEF_YOUTUBEURL: self.YouTubeUrl,
+                PBO_DEF_SPEED: self.varSpeed.get(),
+                PBO_DEF_SEMITONES: self.varPitchST.get(),
+                PBO_DEF_CENTS: self.varPitchCents.get(),
+                PBO_DEF_VOLUME: self.varVolume.get()
             }
 
         self.settings.addRecentFile(filename, filePlabackOptions)
@@ -598,7 +611,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                           icon = "cancel", font = ("", LBL_FONT_SIZE))
             return(False)
 
-
         # Temporarily disables all the keypress and mouse binding
         self.unbind_all('<KeyPress>')
         self.unbind_all('<1>')
@@ -612,26 +624,32 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(rUrl == False):
             return(False)
 
-        # Set the URL
-        manager.setURL(rUrl)
+        self.setYouTubeUrl(url=rUrl, vinfo=videoInfo["title"])
+
+    # Actually load a YouTube URL
+    def setYouTubeUrl(self, url: str, vinfo: str):
+        manager = ytmanage.ytManage(url)
 
         # Download the video into a temporary file
         if(manager.downloadAudioFile(process_callback = self.dispYoutubeProgress) == False):
             CTkMessagebox(master = self, title = _("Error"), 
                             message=_("Unable to download audio file from YouTube."),
                             icon = "cancel", font = ("", LBL_FONT_SIZE))
-            return
+            return(False)
 
-        # Prevent this temporary file to be added to recent
+        # Set the flag for Youtube and saves the URL
         self.bYouTubeFile = True
+        self.YouTubeUrl = url 
 
         # Uses the video title as metadata to be displayed
         # on the status bar
-        self.songMetadata = videoInfo["title"]
+        self.songMetadata = vinfo
 
         # Set the temporary file to be played
         self.setFile(manager.audioFile)
 
+        return(True)
+        
     # Open a dialog with the list of recent files
     def openRecentFileDialog(self, event):
         RecentFileList = self.settings.getRecentFiles()
@@ -647,7 +665,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.unbind_all('<KeyPress>')
             self.unbind_all('<1>')
             try:
-                popup = recentdialog.recentDialog(self, RecentFileList.keys())
+                popup = recentdialog.recentDialog(self, RecentFileList)
                 rFile = popup.show()
             finally:
                 self.bind_all('<1>', self._click_manager_)
@@ -656,8 +674,16 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             if(rFile == ""):
                 return(False)
             
-            self.bYouTubeFile = False
-            self.setFile(rFile)
+            # check for YoutubeFile
+            print(rFile)
+            print(RecentFileList[rFile].get(PBO_DEF_YOUTUBE, False))
+            print(RecentFileList[rFile].get(PBO_DEF_METADATA, ""))
+            #if(RecentFileList[rFile].get(PBO_DEF_YOUTUBE, False) == False):
+            #    self.bYouTubeFile = False
+            #    self.YouTubeUrl = ""
+            #    self.setFile(rFile)
+            #else:
+            #    self.setYouTubeUrl(rFile, RecentFileList[rFile].get(PBO_DEF_METADATA, ""))
 
     # Toggle loop playing
     def loopToggle(self, bForceDisable = False):
@@ -832,7 +858,9 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.songMetadata = f"{self.player.artist} - {self.player.title}"
                 self.statusBarMessage(self.songMetadata, True)
                 self.bStatusBarTags = True
-        
+
+                # Updates the info on the recent file list
+                self.setRecentFilePBOptions(self.media)        
 
         # Sets the default loop end to duration (if not already set)
         if(self.player.endPoint != None and self.player.endPoint <= 0):
@@ -953,7 +981,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         # Save the current value on the recent files list
         self.setRecentFilePBOptions(self.media)
         self.player.set_volume(self.player.volume)
-
 
     def changePitch(self):
         # converte da semitoni + centesimi
@@ -1180,6 +1207,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         dropped_file = str(self.tk.splitlist(event.data)[0])
         if(dropped_file != ""):
             self.bYouTubeFile = False
+            self.YouTubeUrl = ""
             self.setFile(dropped_file)
 
     # Test the dropped file
