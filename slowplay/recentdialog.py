@@ -27,7 +27,7 @@ class recentDialog(ctk.CTkToplevel):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.ListBox = CTkListbox(self.LFrame, font=("", 16), command=self.printSel)
+        self.ListBox = CTkListbox(self.LFrame, font=("", 16))
         self.ListBox.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
         self.ListBox.bind("<Double-1>", self.onOk)
 
@@ -48,9 +48,6 @@ class recentDialog(ctk.CTkToplevel):
     def checkBoxToggle(self):
         self.fillListbox()
 
-    def printSel(self, event):
-        print(self.revKeysList[self.ListBox.curselection()])
-
     def fillListbox(self):
         self.ListBox.delete("all")
 
@@ -62,13 +59,6 @@ class recentDialog(ctk.CTkToplevel):
         for k in self.revKeysList:
             v = self.data[k]
             
-            # If it is a YouTube video use the URL as a key
-            if(v.get(PBO_DEF_YOUTUBE, False) == False):
-                lbK = k
-            else:
-                print(v.get(PBO_DEF_YOUTUBEURL, ""))
-                lbK = v.get(PBO_DEF_YOUTUBEURL, "")
-
             # If there are metadata saved in the list display the metadata
             # Otherwise display the filename
             if(v.get(PBO_DEF_METADATA, "") == ""):
@@ -78,7 +68,7 @@ class recentDialog(ctk.CTkToplevel):
                 if(self.togglePath.get() == 1):
                     lbV += " - " + k
             
-            self.ListBox.insert(lbK, lbV)
+            self.ListBox.insert(k, lbV)
         
         self.ListBox.activate(0)
 

@@ -153,7 +153,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entSpeed.bind('<Return>', self.checkSpeed)
         self.entSpeed.bind('<KP_Enter>', self.checkSpeed)
         self.entSpeed.bind('<FocusOut>', self.checkSpeed)
-        self.speedChanged(None, None, None)
 
         #vnegint = (self.register(self.validate_neg_int),'%d','%i','%P','%s','%S','%v','%V','%W')
         vnegint = (self.register(self.validate_neg_int),'%S', '%P')
@@ -177,7 +176,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entPitchST.bind('<Return>', self.checkSemitones)
         self.entPitchST.bind('<KP_Enter>', self.checkSemitones)
         self.entPitchST.bind('<FocusOut>', self.checkSemitones)
-        self.semitonesChanged(None, None, None)
 
         self.varPitchCents = ctk.IntVar(self, value=DEFAULT_CENTS)
         self.varPitchCents.trace_add("write", self.centsChanged)
@@ -199,7 +197,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entPitchCents.bind('<Return>', self.checkCents)
         self.entPitchCents.bind('<KP_Enter>', self.checkCents)
         self.entPitchCents.bind('<FocusOut>', self.checkCents)
-        self.centsChanged(None, None, None)
 
         self.varVolume = ctk.IntVar(self, value=DEFAULT_VOLUME)
         self.varVolume.trace_add("write", self.volumeChanged)
@@ -214,8 +211,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entVolume.bind('<Return>', self.checkVolume)
         self.entVolume.bind('<KP_Enter>', self.checkVolume)
         self.entVolume.bind('<FocusOut>', self.checkVolume)
-        self.volumeChanged(None, None, None)
         self.PlaybackTab.columnconfigure(1, weight=1)
+
+        self.speedChanged(None, None, None)
+        self.semitonesChanged(None, None, None)
+        self.centsChanged(None, None, None)
+        self.volumeChanged(None, None, None)
 
         # Widgets on Loop Tab
         self.sldLoop = CTkRangeSlider(self.LoopTab, from_=-2, to=-1, 
@@ -374,10 +375,11 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 filePlabackOptions = self.settings.getRecentFile(lastPlayed)
                 if(filePlabackOptions is not None and isinstance(filePlabackOptions, dict)):
                     # Check for local file or youtube url
-                    if(filePlabackOptions[PBO_DEF_YOUTUBE] == False):
+                    if(PBO_DEF_YOUTUBE in filePlabackOptions and filePlabackOptions[PBO_DEF_YOUTUBE] == True):
+                        pass
+                        #self.setYouTubeUrl(lastPlayed, filePlabackOptions[PBO_DEF_METADATA])
+                    else:
                         self.setFile(lastPlayed)
-                    #else:
-                    #    self.setYouTubeUrl(filePlabackOptions[PBO_DEF_YOUTUBEURL], filePlabackOptions[PBO_DEF_METADATA])
 
     # Open file selection and sets it for playback
     def openFile(self):
@@ -405,8 +407,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     # Reset all values
     def resetValues(self):
-        self.player.startPoint = 0
-        self.player.endPoint = 0
+        self.player.startPoint = -2
+        self.player.endPoint = -1
         self.loopToggle(bForceDisable = True)
         self.player.Pause()
         self.player.Rewind()
@@ -456,19 +458,21 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(self.bYouTubeFile == False):
             self.songMetadata = self.mediaFileName
             self.title(f"{APP_TITLE} - {self.mediaFileName}")
+            recentFileKey = self.media            
         else:
-            self.songMetadata = f"(YT) - {self.songMetadata}"
+            #self.songMetadata = f"(YT) - {self.songMetadata}"
             self.title(f"{APP_TITLE} - {self.songMetadata}")
+            recentFileKey = self.YouTubeUrl
 
         # Updates window title and status bar
-        self.statusBarMessage(self.songMetadata, static = True)
+        self.displaySongMetadata()
 
         # if the file was recently open, it loads its settings
         # otherwise saves it into the list
-        filePlabackOptions = self.settings.getRecentFile(self.media)
+        filePlabackOptions = self.settings.getRecentFile(recentFileKey)
 
         if(filePlabackOptions is not None and isinstance(filePlabackOptions, dict)):
-            self.settings.moveToLastPosition(self.media)
+            self.settings.moveToLastPosition(recentFileKey)
             
             self.settings.bUpdateForbidden = True
             try:
@@ -489,12 +493,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.settings.bUpdateForbidden = False
         else:
             self.resetValues()
-            self.setRecentFilePBOptions(self.media)
+            self.setRecentFilePBOptions()
 
     # Saves the playback options to the recent files list
-    def setRecentFilePBOptions(self, filename):
-        if(filename == ""):
-            return(True)
+    def setRecentFilePBOptions(self):
+        if(self.media == "" and self.YouTubeUrl == ""):
+            return
 
         if(self.bYouTubeFile == True):
             fname = self.YouTubeUrl
@@ -504,14 +508,13 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         filePlabackOptions = {
                 PBO_DEF_METADATA: self.songMetadata,
                 PBO_DEF_YOUTUBE: self.bYouTubeFile,
-                PBO_DEF_YOUTUBEURL: self.YouTubeUrl,
                 PBO_DEF_SPEED: self.varSpeed.get(),
                 PBO_DEF_SEMITONES: self.varPitchST.get(),
                 PBO_DEF_CENTS: self.varPitchCents.get(),
                 PBO_DEF_VOLUME: self.varVolume.get()
             }
 
-        self.settings.addRecentFile(filename, filePlabackOptions)
+        self.settings.addRecentFile(fname, filePlabackOptions)
 
     # Saves an audio file with the pitch and tempo settings
     def saveAs(self):
@@ -579,7 +582,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.save_prg_var.__del__()
             self.save_canc.destroy()
             self.save_canc_tt.destroy()
-            self.statusBarMessage(self.songMetadata, static = True)
+            self.displaySongMetadata()
 
     # Open the save file dialog
     def selectFileToSave(self) -> str:
@@ -675,15 +678,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 return(False)
             
             # check for YoutubeFile
-            print(rFile)
-            print(RecentFileList[rFile].get(PBO_DEF_YOUTUBE, False))
-            print(RecentFileList[rFile].get(PBO_DEF_METADATA, ""))
-            #if(RecentFileList[rFile].get(PBO_DEF_YOUTUBE, False) == False):
-            #    self.bYouTubeFile = False
-            #    self.YouTubeUrl = ""
-            #    self.setFile(rFile)
-            #else:
-            #    self.setYouTubeUrl(rFile, RecentFileList[rFile].get(PBO_DEF_METADATA, ""))
+            if(RecentFileList[rFile].get(PBO_DEF_YOUTUBE, False) == False):
+                self.bYouTubeFile = False
+                self.YouTubeUrl = ""
+                self.setFile(rFile)
+            else:
+                self.setYouTubeUrl(rFile, RecentFileList[rFile].get(PBO_DEF_METADATA, ""))
 
     # Toggle loop playing
     def loopToggle(self, bForceDisable = False):
@@ -856,11 +856,11 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(self.bStatusBarTags == False):
             if(self.player.artist != "" and self.player.title != "" ):
                 self.songMetadata = f"{self.player.artist} - {self.player.title}"
-                self.statusBarMessage(self.songMetadata, True)
+                self.displaySongMetadata()
                 self.bStatusBarTags = True
 
                 # Updates the info on the recent file list
-                self.setRecentFilePBOptions(self.media)        
+                self.setRecentFilePBOptions()        
 
         # Sets the default loop end to duration (if not already set)
         if(self.player.endPoint != None and self.player.endPoint <= 0):
@@ -874,6 +874,12 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.setLoopStart(0)
             self.sldLoop.configure(from_ = 0, require_redraw=True)
 
+    # Display the metadata on the statusbar
+    def displaySongMetadata(self):
+        if(self.bYouTubeFile == False):
+            self.statusBarMessage(self.songMetadata, static = True)
+        else:
+            self.statusBarMessage(YOUTUBE_METADATA_PREFIX + self.songMetadata, static = True)
 
     # Display the YouTube download progress stripping any newline at the end of strings
     def dispYoutubeProgress(self, line):
@@ -916,7 +922,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             return
 
         # Save the current value on the recent files list
-        self.setRecentFilePBOptions(self.media)
+        self.setRecentFilePBOptions()
 
         self.bValuesChanging = True
         try:
@@ -961,7 +967,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entPitchST.insert(0, value)
         self.player.semitones = self.varPitchST.get()
         # Save the current value on the recent files list
-        self.setRecentFilePBOptions(self.media)
+        self.setRecentFilePBOptions()
         self.changePitch()
 
     def centsChanged(self, a, b, c):
@@ -970,7 +976,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entPitchCents.insert(0, value)
         self.player.cents = self.varPitchCents.get()
         # Save the current value on the recent files list
-        self.setRecentFilePBOptions(self.media)
+        self.setRecentFilePBOptions()
         self.changePitch()
 
     def volumeChanged(self, a, b, c):
@@ -979,7 +985,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.entVolume.insert(0, value)
         self.player.volume = self.varVolume.get() * 0.01
         # Save the current value on the recent files list
-        self.setRecentFilePBOptions(self.media)
+        self.setRecentFilePBOptions()
         self.player.set_volume(self.player.volume)
 
     def changePitch(self):
@@ -1088,7 +1094,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(newText):
             self.fileLabel.configure(text = newText)
         else:
-            self.fileLabel.configure(text = self.songMetadata)
+            if(self.bYouTubeFile == False):
+                self.fileLabel.configure(text = self.songMetadata)
+            else:
+                self.fileLabel.configure(text = YOUTUBE_METADATA_PREFIX + self.songMetadata)
 
     def parseHotkey(self, event):
         key = event.keysym

@@ -19,7 +19,8 @@ PBO_DEF_VOLUME = "Volume"
 
 PBO_DEF_METADATA = "Metadata"
 PBO_DEF_YOUTUBE = "YouTube"
-PBO_DEF_YOUTUBEURL = "YouTubeURL"
+
+YOUTUBE_METADATA_PREFIX = "(YT) - "
 
 class AppSettings(object):
     def __init__(self, filename = ""):
