@@ -37,7 +37,10 @@ class ytDialog(ctk.CTkToplevel):
         # Mark app directories
         working_dir = os.path.dirname(__file__)
         resources_dir = os.path.join(working_dir, "resources")
-                
+        
+        # Set the video found flag
+        self.videoFound = False
+        
         self.wm_title(_("Open YouTube Video..."))
         
         #self.after(10)
@@ -123,6 +126,8 @@ class ytDialog(ctk.CTkToplevel):
         
         self.manager.reset()
         self.dlButton.configure(state = ctk.DISABLED)
+        self.videoFound = False
+
     
     def searchVideo(self):
         if(self.URL_entry.get() == ""):
@@ -180,6 +185,9 @@ class ytDialog(ctk.CTkToplevel):
         # Enable the download button
         self.dlButton.configure(state=ctk.NORMAL)
 
+        # Set the video found flag
+        self.videoFound = True
+
         return(True)
     
     def progressGadgetUpdate(self, line):
@@ -212,8 +220,15 @@ class ytDialog(ctk.CTkToplevel):
         state = event.state
         #print("Key: ", key, " - State: ", state)
 
-        if(key == "Escape" or key == "KP_Enter" or key == "Return"):
+        if(key == "Escape"):
             self.destroy()
+        elif(key == "KP_Enter" or key == "Return"):
+            if(self.videoFound == True):
+                self.onDownload()           # If video was already searched starts downlowad
+            else:
+                self.searchVideo()          # If video was not found yet it searches
+
+
 
 #
 # Class to manage all the operation to be done on YouTube Video 

@@ -68,6 +68,9 @@ class recentDialog(ctk.CTkToplevel):
                 if(self.togglePath.get() == 1):
                     lbV += " - " + k
             
+            if(v.get(PBO_DEF_YOUTUBE, False) == True):
+                lbV = YOUTUBE_METADATA_PREFIX + lbV
+            
             self.ListBox.insert(k, lbV)
         
         self.ListBox.activate(0)
