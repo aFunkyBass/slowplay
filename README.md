@@ -20,6 +20,7 @@ Thank you Jonas for your work.
 - [YouTube audio extraction from URL](#youtube-audio-extraction)
 - [Loop a range of the song, with fine adjustment of boundaries](#loop-ab)
 - [Modified audio export in MP3 or WAV audio format](#export-modified-audio)
+- [No nonsense keyboard shortcuts](#optimized-keyobard-shortcuts)
 - [...and more!](#other-features)
 
 ### Speed and pitch change:
@@ -38,14 +39,29 @@ Speed change is made by moving the slider which will change it in 5% steps, or b
 >**Note** To enable this feature, you need install the latest version of [yt-dlp](https://github.com/yt-dlp/yt-dlp) and make sure it is present on your execution path. If `yt-dlp` is not found on your system, you will get an error.
 
 ### Loop A/B:
-This function allows you to loop playback a section of the song. Please click on the "Loop control" tab to access all the loop related controls.
+This function allows you to loop playback a section of the song. Click on the "Loop control" tab to access all the loop related controls.
 
-Use the "Set loop start" (shortcut "A") and "Set loop end" (shortcut "B") buttons while playing to mark the loop boundaries. Toggle the "Enable loop" switch (shortcut "L") to engage/disengage loop playing. You can reset the A/B point using the reset buttons or pressing "Ctrl+A" and "Ctrl+B" on your keyboard.
+Use the "Set loop start" (shortcut "A" or num keypad divide) and "Set loop end" (shortcut "B" or num keypad multiply) buttons while playing to mark the loop boundaries. Toggle the "Enable loop" switch (shortcut "L") to engage/disengage loop playing. You can reset the A/B point using the reset buttons or pressing "Ctrl+A" and "Ctrl+B" on your keyboard.
 
 To achieve maximum execution precision, you can fine adjust the loop points by moving them left and right by 10 or 100 milliseconds using the associated buttons. *NOTE: Please keep in mind that there can be very short silence gap when restarting the loop. This is normal and it can't be avoided*
 
 ### Export modified audio:
 It is possible to export modified songs by using the "Save as..." button. You can save your files either in mp3 or wav format, based on the extension of file to be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as constant bitrate 192k. Volume setting and metadata are ignored in the export operation.
+
+### Optimized keyobard shortcuts:
+If you use SlowPlay for music practicing, you probably want access its functions without using the mouse or both hands, which is why most important shortcuts are assigned to the numeric keypads.
+
+- Numbers in the left column (1, 4, 7) move the song position back by 5, 10 and 15 seconds. Numbers on the right column (3, 6, 9) move it forward accordingly. You can reach the song position you want to reharse in a bit.
+
+- Speed controls are assigned to the central column. Numbers 2 and 8 change speed by -5% and +5% respectively, while number 5 resets the speed to normal.
+
+- Plus and minus keys transpose the song by semitones
+
+- Loop start and loop end can be set using the Divide and the multiply keys respectively
+
+I highly recommend taking some time to familiarize yourself with these keyboard shortucts, as they will save you a lot of time in the long run! Personally, I've been using this key combination for my music classes for a while now, and I can't think of anything better.
+
+See the [shortcuts](#shortcuts) section for a more complete key reference.
 
 ### Other features:
 - SlowPlay keeps track of the last 16 played files, and restores the playback parameters (speed, pitch, cents and volume) you set when you last played the songs. To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. If the software is launched with no media specified on the command line, it tries to re-open last played track.

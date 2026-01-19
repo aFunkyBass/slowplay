@@ -1164,10 +1164,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         elif(key == 'l' or key == 'L'):
             self.loopToggle()
         # Set loop start
-        elif((key == 'a' or key == 'A') and state != 20):
+        elif((key == 'a' or key == 'A' or key == 'KP_Divide') and state != 20):
             self.setLoopStart(self.player.query_position())
         # Set loop end
-        elif((key == 'b' or key == 'B') and state != 20):
+        elif((key == 'b' or key == 'B'or key == 'KP_Multiply') and state != 20):
             self.setLoopEnd(self.player.query_position())
         # Ctrl + a: Reset loop start
         elif(key == 'a' and state == 20):
