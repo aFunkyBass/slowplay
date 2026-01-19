@@ -16,6 +16,12 @@ Thank you Jonas for your work.
 
 ## Features
 
+- [Speed and pitch change on the fly](#speed-and-pitch-change)
+- [YouTube audio extraction from URL](#youtube-audio-extraction)
+- [Loop a range of the song, with fine adjustment of boundaries](#loop-ab)
+- [Modified audio export in MP3 or WAV audio format](#export-modified-audio)
+- [...and more!](#other-features)
+
 ### Speed and pitch change:
 **SlowPlay** can speed down/up songs or change their pitch independently "on the fly". You can import all the most common audio files format (mp3, wav, flac, aif...).
 
@@ -38,7 +44,7 @@ Use the "Set loop start" (shortcut "A") and "Set loop end" (shortcut "B") button
 
 To achieve maximum execution precision, you can fine adjust the loop points by moving them left and right by 10 or 100 milliseconds using the associated buttons. *NOTE: Please keep in mind that there can be very short silence gap when restarting the loop. This is normal and it can't be avoided*
 
-### Export modified audio
+### Export modified audio:
 It is possible to export modified songs by using the "Save as..." button. You can save your files either in mp3 or wav format, based on the extension of file to be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as constant bitrate 192k. Volume setting and metadata are ignored in the export operation.
 
 ### Other features:
