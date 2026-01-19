@@ -57,7 +57,9 @@ If you use SlowPlay for music practicing, you probably want access its functions
 
 - Plus and minus keys transpose the song by semitones
 
-- Loop start and loop end can be set using the Divide and the multiply keys respectively
+- Loop start and loop end can be set using the Divide and the Multiply keys respectively
+
+- Number 0 start and pause the playback while the Dot stop and rewind.
 
 I highly recommend taking some time to familiarize yourself with these keyboard shortucts, as they will save you a lot of time in the long run! Personally, I've been using this key combination for my music classes for a while now, and I can't think of anything better.
 
