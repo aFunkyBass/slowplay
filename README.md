@@ -124,10 +124,10 @@ The following commands are all assigned to the numeric keypad. Refer to the draw
 #### Loop controls:
 - **L**: Toggle loop playing
 
-- **A**: Sets the start loop point to the current playing position
+- **A** or **Keypad Divide**: Sets the start loop point to the current playing position
 - **Ctrl+A**: Resets the start loop point to the start of the song
 
-- **B**: Sets the end loop point to the current playing position
+- **B** or **Keypad Multiply**: Sets the end loop point to the current playing position
 - **Ctrl+B**: Resets the end loop point to the end of the song
 
 ![Keypad shortcuts](slowplay/resources/Keypad.png)
