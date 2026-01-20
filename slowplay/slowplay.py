@@ -409,6 +409,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def resetValues(self):
         self.player.startPoint = -2
         self.player.endPoint = -1
+        self.sldLoop.configure(from_ = 0, to = 100)
         self.loopToggle(bForceDisable = True)
         self.player.Pause()
         self.player.Rewind()
