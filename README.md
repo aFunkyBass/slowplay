@@ -70,25 +70,30 @@ See the [shortcuts](#shortcuts) section for a more complete key reference.
 - SlowPlay supports drag-n-drop to open local audio files. You can drop audio files straight from your file manager or from other applications.
 - You can specify a different gstreamer sink for particular needs by supplying the **--sink** option from the command line. Example: the following command will send output to a JACK audio system `slowplay --sink jackaudiosink`
 
-## Developement
-
-This software is my very first attempt to write "serious" Python code, so it may not look strictly pythonic to the purists, I apologize for that. I was born with C and quit my job as software developer many years ago, so not only I'm not a Python dev but I am also an obsolete dev! :)
-
-Having said that, Slowplay is still at its early test stage, I had not the possibility to test it on many computers, so don't expect it to work on your system right out of the box. Please report problems, I can try to address them with your help.
-
 ## Installation
 
-To install SlowPlay please follow these simple steps:
+There are a couple of options to install SlowPlay depending upon your Linux distribution.
+
+*NOTE: currenty SlowPlay is only available for the Linux operating system.*
+
+### Debian derivative distributions (Debian, Ubuntu, Mint etc...)
+
+Please download the `slowplay[version-num].deb` from this repository [latest release](https://github.com/aFunkyBass/slowplay/releases/latest) and install it with your package manager.
+
+You can also install it from the command line. Here's an example, assuming you have downloaded the .DEB file into your home folder:
+
+    dpkg -i ~/slowplay[version-num].deb
+
+### Other distributions
+
+For other distributions, you can manually install the app. Here are the steps to follow:
 
 - Download the compressed file `slowplay[version-num].tar.gz` from the [latest release](https://github.com/aFunkyBass/slowplay/releases/latest).
 - Extract it on a folder present your system path (tipically `/opt` or `~/.local/bin`)
 - Run the executable file `slowplay`
 
-*NOTE: currenty Slowplay is only available for the Linux operating system.*
+Optionally, you can integrate SlowPlay into you desktop environment using a menu editor or by creating a .desktop file into `~/.local/share/applications`. The detailed procedure on how to integrate the app into your DE is beyond the scope of this manual. Please refer to your distro documentation for this.
 
-### Requirements
-
-Slowplay distributable is compiled using pyinstaller, so it should be running out of the box on most modern Linux systems as all the libraries are built-in. Please report any issues on this github.
 
 ## Shortcuts
 SlowPlay offers the following shortcuts:
