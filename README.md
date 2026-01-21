@@ -24,21 +24,26 @@ Thank you Jonas for your work.
 - [...and more!](#other-features)
 
 ### Speed and pitch change:
+
 **SlowPlay** can speed down/up songs or change their pitch independently "on the fly". You can import all the most common audio files format (mp3, wav, flac, aif...).
 
 Speed change is made by moving the slider which will change it in 5% steps, or by entering the precise percentage value in the edit box (eg 87%).You can transpose your song up and down by semitones or fine adjust the pitch by cents, in case the song is not in tune with your instruments. For your convenience, SlowPlay offers several numeric keypad shortcuts. Please take a look at the [shortcut](#optimized-keyobard-shortcuts) list further on in this document.
 
 ### YouTube audio extraction:
-**SlowPlay** can extract audio from YouTube videos and treat it like a regular audio files. Please follow these steps to operate on YouTube videos:
+
+**SlowPlay** can extract audio from YouTube videos and treat it like a regular audio file. Please follow these steps to operate on YouTube videos:
 
 - Click on the YouTube button to open the YouTube dialog
 - Paste a valid YouTube URL in the upper box and click on the YouTube icon next to it
 - The dialog will search for the specified URL and show the video info and its thumbnail
-- If that's the video you are looking for, click on "Open" button on the dialog to import it and get back to the main window
+- If that's the video you are looking for, click on "Open" button on the dialog to import it and get back to the main window *(downloading and extracting audio can take a little time, meanwhile the app might be unresponsive. Please wait until done)*
+
+Audio extracted from YouTube are marked with a leading "(YT)" on the title.
 
 >**Note** To enable this feature, you need install the latest version of [yt-dlp](https://github.com/yt-dlp/yt-dlp) and ffmpeg. Make sure `yt-dlp` it is present on your execution path. If `yt-dlp` is not found on your system, you will get an error.
 
 ### Loop A/B:
+
 This function allows you to loop playback a section of the song. Click on the "Loop control" tab to access all the loop related controls.
 
 Use the "Set loop start" (shortcut "A" or num keypad divide) and "Set loop end" (shortcut "B" or num keypad multiply) buttons while playing to mark the loop boundaries. Toggle the "Enable loop" switch (shortcut "L") to engage/disengage loop playing. You can reset the A/B point using the reset buttons or pressing "Ctrl+A" and "Ctrl+B" on your keyboard.
@@ -46,9 +51,11 @@ Use the "Set loop start" (shortcut "A" or num keypad divide) and "Set loop end" 
 To achieve maximum execution precision, you can fine adjust the loop points by moving them left and right by 10 or 100 milliseconds using the associated buttons. *NOTE: Please keep in mind that there can be very short silence gap when restarting the loop. This is normal and it can't be avoided*
 
 ### Export modified audio:
+
 It is possible to export modified songs by using the "Save as..." button. You can save your files either in mp3 or wav format, based on the extension of file to be saved. Currently saved audio files are in the format of 44.1K 16bit stereo. Mp3 are saved as constant bitrate 192k. Volume setting and metadata are ignored in the export operation.
 
 ### Optimized keyobard shortcuts:
+
 If you use SlowPlay for music practicing, you probably want access its functions without using the mouse or both hands, which is why most important shortcuts are assigned to the numeric keypads.
 
 - Numbers in the left column (1, 4, 7) move the song position back by 5, 10 and 15 seconds. Numbers on the right column (3, 6, 9) move it forward accordingly. You can reach the song position you want to reharse in a bit.
@@ -66,9 +73,14 @@ I highly recommend taking some time to familiarize yourself with these keyboard 
 See the [shortcuts](#shortcuts) section for a more complete key reference.
 
 ### Other features:
-- SlowPlay keeps track of the last 16 played files, and restores the playback parameters (speed, pitch, cents and volume) you set when you last played the songs. To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. If the software is launched with no media specified on the command line, it tries to re-open last played track.
-- SlowPlay supports drag-n-drop to open local audio files. You can drop audio files straight from your file manager or from other applications.
-- You can specify a different gstreamer sink for particular needs by supplying the **--sink** option from the command line. Example: the following command will send output to a JACK audio system `slowplay --sink jackaudiosink`
+
+- **Recent file list**: To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. SlowPlay keeps track of the last 16 played files and all the playback parameters (speed, pitch, cents and volume), which are restored as you load the song again.
+If the software is launched without specifying any media in the command line, it attempts to reopen the last played track.
+If the last played song was extracted from a YouTube video, the app will not automatically open it to prevent unwanted downloads. You can dwonload it again by accessing the recent files dialog.
+
+- **Drag-n-drop**: you can drop audio files straight from your file manager or from other applications.
+
+- **gstreamer audio sink**: you can specify a different gstreamer sink for particular needs by supplying the **--sink** option from the command line. Example: the following command will send output to a JACK audio system `slowplay --sink jackaudiosink`
 
 ## Installation
 
@@ -96,6 +108,7 @@ Optionally, you can integrate SlowPlay into you desktop environment using a menu
 
 
 ## Shortcuts
+
 SlowPlay offers the following shortcuts:
 
 #### General operations:
