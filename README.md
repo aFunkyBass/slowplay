@@ -26,17 +26,17 @@ Thank you Jonas for your work.
 ### Speed and pitch change:
 **SlowPlay** can speed down/up songs or change their pitch independently "on the fly". You can import all the most common audio files format (mp3, wav, flac, aif...).
 
-Speed change is made by moving the slider which will change it in 5% steps, or by entering the precise percentage value in the edit box (eg 87%).You can transpose your song up and down by semitones or fine adjust the pitch by cents, in case the song is not in tune with your instruments. For your convenience, SlowPlay offers several numeric keypad shortcuts. Please take a look at the shortcut list further on in this document.
+Speed change is made by moving the slider which will change it in 5% steps, or by entering the precise percentage value in the edit box (eg 87%).You can transpose your song up and down by semitones or fine adjust the pitch by cents, in case the song is not in tune with your instruments. For your convenience, SlowPlay offers several numeric keypad shortcuts. Please take a look at the [shortcut](#optimized-keyobard-shortcuts) list further on in this document.
 
 ### YouTube audio extraction:
 **SlowPlay** can extract audio from YouTube videos and treat it like a regular audio files. Please follow these steps to operate on YouTube videos:
 
 - Click on the YouTube button to open the YouTube dialog
 - Paste a valid YouTube URL in the upper box and click on the YouTube icon next to it
-- The dialog will search for the specified URL and show the video info as long as its thumbnail
+- The dialog will search for the specified URL and show the video info and its thumbnail
 - If that's the video you are looking for, click on "Open" button on the dialog to import it and get back to the main window
 
->**Note** To enable this feature, you need install the latest version of [yt-dlp](https://github.com/yt-dlp/yt-dlp) and make sure it is present on your execution path. If `yt-dlp` is not found on your system, you will get an error.
+>**Note** To enable this feature, you need install the latest version of [yt-dlp](https://github.com/yt-dlp/yt-dlp) and ffmpeg. Make sure `yt-dlp` it is present on your execution path. If `yt-dlp` is not found on your system, you will get an error.
 
 ### Loop A/B:
 This function allows you to loop playback a section of the song. Click on the "Loop control" tab to access all the loop related controls.
@@ -74,7 +74,7 @@ See the [shortcuts](#shortcuts) section for a more complete key reference.
 
 There are a couple of options to install SlowPlay depending upon your Linux distribution.
 
-*NOTE: currenty SlowPlay is only available for the Linux operating system.*
+*NOTE: currently SlowPlay is only available for the Linux operating system.*
 
 ### Debian derivative distributions (Debian, Ubuntu, Mint etc...)
 
@@ -92,7 +92,7 @@ For other distributions, you can manually install the app. Here are the steps to
 - Extract it on a folder present your system path (tipically `/opt` or `~/.local/bin`)
 - Run the executable file `slowplay`
 
-Optionally, you can integrate SlowPlay into you desktop environment using a menu editor or by creating a .desktop file into `~/.local/share/applications`. The detailed procedure on how to integrate the app into your DE is beyond the scope of this manual. Please refer to your distro documentation for this.
+Optionally, you can integrate SlowPlay into you desktop environment using a menu editor or by creating a .desktop file into `~/.local/share/applications`. The detailed procedure on how to integrate the app into your DE is beyond the scope of this manual. Please refer to your distro documentation.
 
 
 ## Shortcuts
@@ -137,4 +137,4 @@ The following commands are all assigned to the numeric keypad. Refer to the draw
 
 ![Keypad shortcuts](slowplay/resources/Keypad.png)
 
-*(please make sure none of the input boxes have the focus. Click on an empty area of the app to take the focus back from an input box)*:
+*(please make sure none of the input boxes have the focus. Click on an empty area of the app to take the focus back from an input box)*
