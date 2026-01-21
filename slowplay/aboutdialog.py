@@ -27,10 +27,7 @@ class imgDialog(ctk.CTkToplevel):
         self.attributes("-topmost", True)
         #self.overrideredirect(True)
 
-        x = (self.winfo_screenwidth() / 2) - (WIDTH / 2)
-        y = (self.winfo_screenheight() / 2) - (HEIGHT / 2)
-
-        self.geometry("%dx%d+%d+%d" % (WIDTH, HEIGHT, x, y))
+        self.geometry("%dx%d" % (WIDTH, HEIGHT))
         self.resizable(width=False, height=False)
 
         self.lift()
@@ -75,18 +72,8 @@ class aboutDialog(ctk.CTkToplevel):
                 
         self.wm_title(_("About"))
         
-        #self.after(10)
-
-        #self.attributes("-topmost", True)
-        #self.overrideredirect(True)
-
-        x = (self.winfo_screenwidth() / 2) - (WIDTH / 2)
-        y = (self.winfo_screenheight() / 2) - (HEIGHT / 2)
-
-        self.geometry("%dx%d+%d+%d" % (WIDTH, HEIGHT, x, y))
+        self.geometry("%dx%d" % (WIDTH, HEIGHT))
         self.resizable(width=False, height=False)
-        #self.minsize(width = 400, height = 300)
-
 
         img = ctk.CTkImage(dark_image=Image.open(os.path.join(resources_dir, "Icona-64.png")), 
                                 light_image=Image.open(os.path.join(resources_dir, "Icona-64.png")),

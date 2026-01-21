@@ -43,17 +43,10 @@ class ytDialog(ctk.CTkToplevel):
         
         self.wm_title(_("Open YouTube Video..."))
         
-        #self.after(10)
+        self.attributes("-topmost", True)
 
-        #self.attributes("-topmost", True)
-        #self.overrideredirect(True)
-
-        x = (self.winfo_screenwidth() / 2) - (WIDTH / 2)
-        y = (self.winfo_screenheight() / 2) - (HEIGHT / 2)
-
-        self.geometry("%dx%d+%d+%d" % (WIDTH, HEIGHT, x, y))
+        self.geometry("%dx%d" % (WIDTH, HEIGHT))
         self.resizable(width=False, height=False)
-        #self.minsize(width = 400, height = 300)
 
         self.TopFrame = ctk.CTkFrame(self, width=400, height=200)
         self.TopFrame.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=10, pady=10)
