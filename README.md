@@ -74,7 +74,7 @@ See the [shortcuts](#shortcuts) section for a more complete key reference.
 
 ### Other features:
 
-- **Recent file list**: To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. SlowPlay keeps track of the last 16 played files and all the playback parameters (speed, pitch, cents and volume), which are restored as you load the song again.
+- **Recent files list**: To access the recent files list use the **Ctrl+R** shortcut, or right-click on the "Open" button. SlowPlay keeps track of the last 16 played files and all the playback parameters (speed, pitch, cents and volume), which are restored as you load the song again.
 If the software is launched without specifying any media in the command line, it attempts to reopen the last played track.
 If the last played song was extracted from a YouTube video, the app will not automatically open it to prevent unwanted downloads. You can dwonload it again by accessing the recent files dialog.
 
