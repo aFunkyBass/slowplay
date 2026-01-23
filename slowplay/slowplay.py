@@ -65,7 +65,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.player.updateInterval = UPDATE_INTERVAL
 
         # set style and theme
-        ctk.set_appearance_mode("dark")
+        ctk.set_appearance_mode("Dark")
 
         # Loads the reset buttons icon
         resetIcon = ctk.CTkImage(light_image=Image.open(f"{resources_dir}/Reset Icon.png"),
@@ -95,6 +95,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.bYouTubeFile = False           # Flag is True when the media is a YouTube video
         self.YouTubeUrl = ""                # Actual YouTube URL
+
+        self.lastPlayingState = False       # Last status of the player
 
         # Build the 3 main frames: Left (shrinkable), Right (buttons)
         # and low (status ba
@@ -226,7 +228,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.loopAFrame = ctk.CTkFrame(self.LoopTab)
         self.loopAFrame.grid(row=1, column=0, pady=8, sticky="w")
 
-        self.lblLoopStart = ctk.CTkLabel(self.loopAFrame, anchor="w", width=80, font=("", LBL_FONT_SIZE))
+        self.lblLoopStart = ctk.CTkLabel(self.loopAFrame, anchor="w", width=80, font=("", LBL_FONT_SIZE),
+                                         text="---")
         self.btnResetLoopStart = ctk.CTkButton(self.loopAFrame, width=40, image=resetIcon, text=None,
                                                command=lambda: self.setLoopStart(0))
         self.btnResetLoopStart_tt = CTkToolTip(self.btnResetLoopStart, message=_("Reset loop start point\nShortcut: Ctrl+A"),
@@ -264,7 +267,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.loopBFrame = ctk.CTkFrame(self.LoopTab)
         self.loopBFrame.grid(row=1, column=2, pady=8, sticky="e")
 
-        self.lblLoopEnd = ctk.CTkLabel(self.loopBFrame, anchor="e", width=80, font=("", LBL_FONT_SIZE))
+        self.lblLoopEnd = ctk.CTkLabel(self.loopBFrame, anchor="e", width=80, font=("", LBL_FONT_SIZE),
+                                       text="---")
         self.btnResetLoopEnd = ctk.CTkButton(self.loopBFrame, width=40, image=resetIcon, text=None,
                                              command=lambda: self.setLoopEnd(self.player.query_duration()))
         self.btnResetLoopStart_tt = CTkToolTip(self.btnResetLoopEnd, message=_("Reset loop end point\nShortcut: Ctrl+B"),
@@ -411,7 +415,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.player.endPoint = -1
         self.sldLoop.configure(from_ = 0, to = 100)
         self.loopToggle(bForceDisable = True)
-        self.player.Pause()
+        self.Pause()
         self.player.Rewind()
         self.varSpeed.set(DEFAULT_SPEED)
         self.varPitchST.set(DEFAULT_SEMITONES)
@@ -551,7 +555,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             if(res.get() != "Yes"):
                 return
 
-        self.player.Pause()
+        self.Pause()
 
         # Create a progress bar on the bottom panel
         self.save_prg_var = ctk.DoubleVar(self, value=0)
@@ -796,16 +800,29 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             return
 
         if self.player.isPlaying == False:
-            self.player.Play()
+            self.Play()
         else:
-            self.player.Pause()
+            self.Pause()
+
+    # Start Playing   
+    def Play(self):
+        self.player.Play()
+        self.playButton.configure(fg_color="green", hover_color="#085008", require_redraw=True)
+    
+    # Pause Playing
+    def Pause(self):
+        btnColor = ctk.ThemeManager.theme["CTkButton"]["fg_color"][0 if ctk.get_appearance_mode() == "Light" else 1]
+        hovColor = ctk.ThemeManager.theme["CTkButton"]["hover_color"][0 if ctk.get_appearance_mode() == "Light" else 1]
+        self.player.Pause()
+        self.playButton.configure()
+        self.playButton.configure(fg_color=btnColor, hover_color=hovColor, require_redraw=True)
 
     def stopPlaying(self):
         if(self.player.canPlay == False):
             self.statusBarMessage(_("Please open a file..."))
             return
 
-        self.player.Pause()
+        self.Pause()
         self.player.Rewind()
         self.dispSongTime(Force=True)
 
@@ -826,6 +843,13 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             if(position and (position < self.player.startPoint or 
                position >= self.player.endPoint)):
                 self.player.seek_absolute(self.player.startPoint)
+
+        # Resets widget controls if it's not playing
+        if(self.lastPlayingState != self.player.isPlaying):
+            if(self.player.isPlaying == False):
+                self.stopPlaying()
+
+            self.lastPlayingState = self.player.isPlaying
 
     def dispSongTime(self, Force = False):
         if(self.bValuesChanging):
@@ -871,7 +895,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.sldLoop.configure(to = actualEndloop, require_redraw=True)
 
         # Sets loop start point to 0 if it is not set
-        if(self.player.startPoint != None and self.sldLoop._from_ != 0):
+        #if(self.player.startPoint != None and self.sldLoop._from_ != 0):
+        if(self.player.startPoint < 0):
             self.setLoopStart(0)
             self.sldLoop.configure(from_ = 0, require_redraw=True)
 

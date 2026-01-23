@@ -171,6 +171,9 @@ class slowPlayer():
 
         return(None)
 
+    def getState(self):
+        return(self.pipeline.get_state(Gst.CLOCK_TIME_NONE))
+
     def get_speed(self):
         return self.tempopitch.get_property("tempo")
 

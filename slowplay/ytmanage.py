@@ -65,7 +65,6 @@ class ytDialog(ctk.CTkToplevel):
         self.URL_lbl = ctk.CTkLabel(self.TopFrame, text=_("URL: "))
         self.URL_lbl.grid(row=0, column=0, sticky="w", padx=8, pady=8)
 
-        self.URL_var = ctk.StringVar(self, value="")
         self.URL_entry = ctk.CTkEntry(self.TopFrame, placeholder_text=_("Paste a YouTube URL here..."))
         self.URL_entry.grid(row=0, column=1, sticky="ew", padx=8, pady=8)
 
