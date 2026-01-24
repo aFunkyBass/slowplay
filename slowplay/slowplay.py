@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/env python3
 #
 # https://lazka.github.io/pgi-docs/#Gst-1.0/classes/Element.html
 # https://tkinterexamples.com/
@@ -817,6 +817,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.playButton.configure()
         self.playButton.configure(fg_color=btnColor, hover_color=hovColor, require_redraw=True)
 
+    # Stop playing and rewind
     def stopPlaying(self):
         if(self.player.canPlay == False):
             self.statusBarMessage(_("Please open a file..."))
@@ -845,11 +846,11 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                 self.player.seek_absolute(self.player.startPoint)
 
         # Resets widget controls if it's not playing
-        if(self.lastPlayingState != self.player.isPlaying):
-            if(self.player.isPlaying == False):
-                self.stopPlaying()
-
-            self.lastPlayingState = self.player.isPlaying
+        #if(self.lastPlayingState != self.player.isPlaying):
+        #    if(self.player.isPlaying == False):
+        #        self.stopPlaying()
+        #
+        #    self.lastPlayingState = self.player.isPlaying
 
     def dispSongTime(self, Force = False):
         if(self.bValuesChanging):
@@ -1285,5 +1286,5 @@ def main():
 
     app.mainloop()
 
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()
