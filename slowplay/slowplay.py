@@ -13,15 +13,15 @@ from CTkToolTip import *
 from tkinterdnd2 import *
 #from tkinter import ttk
 from tkinter import PhotoImage
-import gettext
-_ = gettext.gettext
-
 import datetime as dt
 import os
 import argparse
 from PIL import Image
 import re
 import sys, pathlib
+
+import gettext
+_ = gettext.gettext
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
