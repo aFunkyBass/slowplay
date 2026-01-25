@@ -38,9 +38,7 @@ class slowPlayer():
         self.pipevolume = Gst.ElementFactory.make("volume")
         
         if self.tempopitch is None:
-            CTkMessagebox(title=_("Error"), icon="cancel", 
-                          message=_("You need to install the Gstreamer soundtouch elements for this program to work."))
-            raise SystemExit()
+            raise SystemExit(_("You need to install the Gstreamer soundtouch elements for this program to work."))
 
         #self.resampler = Gst.ElementFactory.make("audioresample")
 

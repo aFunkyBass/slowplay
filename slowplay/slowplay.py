@@ -13,15 +13,15 @@ from CTkToolTip import *
 from tkinterdnd2 import *
 #from tkinter import ttk
 from tkinter import PhotoImage
+import gettext
+_ = gettext.gettext
+
 import datetime as dt
 import os
 import argparse
 from PIL import Image
 import re
 import sys, pathlib
-
-import gettext
-_ = gettext.gettext
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
@@ -1270,6 +1270,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 def main():
     parser = argparse.ArgumentParser(description = APP_DESCRIPTION, prog = APP_NAME)
     parser.add_argument("--sink", help=_("Specify a GStreamer custom sink"))
+    parser.add_argument("-v", "--version", action="version", version=f"{APP_NAME} - {APP_VERSION}")
     parser.add_argument("media", nargs="?", help=_("URI of the media to open"))
 
     args = parser.parse_args()
