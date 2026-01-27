@@ -112,6 +112,7 @@ Optionally, you can integrate SlowPlay into you desktop environment using a menu
 SlowPlay offers the following shortcuts:
 
 #### General operations:
+- **Ctrl+R**: Open a file
 - **Ctrl+R**: Open recent files list
 - **Ctrl+Y**: Open YouTube search dialog
 - **Ctrl+Q**: Quit application

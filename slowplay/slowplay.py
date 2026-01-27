@@ -1179,6 +1179,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             if(self.varPitchST.get() > MIN_PITCH_SEMITONES):
                 self.varPitchST.set(self.varPitchST.get() - STEPS_SEMITONES)
 
+        # Ctrl + o: open recent files dialog box
+        elif(key == 'o' and state == 20):
+            self.openFile()
+
         # Ctrl + r: open recent files dialog box
         elif(key == 'r' and state == 20):
             self.openRecentFileDialog(None)

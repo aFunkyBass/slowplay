@@ -118,6 +118,7 @@ class aboutDialog(ctk.CTkToplevel):
 
         sc_list = [
             (SC_SECTION_TITLE, _("GENERAL SHORTCUTS:")),
+            ("CTRL+O", _("Open a file")),
             ("CTRL+R", _("Open recent files list")),
             ("CTRL+Y", _("Open YouTube dialog")),
             ("CTRL+Q", _("Quit")),
