@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-01-13 11:44+0100\n"
+"POT-Creation-Date: 2026-01-27 23:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,123 +19,127 @@ msgstr ""
 msgid "Numeric Keypad Map"
 msgstr ""
 
-#: aboutdialog.py:76 aboutdialog.py:107 slowplay.py:345
+#: aboutdialog.py:73 aboutdialog.py:94 slowplay.py:351
 msgid "About"
 msgstr ""
 
-#: aboutdialog.py:101
+#: aboutdialog.py:88
 msgid "Close"
 msgstr ""
 
-#: aboutdialog.py:108
+#: aboutdialog.py:95
 msgid "Shortcuts"
 msgstr ""
 
-#: aboutdialog.py:120
+#: aboutdialog.py:107
 msgid "Created by"
 msgstr ""
 
-#: aboutdialog.py:133
+#: aboutdialog.py:120
 msgid "GENERAL SHORTCUTS:"
 msgstr ""
 
-#: aboutdialog.py:134
+#: aboutdialog.py:121 slowplay.py:403
+msgid "Open a file"
+msgstr ""
+
+#: aboutdialog.py:122
 msgid "Open recent files list"
 msgstr ""
 
-#: aboutdialog.py:135
+#: aboutdialog.py:123
 msgid "Open YouTube dialog"
 msgstr ""
 
-#: aboutdialog.py:136
+#: aboutdialog.py:124
 msgid "Quit"
 msgstr ""
 
-#: aboutdialog.py:137
+#: aboutdialog.py:125
 msgid "PLAYBACK SHORTCUTS:"
 msgstr ""
 
-#: aboutdialog.py:138 slowplay.py:319
+#: aboutdialog.py:126 slowplay.py:325
 msgid "Play/Pause"
 msgstr ""
 
-#: aboutdialog.py:139
+#: aboutdialog.py:127
 msgid "Stop and rewind"
 msgstr ""
 
-#: aboutdialog.py:140
+#: aboutdialog.py:128
 msgid "Rewind 5 seconds"
 msgstr ""
 
-#: aboutdialog.py:141
+#: aboutdialog.py:129
 msgid "Rewind 10 seconds"
 msgstr ""
 
-#: aboutdialog.py:142
+#: aboutdialog.py:130
 msgid "Rewind 15 seconds"
 msgstr ""
 
-#: aboutdialog.py:143
+#: aboutdialog.py:131
 msgid "Forward 5 seconds"
 msgstr ""
 
-#: aboutdialog.py:144
+#: aboutdialog.py:132
 msgid "Forward 10 seconds"
 msgstr ""
 
-#: aboutdialog.py:145
+#: aboutdialog.py:133
 msgid "Forward 15 seconds"
 msgstr ""
 
-#: aboutdialog.py:146
+#: aboutdialog.py:134
 msgid "Rewind"
 msgstr ""
 
-#: aboutdialog.py:147
+#: aboutdialog.py:135
 msgid "Playback speed +5%"
 msgstr ""
 
-#: aboutdialog.py:148
+#: aboutdialog.py:136
 msgid "Playback speed -5%"
 msgstr ""
 
-#: aboutdialog.py:149
+#: aboutdialog.py:137
 msgid "Reset playback speed to 100%"
 msgstr ""
 
-#: aboutdialog.py:150
+#: aboutdialog.py:138
 msgid "Transpose +1 semitone"
 msgstr ""
 
-#: aboutdialog.py:151
+#: aboutdialog.py:139
 msgid "Transpose -1 semitone"
 msgstr ""
 
-#: aboutdialog.py:152
+#: aboutdialog.py:140
 msgid "LOOP SHORTCUTS:"
 msgstr ""
 
-#: aboutdialog.py:153
+#: aboutdialog.py:141
 msgid "Toggle loop playing"
 msgstr ""
 
-#: aboutdialog.py:154
+#: aboutdialog.py:142
 msgid "Set loop start"
 msgstr ""
 
-#: aboutdialog.py:155
+#: aboutdialog.py:143
 msgid "Set loop end"
 msgstr ""
 
-#: aboutdialog.py:156
+#: aboutdialog.py:144
 msgid "Reset loop start"
 msgstr ""
 
-#: aboutdialog.py:157
+#: aboutdialog.py:145
 msgid "Reset loop end"
 msgstr ""
 
-#: aboutdialog.py:178
+#: aboutdialog.py:166
 msgid "SHOW NUM. KEYPAD MAP"
 msgstr ""
 
@@ -151,63 +155,59 @@ msgstr ""
 msgid "All files"
 msgstr ""
 
-#: player.py:41 slowplay.py:620 slowplay.py:641
-msgid "Error"
-msgstr ""
-
-#: player.py:42
+#: player.py:41
 msgid "You need to install the Gstreamer soundtouch elements for this program to work."
 msgstr ""
 
-#: player.py:51
+#: player.py:49
 msgid "Error: impossible to instantiate sink: '{}'. Reverting to default sink"
 msgstr ""
 
-#: recentdialog.py:12
+#: recentdialog.py:13
 msgid "Select recent file..."
 msgstr ""
 
-#: recentdialog.py:36
+#: recentdialog.py:37
 msgid "OK"
 msgstr ""
 
-#: recentdialog.py:39 ytmanage.py:62
+#: recentdialog.py:40 ytmanage.py:58
 msgid "Cancel"
 msgstr ""
 
-#: recentdialog.py:42
+#: recentdialog.py:43
 msgid "Show full path"
 msgstr ""
 
-#: slowplay.py:126
+#: slowplay.py:129
 msgid "Playback control"
 msgstr ""
 
-#: slowplay.py:127
+#: slowplay.py:130
 msgid "Loop control"
 msgstr ""
 
-#: slowplay.py:137
+#: slowplay.py:140
 msgid "Speed:"
 msgstr ""
 
-#: slowplay.py:150
+#: slowplay.py:153
 msgid "Reset speed"
 msgstr ""
 
-#: slowplay.py:161
+#: slowplay.py:163
 msgid "Transpose:"
 msgstr ""
 
-#: slowplay.py:174
+#: slowplay.py:176
 msgid "Reset transpose"
 msgstr ""
 
-#: slowplay.py:183
+#: slowplay.py:184
 msgid "Pitch (cents):"
 msgstr ""
 
-#: slowplay.py:195
+#: slowplay.py:196
 msgid "Reset pitch"
 msgstr ""
 
@@ -215,120 +215,116 @@ msgstr ""
 msgid "Volume:"
 msgstr ""
 
-#: slowplay.py:230
+#: slowplay.py:235
 msgid ""
 "Reset loop start point\n"
 "Shortcut: Ctrl+A"
 msgstr ""
 
-#: slowplay.py:234
+#: slowplay.py:239
 msgid ""
 "Set loop start point\n"
 "Shortcut: A"
 msgstr ""
 
-#: slowplay.py:239 slowplay.py:243
+#: slowplay.py:244 slowplay.py:248
 msgid "Move loop start left by"
 msgstr ""
 
-#: slowplay.py:239 slowplay.py:243 slowplay.py:247 slowplay.py:251
-#: slowplay.py:277 slowplay.py:281 slowplay.py:285 slowplay.py:289
+#: slowplay.py:244 slowplay.py:248 slowplay.py:252 slowplay.py:256
+#: slowplay.py:283 slowplay.py:287 slowplay.py:291 slowplay.py:295
 msgid "milliseconds"
 msgstr ""
 
-#: slowplay.py:247 slowplay.py:251
+#: slowplay.py:252 slowplay.py:256
 msgid "Move loop start right by"
 msgstr ""
 
-#: slowplay.py:268
+#: slowplay.py:274
 msgid ""
 "Reset loop end point\n"
 "Shortcut: Ctrl+B"
 msgstr ""
 
-#: slowplay.py:272
+#: slowplay.py:278
 msgid ""
 "Set loop end point\n"
 "Shortcut: B"
 msgstr ""
 
-#: slowplay.py:277 slowplay.py:281
+#: slowplay.py:283 slowplay.py:287
 msgid "Move loop end left by"
 msgstr ""
 
-#: slowplay.py:285 slowplay.py:289
+#: slowplay.py:291 slowplay.py:295
 msgid "Move loop end right by"
 msgstr ""
 
-#: slowplay.py:303
+#: slowplay.py:309
 msgid "Enable loop"
 msgstr ""
 
-#: slowplay.py:307
+#: slowplay.py:313
 msgid ""
 "Toggle loop playing\n"
 "Shortcut: L"
 msgstr ""
 
-#: slowplay.py:316
+#: slowplay.py:322
 msgid "Play"
 msgstr ""
 
-#: slowplay.py:322 ytmanage.py:58
+#: slowplay.py:328 ytmanage.py:54
 msgid "Open"
 msgstr ""
 
-#: slowplay.py:325
+#: slowplay.py:331
 msgid ""
 "Open a file.\n"
 "Right-click to reopen a recent file"
 msgstr ""
 
-#: slowplay.py:337
+#: slowplay.py:343
 msgid "Click to extract audio from a YouTube video"
 msgstr ""
 
-#: slowplay.py:340
+#: slowplay.py:346
 msgid "Save as..."
 msgstr ""
 
-#: slowplay.py:342
+#: slowplay.py:348
 msgid "Save the file with current speed/pitch settings as MP3 or WAV"
 msgstr ""
 
-#: slowplay.py:347
+#: slowplay.py:353
 msgid "Show info about this software"
 msgstr ""
 
-#: slowplay.py:383
-msgid "Open a file"
-msgstr ""
-
-#: slowplay.py:423
+#: slowplay.py:444
 msgid "Error: file not found"
 msgstr ""
 
-#: slowplay.py:424
+#: slowplay.py:445
 msgid "Unable to open file: {}"
 msgstr ""
 
-#: slowplay.py:506 slowplay.py:768 slowplay.py:778
+#: slowplay.py:527 slowplay.py:799 slowplay.py:823
 msgid "Please open a file..."
 msgstr ""
 
-#: slowplay.py:517
+#: slowplay.py:538
 msgid "Filename error..."
 msgstr ""
 
-#: slowplay.py:518
+#: slowplay.py:539
 msgid "Unable to save file: {}"
 msgstr ""
 
-#: slowplay.py:530
+#: slowplay.py:551
 msgid "Overwrite confirmation"
 msgstr ""
 
-#: slowplay.py:531
+#: slowplay.py:552
 msgid ""
 "{}\n"
 "already exists.\n"
@@ -336,102 +332,106 @@ msgid ""
 "Do you want to overwrite it?"
 msgstr ""
 
-#: slowplay.py:551
+#: slowplay.py:572
 msgid "Cancel file save"
 msgstr ""
 
-#: slowplay.py:561
+#: slowplay.py:582
 msgid "Saving file: {}..."
 msgstr ""
 
-#: slowplay.py:578
+#: slowplay.py:599
 msgid "Save as.."
 msgstr ""
 
-#: slowplay.py:596
+#: slowplay.py:617
 msgid "Error: unable to find "
 msgstr ""
 
-#: slowplay.py:597
+#: slowplay.py:618
 msgid " on your system and retry."
 msgstr ""
 
-#: slowplay.py:597
+#: slowplay.py:618
 msgid "Please install "
 msgstr ""
 
-#: slowplay.py:621
+#: slowplay.py:643 slowplay.py:667
+msgid "Error"
+msgstr ""
+
+#: slowplay.py:644
 msgid "Unable to download audio file from YouTube."
 msgstr ""
 
-#: slowplay.py:642
+#: slowplay.py:668
 msgid "No file was recently open with this software. Please open one by clicking the open button"
 msgstr ""
 
-#: slowplay.py:671
+#: slowplay.py:702
 msgid "Loop enabled"
 msgstr ""
 
-#: slowplay.py:675
+#: slowplay.py:706
 msgid "Loop disabled"
 msgstr ""
 
-#: slowplay.py:1208
+#: slowplay.py:1276
 msgid "Specify a GStreamer custom sink"
 msgstr ""
 
-#: slowplay.py:1209
+#: slowplay.py:1278
 msgid "URI of the media to open"
 msgstr ""
 
-#: ytmanage.py:41
+#: ytmanage.py:44
 msgid "Open YouTube Video..."
 msgstr ""
 
-#: ytmanage.py:69
+#: ytmanage.py:65
 msgid "URL: "
 msgstr ""
 
-#: ytmanage.py:73
+#: ytmanage.py:68
 msgid "Paste a YouTube URL here..."
 msgstr ""
 
-#: ytmanage.py:82
+#: ytmanage.py:77
 msgid "Click to search YouTube video"
 msgstr ""
 
-#: ytmanage.py:129
+#: ytmanage.py:126
 msgid "Error: no URL specified"
 msgstr ""
 
-#: ytmanage.py:130
+#: ytmanage.py:127
 msgid "Please paste a YouTube URL into the edit box"
 msgstr ""
 
-#: ytmanage.py:151
+#: ytmanage.py:148
 msgid "Error: unable to find the video..."
 msgstr ""
 
-#: ytmanage.py:152
+#: ytmanage.py:149
 msgid ""
 "Unable to retrieve the required video\n"
 "\n"
 "Please make sure you entered a valid YouTube URL."
 msgstr ""
 
-#: ytmanage.py:159
+#: ytmanage.py:156
 msgid "by: "
 msgstr ""
 
-#: ytmanage.py:160
+#: ytmanage.py:157
 msgid "Views: "
 msgstr ""
 
-#: ytmanage.py:169
+#: ytmanage.py:166
 msgid "Error: unable to download the thumbnail..."
 msgstr ""
 
-#: ytmanage.py:170
+#: ytmanage.py:167
 msgid ""
 "Unable to retrieve the video thubnail\n"
 "\n"
