@@ -80,7 +80,7 @@ If the last played song was extracted from a YouTube video, the app will not aut
 
 - **Drag-n-drop**: you can drop audio files straight from your file manager or from other applications.
 
-- **gstreamer audio sink**: you can specify a different gstreamer sink for particular needs by supplying the **--sink** option from the command line. Example: the following command will send output to a JACK audio system `slowplay --sink jackaudiosink`
+- **gstreamer audio sink**: you can specify a different gstreamer sink for particular needs by supplying the **--sink** option from the command line. Example: the following command will send output to JACK audio `slowplay --sink jackaudiosink`
 
 ## Installation
 
