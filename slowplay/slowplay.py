@@ -58,7 +58,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.title(APP_TITLE)
 
         # Sets the app icon
-        self.wm_iconphoto(False, PhotoImage(file=f"{resources_dir}/Icona-32.png"))
+        self.wm_iconphoto(True, PhotoImage(file=f"{resources_dir}/Icona-32.png"))
 
         # Instanciate the GStreamer player
         self.player = slowPlayer(args.sink)
@@ -1069,7 +1069,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     def songSeek(self, val):
         dd, pp = self.player.update_position()
-        if(dd != 0):
+        if(dd is not None and dd != 0):
             newPos = val * dd
             self.player.seek_absolute(newPos)
 
