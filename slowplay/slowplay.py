@@ -366,6 +366,10 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.update()
         self.minsize(self.winfo_width(), self.winfo_height())
 
+        # Check if the user asked to delete the recent file list
+        if(args.delete_recent is not None and args.delete_recent == True):
+            self.settings.resetSettings(True)
+
         # Check if a filename is passed from the command line
         if(args.media != None):
             self.setFile(args.media)
@@ -1274,6 +1278,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 def main():
     parser = argparse.ArgumentParser(description = APP_DESCRIPTION, prog = APP_NAME)
     parser.add_argument("--sink", help=_("Specify a GStreamer custom sink"))
+    parser.add_argument("--delete-recent", help=_("Clear the list of recently played media"), action='store_true')
     parser.add_argument("-v", "--version", action="version", version=f"{APP_NAME} - {APP_VERSION}")
     parser.add_argument("media", nargs="?", help=_("URI of the media to open"))
 

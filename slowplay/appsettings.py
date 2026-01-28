@@ -32,21 +32,14 @@ class AppSettings(object):
 
         self.bUpdateForbidden = False     # Disallow setting new values
 
-        # Dictionary containing all the app settings
-        self.settings = {
-            CFG_APP_SECTION : {
-                "LastOpenDir": USER_HOME_DIR,
-                "LastSaveDir": USER_HOME_DIR,
-                "MaxRecentFileList": MAX_RECENTFILE_LIST
-            },
-            CFG_RECENTFILE_SECTION: {}
-        }
-
         if(filename == ""):
             self.settingsFilename = APP_CFG_FILENAME
         else:
             self.settingsFilename = filename
 
+        # Create a dictionary containing all the app settings
+        self.settings = {}
+        self.resetSettings()
     
     # Fetches a value from the settings dict
     # If value is not present return defval
@@ -175,7 +168,25 @@ class AppSettings(object):
             return(True)
         else:
             return(False)
-    
+
+    # Resets all settings
+    def resetSettings(self, storeSettings = False):
+        if(self.settings is not None):
+            self.settings = None
+
+        self.settings = {
+            CFG_APP_SECTION : {
+                "LastOpenDir": USER_HOME_DIR,
+                "LastSaveDir": USER_HOME_DIR,
+                "MaxRecentFileList": MAX_RECENTFILE_LIST
+            },
+            CFG_RECENTFILE_SECTION: {}
+        }
+
+        # Optionally save settings on disk
+        if(storeSettings == True):
+            self.saveSettings()
+
     # Saves the current settings on the cfg file
     def saveSettings(self):
         if(self.bUpdateForbidden == True):
@@ -192,7 +203,7 @@ class AppSettings(object):
         except:
             return(False)
 
-    # Saves settings from the cfg file
+    # Load settings from the cfg file
     def loadSettings(self):
         try:
             with open(self.settingsFilename, mode="r", encoding="utf-8") as infile:
