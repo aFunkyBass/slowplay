@@ -17,6 +17,9 @@ from sp_constants import *
 import gettext
 _ = gettext.gettext
 
+THUMB_WIDTH = 300
+THUMB_HEIGHT = 168
+
 class ytDialog(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,9 +84,9 @@ class ytDialog(ctk.CTkToplevel):
 
         self.TopFrame.columnconfigure(1, weight=1)
         self.TopFrame.rowconfigure(1, weight=1)
-
-        # Widget on InfoFrame
-        self.thumbnail = ctk.CTkLabel(self.InfoFrame, width=300, height=168, text=" ")
+       
+        self.thumbnail = ctk.CTkLabel(self.InfoFrame, width=THUMB_WIDTH, height=THUMB_HEIGHT, text="",
+                                      image=YTIcon, fg_color="black", corner_radius=15)
         self.thumbnail.grid(row = 0, column = 0, rowspan = 4, sticky = "n", padx = 10, pady = 10)
 
         self.title = ctk.CTkLabel(self.InfoFrame, anchor = "w", wraplength=100,
@@ -171,7 +174,7 @@ class ytDialog(ctk.CTkToplevel):
         else:
             img = Image.open(self.manager.thumbnail)
             thumbImage = ctk.CTkImage(dark_image = img, light_image = img,
-                                size=[self.thumbnail.winfo_width(), self.thumbnail.winfo_height()])
+                                size=[THUMB_WIDTH, THUMB_HEIGHT])
             self.thumbnail.configure(image = thumbImage)
 
         # Enable the download button
