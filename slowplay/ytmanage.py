@@ -263,7 +263,7 @@ class ytManage:
             return(False)
     
     # Actually performs download the audio from the YouTube url
-    def downloadAudioFile(self, process_callback = None, show_output = False):
+    def downloadAudioFile(self, process_callback = None, show_output = False, include_stderr = False):
         #print("Url: " + ytURL)
         if(self.curURL is None):
             return(None)
@@ -278,7 +278,7 @@ class ytManage:
         ]
 
         # Performs the os call and capture the stdout
-        ret, ytOut = utils.capture_subprocess_output(command, process_callback, show_output)
+        ret, ytOut = utils.capture_subprocess_output(command, process_callback, show_output, include_stderr)
 
         return(ytOut if ret != False else False)
 
