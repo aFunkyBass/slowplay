@@ -66,7 +66,8 @@ SAVE_DEFAULT_EXTENSION = "mp3"
 
 # YouTube constants
 YTDLP_CMD = "yt-dlp"                   # Command to execute for video managing
-YT_AUDIO_FORMAT_EXTENSION = "mp3"      # default audio extraction format 
+YT_AUDIO_FORMAT_PRESET = "aac"         # default audio extraction format 
+YT_AUDIO_FORMAT_EXTENSION = "m4a"      # default extracted audio extension
 YT_THUMB_FORMAT_EXTENSION = "png"      # default thumbnail extraction format
 
 

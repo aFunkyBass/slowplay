@@ -86,7 +86,7 @@ class ytDialog(ctk.CTkToplevel):
         self.TopFrame.rowconfigure(1, weight=1)
        
         self.thumbnail = ctk.CTkLabel(self.InfoFrame, width=THUMB_WIDTH, height=THUMB_HEIGHT, text="",
-                                      image=YTIcon, fg_color="black", corner_radius=15)
+                                      image=YTIcon, fg_color="black", corner_radius=0)
         self.thumbnail.grid(row = 0, column = 0, rowspan = 4, sticky = "n", padx = 10, pady = 10)
 
         self.title = ctk.CTkLabel(self.InfoFrame, anchor = "w", wraplength=100,
@@ -273,8 +273,7 @@ class ytManage:
 
         command = [
             YTDLP_CMD,
-             '-x',                                      # Extract audio
-             '--audio-format', YT_AUDIO_FORMAT_EXTENSION,  # Audio format
+             '-t', YT_AUDIO_FORMAT_PRESET,              # Audio format
              '--no-playlist',                           # Only consider the single file
              '-o', self.outFile,                        # Output filename
              self.curURL                                # Video URL
