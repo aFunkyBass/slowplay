@@ -601,7 +601,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         try:
             filename = filedialogs.saveFileDialog(
                 title=_('Save as..'),
-                initialfile = self.mediaFileName,
+                initialfile = self.mediaFileName if self.bYouTubeFile == False else self.songMetadata + "." + SAVE_DEFAULT_EXTENSION,
                 initialdir = self.settings.getVal(CFG_APP_SECTION, "LastSaveDir", os.path.expanduser("~")),
                 filter = SAVE_EXTENSIONS_FILTER,
                 overwrite = False)
