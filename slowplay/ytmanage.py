@@ -374,7 +374,7 @@ class ytManage:
         # This is done because if the same URL is specified twice in a
         # session, the files is not downloaded again.
         self.curURL = newURL
-        self.outFile = utils.__generate_temp_filename__(
+        self.outFile = utils.__generate_temp_filename__(YT_AUDIO_FILE_PREFIX + 
                                 hashlib.sha256(str(newURL).encode('ASCII')).hexdigest())
         self.audioFile = '.'.join([self.outFile, YT_AUDIO_FORMAT_EXTENSION])
 

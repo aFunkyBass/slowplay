@@ -30,7 +30,6 @@ import utils
 from player import slowPlayer
 import filedialogs
 from appsettings import *
-#from appsettings import CFG_APP_SECTION
 import recentdialog
 import aboutdialog
 import ytmanage
@@ -454,7 +453,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.media = os.path.realpath(filename)
         self.mediaFileName = os.path.basename(self.media)
         self.mediaPath = os.path.dirname(self.media)
-        self.settings.setVal(CFG_APP_SECTION, "LastOpenDir", self.mediaPath)
+        if(self.bYouTubeFile == False):
+            self.settings.setVal(CFG_APP_SECTION, "LastOpenDir", self.mediaPath)
 
         # Compose a valid uri
         self.mediaUri = self.filename2Uri(self.media)
@@ -707,7 +707,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.swtLoopEnabled.select()
         else:
             self.playButton.configure(image = None, require_redraw=True)
-            self.statusBarMessage(_("Loop disabled"), timeout=1000)
+            if(bForceDisable == False):
+                self.statusBarMessage(_("Loop disabled"), timeout=1000)
             self.swtLoopEnabled.deselect()
 
     # Sets loop start point
