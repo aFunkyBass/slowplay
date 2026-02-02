@@ -93,7 +93,6 @@ class aboutDialog(ctk.CTkToplevel):
 
         tab1 = self.tabview.add(_("About"))
         tab2 = self.tabview.add(_("Shortcuts"))
-        #tab3 = self.tabview.add(_("Donate"))
 
         # Widget on tab 1: "About"
         self.mainLabel = ctk.CTkLabel(tab1, text=APP_TITLE, justify="center", anchor="center", 
@@ -168,31 +167,17 @@ class aboutDialog(ctk.CTkToplevel):
 
         self.scrollFrame.grid_columnconfigure(0, weight=1)
 
+        # Binds all the widget to mouse wheel
         self.scrollFrame.bind("<Button-4>", self.onScroll)
         self.scrollFrame.bind("<Button-5>", self.onScroll)
         for wid in self.scrollFrame.children.values():
             wid.bind("<Button-4>", self.onScroll)
             wid.bind("<Button-5>", self.onScroll)
 
-        # Widget on tab 3: "Donate"
-        """
-        self.donateMainLabel = ctk.CTkLabel(tab3, text=_("Show your love..."), justify="center", anchor="center", 
-                                      compound="center", font=("", 20, "bold"))
-        self.donateMainLabel.grid(row=0, column=0, pady=(10, 0), sticky="n")
-
-        self.donateSubLabel = ctk.CTkLabel(tab3, text=_("...donate some satoshi!"), justify="center", anchor="center", 
-                                      compound="center")
-        self.donateSubLabel.grid(row=1, column=0, sticky="n")
-
-        self.donateBtcAddess = ctk.CTkLabel(tab3, text=_("...donate some satoshi!"), justify="center", anchor="center", 
-                                      compound="center")
-        self.donateBtcAddess.grid(row=4, column=0, pady=(8, 0), sticky="n")
-        """
         
         tab1.grid_columnconfigure(0, weight=1)
         tab2.grid_columnconfigure(0, weight=1)
         tab2.grid_rowconfigure(0, weight=1)
-        #tab3.grid_columnconfigure(0, weight=1)
     
     def openUrl(self, url):
         webbrowser.open_new(url)
