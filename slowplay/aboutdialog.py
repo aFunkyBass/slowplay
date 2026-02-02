@@ -145,28 +145,34 @@ class aboutDialog(ctk.CTkToplevel):
             ("CTRL+B", _("Reset loop end")),
         ]
 
-        scrollFrame = ctk.CTkScrollableFrame(tab2)
-        scrollFrame.grid(row = 0, column = 0, padx = (0), pady = (0), sticky="nsew")
+        self.scrollFrame = ctk.CTkScrollableFrame(tab2)
+        self.scrollFrame.grid(row = 0, column = 0, padx = (0), pady = (0), sticky="nsew")
         
         scLabels = []
         i = 0
         for sc in sc_list:
             if (sc[0] == SC_SECTION_TITLE):
-                scLabels.append(ctk.CTkLabel(scrollFrame, text=sc[1], font=("", LBL_FONT_SIZE, "bold")))
+                scLabels.append(ctk.CTkLabel(self.scrollFrame, text=sc[1], font=("", LBL_FONT_SIZE, "bold")))
                 scLabels[i].grid(row = i, column = 0, sticky = "ew", columnspan = 2, pady=(10, 0))
                 i = i + 1
             else:
-                scLabels.append(ctk.CTkLabel(scrollFrame, text=f"{sc[0]}: ", font=("", LBL_FONT_SIZE, "bold")))
-                scLabels.append(ctk.CTkLabel(scrollFrame, text=sc[1], font=("", LBL_FONT_SIZE)))
+                scLabels.append(ctk.CTkLabel(self.scrollFrame, text=f"{sc[0]}: ", font=("", LBL_FONT_SIZE, "bold")))
+                scLabels.append(ctk.CTkLabel(self.scrollFrame, text=sc[1], font=("", LBL_FONT_SIZE)))
     
                 scLabels[i].grid(row = i, column = 0, sticky = "w", pady=(0, 0))
                 scLabels[i + 1].grid(row = i, column = 1, sticky = "w", pady=(0, 0))
                 i = i + 2
 
-        kpLabel = ctk.CTkButton(scrollFrame, text=_("SHOW NUM. KEYPAD MAP"), command=self.imgShow)
+        kpLabel = ctk.CTkButton(self.scrollFrame, text=_("SHOW NUM. KEYPAD MAP"), command=self.imgShow)
         kpLabel.grid(row = i + 1, column = 0, columnspan = 2, sticky = "w", pady=(10, 0))
 
-        scrollFrame.grid_columnconfigure(0, weight=1)
+        self.scrollFrame.grid_columnconfigure(0, weight=1)
+
+        self.scrollFrame.bind("<Button-4>", self.onScroll)
+        self.scrollFrame.bind("<Button-5>", self.onScroll)
+        for wid in self.scrollFrame.children.values():
+            wid.bind("<Button-4>", self.onScroll)
+            wid.bind("<Button-5>", self.onScroll)
 
         # Widget on tab 3: "Donate"
         """
@@ -208,6 +214,9 @@ class aboutDialog(ctk.CTkToplevel):
         self.wait_window(self)
         return(True)
     
+    def onScroll(self, event = None):
+        self.scrollFrame._parent_canvas.yview_scroll(1 if event.num == 5 else -1, "units")
+
     def _keybind_(self, event):
         key = event.keysym
         state = event.state

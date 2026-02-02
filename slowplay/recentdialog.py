@@ -30,6 +30,8 @@ class recentDialog(ctk.CTkToplevel):
         self.ListBox = CTkListbox(self.LFrame, font=("", 16))
         self.ListBox.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
         self.ListBox.bind("<Double-1>", self.onOk)
+        self.ListBox.bind("<Button-4>", self.onScroll)
+        self.ListBox.bind("<Button-5>", self.onScroll)
 
         self.LFrame.grid_rowconfigure(0, weight=1)
         self.LFrame.grid_columnconfigure(0, weight=1)
@@ -79,6 +81,9 @@ class recentDialog(ctk.CTkToplevel):
         self.selection = list(self.data)[(len(self.data) - 1) - self.ListBox.curselection()]
         self.destroy()
 
+    def onScroll(self, event = None):
+        self.ListBox._parent_canvas.yview_scroll(1 if event.num == 5 else -1, "units")
+        
     def show(self):
         self.fillListbox()
         self.deiconify()
