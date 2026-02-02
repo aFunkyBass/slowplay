@@ -5,7 +5,7 @@ import utils
 import gettext
 _ = gettext.gettext
 
-ZEN_CMD = "zenity_"
+ZEN_CMD = "zenity"
 
 # Checks to see id Zenity is installed on the system
 def __check_zenity__() -> bool:
