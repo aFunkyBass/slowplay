@@ -141,7 +141,7 @@ class ytDialog(ctk.CTkToplevel):
         
         # Download the required info and fill the fields
         try:
-            videoInfo = self.manager.getVideoInfoFields(["title", "description", "uploader",
+            videoInfo = self.manager.getVideoInfoFields(["id", "title", "description", "uploader",
                                                     "timestamp", "view_count"],
                                                     self.progressGadgetUpdate)
         finally:

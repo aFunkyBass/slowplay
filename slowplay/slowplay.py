@@ -637,6 +637,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if(rUrl == False):
             return(False)
 
+        # Return the url of the video and its Title
         self.setYouTubeUrl(url=rUrl, vinfo=videoInfo["title"])
 
     # Actually load a YouTube URL
