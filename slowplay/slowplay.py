@@ -19,6 +19,7 @@ import argparse
 from PIL import Image
 import re
 import sys, pathlib
+from math import floor
 
 import gettext
 _ = gettext.gettext
@@ -726,7 +727,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         secs = self.player.song_time(loopPoint)
         if(secs is None):
             secs = 0
-        self.lblLoopStart.configure(text = f"{dt.timedelta(seconds=round(secs))}.{utils.get_fractional(secs, 3):03d}")
+        self.lblLoopStart.configure(text = f"{dt.timedelta(seconds=floor(secs))}.{utils.get_fractional(secs, 3):03d}")
 
     # Sets loop end point
     def setLoopEnd(self, loopPoint = 0):
@@ -749,7 +750,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
             self.player.endPoint = loopPoint
             self.sldLoop.set((self.player.startPoint, loopPoint))
             secs = self.player.song_time(loopPoint)
-            self.lblLoopEnd.configure(text = f"{dt.timedelta(seconds=round(secs))}.{utils.get_fractional(secs, 3):03d}")
+            self.lblLoopEnd.configure(text = f"{dt.timedelta(seconds=floor(secs))}.{utils.get_fractional(secs, 3):03d}")
             return(loopPoint)
 
     # Move the loop start by shift milliseconds
@@ -870,7 +871,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
             self.player.songPosition = curpos
 
-            curpos = round(curpos)
+            curpos = floor(curpos)
             cent = dt.timedelta(seconds = curpos)
             self.songTime.set(cent)
 
