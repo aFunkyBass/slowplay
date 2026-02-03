@@ -271,6 +271,11 @@ class ytManage:
         if(self.curURL is None):
             return(None)
 
+        # Check if audiofile is already present 
+        # in this case no download is performed
+        if(os.path.isfile(self.audioFile)):
+            return(True)
+
         command = [
             YTDLP_CMD,
              '-t', YT_AUDIO_FORMAT_PRESET,              # Audio format
