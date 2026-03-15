@@ -226,7 +226,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.sldLoop.grid(row=0, column=0, columnspan=3, padx=8, pady=8, sticky="ew")
 
         self.loopAFrame = ctk.CTkFrame(self.LoopTab)
-        self.loopAFrame.grid(row=1, column=0, pady=8, sticky="w")
 
         self.lblLoopStart = ctk.CTkLabel(self.loopAFrame, anchor="w", width=80, font=("", LBL_FONT_SIZE),
                                          text="---")
@@ -256,16 +255,18 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.btnLoopAFwd2_tt = CTkToolTip(self.btnLoopAFwd2, message=_("Move loop start right by") + f" {MOVE_LOOP_POINTS_COARSE} " + _("milliseconds"),
                                         delay=0.8, alpha=0.5, justify="left", follow=False)
 
-        self.lblLoopStart.grid(row = 0, column = 0, columnspan=2)
+        self.lblLoopStart.grid(row = 0, column = 0, columnspan=2, padx = (8, 0))
         self.btnResetLoopStart.grid(row = 0, column = 2, padx=(4, 0))
         self.btnLoopASet.grid(row = 0, column = 3, padx=(4, 0))
-        self.btnLoopABack2.grid(row = 1, column = 0, pady = (8, 0))
+        self.btnLoopABack2.grid(row = 1, column = 0, padx = (8, 0), pady = (8, 0))
         self.btnLoopABack1.grid(row = 1, column = 1, padx=(4, 0), pady = (8, 0))
         self.btnLoopAFwd1.grid(row = 1, column = 2, padx=(4, 0), pady = (8, 0))
         self.btnLoopAFwd2.grid(row = 1, column = 3, padx=(4, 0), pady = (8, 0))
 
+        self.loopAFrame.grid(row=1, column=0, pady=8, sticky="nw")
+        self.loopAFrame.rowconfigure(0, weight=1)
+
         self.loopBFrame = ctk.CTkFrame(self.LoopTab)
-        self.loopBFrame.grid(row=1, column=2, pady=8, sticky="e")
 
         self.lblLoopEnd = ctk.CTkLabel(self.loopBFrame, anchor="e", width=80, font=("", LBL_FONT_SIZE),
                                        text="---")
@@ -297,11 +298,14 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         self.btnLoopBSet.grid(row = 0, column = 0, padx=(4, 0))
         self.btnResetLoopEnd.grid(row = 0, column = 1, padx=(4, 0))
-        self.lblLoopEnd.grid(row = 0, column = 2, columnspan=2)
+        self.lblLoopEnd.grid(row = 0, column = 2, columnspan=2, padx = (0, 8))
         self.btnLoopBBack2.grid(row = 1, column = 0, pady = (8, 0))
         self.btnLoopBBack1.grid(row = 1, column = 1, padx=(4, 0), pady = (8, 0))
         self.btnLoopBFwd1.grid(row = 1, column = 2, padx=(4, 0), pady = (8, 0))
-        self.btnLoopBFwd2.grid(row = 1, column = 3, padx=(4, 0), pady = (8, 0))
+        self.btnLoopBFwd2.grid(row = 1, column = 3, padx=(4, 8), pady = (8, 0))
+
+        self.loopBFrame.grid(row=1, column=2, pady=8, sticky="ne")
+        self.loopBFrame.rowconfigure(0, weight=1)
 
         self.loopCenterFrame = ctk.CTkFrame(self.LoopTab,bg_color="transparent")
         self.loopCenterFrame.grid(row=1, column=1, pady=8, sticky="nsew")
