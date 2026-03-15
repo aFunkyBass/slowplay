@@ -1,4 +1,4 @@
-# SlowPlay
+# ![Keypad shortcuts](slowplay/resources/Icona-48.png) SlowPlay
 
 **SlowPlay** is a simple audio player with speed/pitch change capabilities, based on GStreamer. It is meant to help music students/teachers transcribe music and play along with it.
 
